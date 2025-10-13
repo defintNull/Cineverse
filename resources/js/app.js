@@ -1,11 +1,12 @@
 import './bootstrap';
+import {Button} from './Components/Button';
 
 console.log('Hello, Cineverse!');
 import {MovieDBService} from "./Services/MovieDBService";
 
 const movieDBService = new MovieDBService();
 movieDBService.getMovieByName("").then(movies => {
-    // console.log('Popular Movies:', movies);
+    console.log('Popular Movies:', movies);
     [...movies.results].forEach(movie => {
         console.log(movie.original_title);
     });
@@ -22,3 +23,7 @@ document.getElementById('searchForm').addEventListener('submit', function (e) {
         });
     });
 });
+
+console.log((new Button()).getButtonElement());
+
+document.getElementById('searchForm').appendChild((new Button()).getButtonElement());
