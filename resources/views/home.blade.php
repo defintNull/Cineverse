@@ -22,7 +22,7 @@
         <!-- Barra di ricerca con filtri -->
         <section>
             <form id="searchForm">
-                <input type="text" name="query" placeholder="Cerca film...">
+                <input type="text" name="query" placeholder="Cerca film..." id="searchBox">
                 <select name="genre" id="genreSelect">
                     <option value="">Tutti i generi</option>
                     <option value="azione">Azione</option>
@@ -33,7 +33,7 @@
                 <select name="year" id="yearSelect">
                     <option value="">Tutti gli anni</option>
                 </select>
-                <button type="submit">Cerca</button>
+                <button type="submit" id="search-btn">Cerca</button>
             </form>
         </section>
 
