@@ -4,8 +4,8 @@ export class MovieDBService {
     #config = {
         method: "GET",
         headers: {
-            "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI2ZjNlNDFhNmZiMDMzM2M0Mzg5MDM1NDE2MTQ2NGQ2MyIsIm5iZiI6MTc2MDM1OTk2NS4wNjQ5OTk4LCJzdWIiOiI2OGVjZjYxZGNhZjdiNzg2ZDYyODI0MjAiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.Gh2i9Pp7YcT9knEuD-U2J7hkNd7jKmAiCnYyRbKyR4s",
-            "accept": "application/json",
+            Authorization: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI2ZjNlNDFhNmZiMDMzM2M0Mzg5MDM1NDE2MTQ2NGQ2MyIsIm5iZiI6MTc2MDM1OTk2NS4wNjQ5OTk4LCJzdWIiOiI2OGVjZjYxZGNhZjdiNzg2ZDYyODI0MjAiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.Gh2i9Pp7YcT9knEuD-U2J7hkNd7jKmAiCnYyRbKyR4s",
+            accept: "application/json",
         },
         body: null
     }
