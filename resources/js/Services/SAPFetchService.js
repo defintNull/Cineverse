@@ -1,5 +1,5 @@
 export class SAPFetchService {
-    static #instance;
+    static #instance = null;
     #configGET = {
         method: "GET",
         credentials: 'include',
@@ -37,7 +37,7 @@ export class SAPFetchService {
     }
 
     static async getInstance() {
-        if(!SAPFetchService.#instance) {
+        if(SAPFetchService.#instance == null) {
             let sap_fetch = new SAPFetchService();
             SAPFetchService.#instance = sap_fetch;
 

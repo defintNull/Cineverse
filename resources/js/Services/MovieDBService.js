@@ -11,7 +11,7 @@ export class MovieDBService {
     }
 
     constructor() {
-        if (MovieDBService.#instance) {
+        if(MovieDBService.#instance != null) {
             return MovieDBService.#instance;
         }
 
@@ -19,7 +19,7 @@ export class MovieDBService {
     }
 
     static getInstance() {
-        if(!MovieDBService.#instance) {
+        if(MovieDBService.#instance == null) {
             MovieDBService.#instance = new MovieDBService();
         }
 
