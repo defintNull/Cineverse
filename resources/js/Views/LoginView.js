@@ -68,7 +68,7 @@ export class LoginView extends View {
             let prova = await SPAFetchService.getInstance();
             console.log(prova);
             let formData = new FormData(loginContainer);
-            prova.POSTFetch('/api/login', formData).then(response => {
+            prova.POSTFetch('/login', formData).then(response => {
                 console.log(response);
             })
         });

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Authentication;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,7 +18,7 @@ class Login extends Controller
 
         if(Auth::attempt([
             'username' => $request->username,
-            'password' => $request->pasword,
+            'password' => $request->password,
             'status' => true,
         ])) {
             $request->session()->regenerate();
