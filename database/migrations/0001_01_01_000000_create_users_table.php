@@ -14,12 +14,17 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('surname');
+            $table->string('nationality');
             $table->string('username')->unique();
             $table->string('email');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->enum('role', ['default', 'moderator']);
-            $table->boolean('status');
+            $table->enum('role', ['default', 'moderator']); #corrispondente a privilege
+            $table->boolean('status'); #corrispondente a "suspended" 0 = sospeso, 1 = attivo
+            $table->boolean('watchlistpriv'); # 0 = pubbliche 1 = private
+            $table->boolean('theme')->default(0); # 0 = dark 1 = white
+            $table->json('preferredgenres');
             $table->rememberToken();
             $table->timestamps();
         });
