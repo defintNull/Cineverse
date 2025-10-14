@@ -1,9 +1,10 @@
-export class SAPFetchService {
+export class SPAFetchService {
     static #instance = null;
     #configGET = {
         method: "GET",
         credentials: 'include',
         headers: {
+            "X-Requested-With": "XMLHttpRequest",
             accept: "application/json",
         },
         body: null
@@ -12,6 +13,7 @@ export class SAPFetchService {
         method: "POST",
         credentials: 'include',
         headers: {
+            "X-Requested-With": "XMLHttpRequest",
             "Content-Type": "application/json",
         },
         body: null
@@ -51,7 +53,7 @@ export class SAPFetchService {
         return SAPFetchService.#instance;
     }
 
-    async POSTFect(path, payload) {
+    async POSTFetch(path, payload) {
         if (typeof payload !== 'object' || payload === null || Array.isArray(payload)) {
             throw new TypeError('Payload must be a non-null object.');
         }
