@@ -50,4 +50,24 @@ export class SAPFetchService {
 
         return SAPFetchService.#instance;
     }
+
+    async POSTFect(path, payload) {
+        if (typeof payload !== 'object' || payload === null || Array.isArray(payload)) {
+            throw new TypeError('Payload must be a non-null object.');
+        }
+
+        let config = JSON.parse(JSON.stringify(this.#configPOST));
+        config.body = payload;
+        return fetch(path, config);
+    }
+
+    async GETFetch(path, payload) {
+        if (typeof payload !== 'object' || payload === null || Array.isArray(payload)) {
+            throw new TypeError('Payload must be a non-null object.');
+        }
+
+        let uri = path + encodeURIComponent(payload);
+
+        return fetch(uri, this.#configGET);
+    }
 }
