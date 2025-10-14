@@ -14,24 +14,24 @@ export class SPAFetchService {
         credentials: 'include',
         headers: {
             "X-Requested-With": "XMLHttpRequest",
-            "Content-Type": "application/json",
+            // "Content-Type": "application/json",
         },
         body: null
     };
 
     constructor() {
-        if(SAPFetchService.#instance) {
-            return SAPFetchService.#instance;
+        if (SPAFetchService.#instance) {
+            return SPAFetchService.#instance;
         }
 
-        SAPFetchService.#instance = this;
+        SPAFetchService.#instance = this;
     }
 
     static #getXSRFCookie() {
         let cookie = document.cookie.split(";");
-        for(let i=0; i<cookie.length; i++) {
+        for (let i = 0; i < cookie.length; i++) {
             let el = cookie[i].trim().split("=");
-            if(el[0] == "XSRF-TOKEN") {
+            if (el[0] == "XSRF-TOKEN") {
                 return decodeURIComponent(el.slice(1).join("="));
             }
         }
@@ -39,18 +39,18 @@ export class SPAFetchService {
     }
 
     static async getInstance() {
-        if(SAPFetchService.#instance == null) {
-            let sap_fetch = new SAPFetchService();
-            SAPFetchService.#instance = sap_fetch;
+        if (SPAFetchService.#instance == null) {
+            let sap_fetch = new SPAFetchService();
+            SPAFetchService.#instance = sap_fetch;
 
-            await fetch('/sanctum/csrf-cookie', SAPFetchService.#instance.#configGET);
-            let XSRF = SAPFetchService.#getXSRFCookie();
+            await fetch('/sanctum/csrf-cookie', SPAFetchService.#instance.#configGET);
+            let XSRF = SPAFetchService.#getXSRFCookie();
 
             sap_fetch.#configGET.headers["X-XSRF-TOKEN"] = XSRF;
             sap_fetch.#configPOST.headers["X-XSRF-TOKEN"] = XSRF;
         }
 
-        return SAPFetchService.#instance;
+        return SPAFetchService.#instance;
     }
 
     async POSTFetch(path, payload) {
@@ -60,7 +60,9 @@ export class SPAFetchService {
 
         let config = JSON.parse(JSON.stringify(this.#configPOST));
         config.body = payload;
-        return fetch(path, config);
+        return fetch(path, config).then(response => {
+            return response.json();
+        });
     }
 
     async GETFetch(path, payload) {
@@ -70,6 +72,8 @@ export class SPAFetchService {
 
         let uri = path + encodeURIComponent(payload);
 
-        return fetch(uri, this.#configGET);
+        return fetch(uri, this.#configGET).then(response => {
+            return response.json();
+        });
     }
 }

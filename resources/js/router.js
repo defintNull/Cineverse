@@ -1,5 +1,6 @@
 import { DebugController } from "./Controllers/DebugController";
 import { HomeController } from "./Controllers/HomeController";
+import { LoginController } from "./Controllers/LoginController";
 
 export class Router {
     static #instance = null;
@@ -7,6 +8,7 @@ export class Router {
     routes = {
         "/": HomeController,
         "/debug": DebugController,
+        "/login": LoginController
     }
 
     constructor() {
