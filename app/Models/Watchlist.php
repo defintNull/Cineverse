@@ -13,7 +13,8 @@ class Watchlist extends Model
      */
     protected $fillable = [
         'name',
-        'films'
+        'films',
+        'user_id'
     ];
 
      /**
