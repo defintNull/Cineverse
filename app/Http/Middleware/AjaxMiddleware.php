@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 class AjaxMiddleware
 {
     /**
-     * Handle an incoming request.
+     * Handle an incoming request checking if the request is an ajax request.
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */

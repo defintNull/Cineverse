@@ -1,5 +1,9 @@
+/**
+ * Manage the fetch request to the backend in the spa
+ */
 export class SPAFetchService {
     static #instance = null;
+    // Fetch configuration for the GET protocol
     #configGET = {
         method: "GET",
         credentials: 'include',
@@ -9,12 +13,12 @@ export class SPAFetchService {
         },
         body: null
     };
+    // Fetch configuration for the POST protocol
     #configPOST = {
         method: "POST",
         credentials: 'include',
         headers: {
             "X-Requested-With": "XMLHttpRequest",
-            // "Content-Type": "application/json",
         },
         body: null
     };
@@ -27,6 +31,9 @@ export class SPAFetchService {
         SPAFetchService.#instance = this;
     }
 
+    /**
+     * Retrieve the XSRF-TOKEN from the cookie
+     */
     static #getXSRFCookie() {
         let cookie = document.cookie.split(";");
         for (let i = 0; i < cookie.length; i++) {
@@ -38,6 +45,9 @@ export class SPAFetchService {
         return false;
     }
 
+    /**
+     * Retrieve the instance and set the XSRF-TOOKEN for the next fetch requests
+     */
     static async getInstance() {
         if (SPAFetchService.#instance == null) {
             let sap_fetch = new SPAFetchService();
@@ -53,6 +63,9 @@ export class SPAFetchService {
         return SPAFetchService.#instance;
     }
 
+    /**
+     * Make a fetch request using the post protocol
+     */
     async POSTFetch(path, payload) {
         if (typeof payload !== 'object' || payload === null || Array.isArray(payload)) {
             throw new TypeError('Payload must be a non-null object.');
@@ -65,6 +78,9 @@ export class SPAFetchService {
         });
     }
 
+    /**
+     * Make a fetch request using the get protocol
+     */
     async GETFetch(path, payload) {
         if (typeof payload !== 'object' || payload === null || Array.isArray(payload)) {
             throw new TypeError('Payload must be a non-null object.');

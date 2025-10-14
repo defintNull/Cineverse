@@ -1,6 +1,11 @@
+/**
+ * Make the fetch request to the TheMovieDB API
+ */
 export class MovieDBService {
     static #instance = null;
+    // URL to the TheMovieDB API
     #url = "https://api.themoviedb.org/3";
+    // Fetch configuration to access the TheMovieDB API
     #config = {
         method: "GET",
         headers: {
@@ -18,6 +23,9 @@ export class MovieDBService {
         MovieDBService.#instance = this;
     }
 
+    /**
+     * Get the instance implementing the singleton pattern
+     */
     static getInstance() {
         if(MovieDBService.#instance == null) {
             MovieDBService.#instance = new MovieDBService();
@@ -26,12 +34,18 @@ export class MovieDBService {
         return MovieDBService.#instance;
     }
 
+    /**
+     * Make the fetch to the TheMovieDB API uaing the query param
+     */
     async #makeFetch(query) {
         return fetch(this.#url + "/" + query, this.#config).then(res => {
             return res.json();
         });
     }
 
+    /**
+     * Get from the TheMovieDB API the films matching the given name
+     */
     async getMovieByName(movie_name) {
         let query = "search/movie?query=" + encodeURIComponent(movie_name);
         return this.#makeFetch(query);
