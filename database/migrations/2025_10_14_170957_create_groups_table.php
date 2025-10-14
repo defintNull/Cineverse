@@ -13,8 +13,17 @@ return new class extends Migration
     {
         Schema::create('groups', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id');
             $table->String('name');
             $table->String('description');
+            $table->enum('visibility', ['public', 'private']);
+            $table->timestamps();
+        });
+
+        Schema::create('group_user', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id');
+            $table->foreignId('group_id');
             $table->timestamps();
         });
     }
@@ -25,5 +34,6 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('groups');
+        Schema::dropIfExists('group_user');
     }
 };

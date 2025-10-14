@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Report extends Model
 {
@@ -14,6 +15,22 @@ class Report extends Model
     protected $fillable = [
         'reason',
         'description',
-        'status'
+        'status',
+        'user_id',
+        'reported_user_id',
     ];
+
+    /**
+     * Get the user that submitted the request
+     */
+    public function user() : BelongsTo {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Get the user reported by the report
+     */
+    public function reportedUser() : BelongsTo {
+        return $this->belongsTo(User::class, 'reported_user_id');
+    }
 }

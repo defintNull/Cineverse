@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -63,8 +64,38 @@ class User extends Authenticatable
         return ['default', 'moderator'];
     }
 
-    public function watchlists(): HasMany
-    {
+    /**
+     * Get the whatchlists linked to this user
+     */
+    public function watchlists() : HasMany {
         return $this->hasMany(Watchlist::class);
+    }
+
+    /**
+     * Get the reports submitted by the user
+     */
+    public function reports() : HasMany {
+        return $this->hasMany(Report::class);
+    }
+
+    /**
+     * Get the reports givrn to thr user
+     */
+    public function own_reports() : HasMany {
+        return $this->hasMany(Report::class, 'reported_user_id');
+    }
+
+    /**
+     * Get the groups where the user participate
+     */
+    public function groups() : BelongsToMany {
+        return $this->belongsToMany(Group::class);
+    }
+
+    /**
+     * Get the like of the user
+     */
+    public function likes() : HasMany {
+        return $this->hasMany(Like::class);
     }
 }

@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('group_id');
             $table->String('content');
             $table->json('films');
             $table->timestamps();
