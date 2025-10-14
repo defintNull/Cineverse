@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Report extends Model
+class Group extends Model
 {
     /**
      * The attributes that are mass assignable.
@@ -12,8 +12,7 @@ class Report extends Model
      * @var list<string>
      */
     protected $fillable = [
-        'reason',
+        'name',
         'description',
-        'status'
     ];
 }
