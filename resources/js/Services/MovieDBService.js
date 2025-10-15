@@ -38,16 +38,42 @@ export class MovieDBService {
      * Make the fetch to the TheMovieDB API uaing the query param
      */
     async #makeFetch(query) {
-        return fetch(this.#url + "/" + query, this.#config).then(res => {
-            return res;
-        });
+        return fetch(this.#url + "/" + query, this.#config);
+    }
+
+    static getImageSrc(res, img) {
+        return "https://image.tmdb.org/t/p/" + res + "/" + img;
     }
 
     /**
-     * Get from the TheMovieDB API the films matching the given name
+     * Get the upcoming movies
      */
-    async getMovieByName(movie_name) {
-        let query = "search/movie?query=" + encodeURIComponent(movie_name);
+    async getLatestMovies(page) {
+        let query = "/movie/upcoming?page=" + encodeURIComponent(page);
+        return this.#makeFetch(query);
+    }
+
+    /**
+     * Get the popular movies
+     */
+    async getPopularMovies(page) {
+        let query = "/movie/popular?page=" + encodeURIComponent(page);
+        return this.#makeFetch(query);
+    }
+
+    /**
+     * Get the upcoming series
+     */
+    async getOnTheAirSeries(page) {
+        let query = "/tv/on_the_air?page=" + encodeURIComponent(page);
+        return this.#makeFetch(query);
+    }
+
+    /**
+     * Get the popular series
+     */
+    async getPopularSeries(page) {
+        let query = "/tv/popular?page=" + encodeURIComponent(page);
         return this.#makeFetch(query);
     }
 }

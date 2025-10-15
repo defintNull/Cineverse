@@ -7,7 +7,6 @@ import { SPAFetchService } from "../Services/SPAFetchService";
  * Controller class that manage the login route
  */
 export class LoginController extends Controller {
-
     #loginView
     #router
 

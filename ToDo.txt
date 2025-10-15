@@ -1,0 +1,8 @@
+movie:
+    Latest
+    Top rating
+
+
+Serie:
+    In corso
+    popular

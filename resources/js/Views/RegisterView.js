@@ -27,7 +27,7 @@ export class RegisterView extends View {
     render() {
         // Card element
         let card = this.#card.getComponentElement();
-        card.classList.add("flex", "flex-col", "items-center", "py-12");
+        card.classList.add("flex", "flex-col", "items-center", "py-12", "w-2/3", "my-12");
         let title = document.createElement("p");
         title.classList.add("font-semibold", "text-4xl", "dark:text-white", "text-gray-900", "pb-8");
         title.innerText = "Registration";

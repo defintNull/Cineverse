@@ -1,6 +1,7 @@
 import { View } from "./View.js";
 import { Input } from "../Components/Input.js";
 import { Button } from "../Components/Button.js";
+import { Card } from "../Components/Card.js";
 
 /**
  * View class that manage the login page
@@ -10,6 +11,14 @@ export class LoginView extends View {
      * Render method to print the necessary elements
      */
     render() {
+        // Div
+        let container = document.createElement("div");
+        container.classList.add("flex", "flex-col", "items-center", "justify-center", "h-full");
+
+        // Card
+        const card = new Card();
+        const cardElement = card.getComponentElement();
+        cardElement.classList.add("flex", "flex-col", "items-center", "py-8", "px-16", "my-12");
 
         // Crea il contenitore principale
         const loginContainer = document.createElement('form');
@@ -68,7 +77,9 @@ export class LoginView extends View {
         // Aggiungi la sezione al body
         divButton.appendChild(loginButtonElement);
         loginContainer.appendChild(divButton);
-        document.body.querySelector('main').appendChild(loginContainer);
+        cardElement.appendChild(loginContainer);
+        container.appendChild(cardElement)
+        document.body.querySelector('main').appendChild(container);
     }
 
     /**
