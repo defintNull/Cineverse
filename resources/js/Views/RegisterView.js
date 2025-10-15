@@ -150,6 +150,11 @@ export class RegisterView extends View {
 
         document.getElementById("registration_form").addEventListener("submit", async function(event) {
             event.preventDefault();
+
+            document.querySelectorAll('p.error-field').forEach(el => {
+
+            });
+
             let formData = new FormData(this);
             let res = await sap_fetch.POSTFetch('/spa/register', formData);
             console.log(res);

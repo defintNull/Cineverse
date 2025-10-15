@@ -39,7 +39,7 @@ export class MovieDBService {
      */
     async #makeFetch(query) {
         return fetch(this.#url + "/" + query, this.#config).then(res => {
-            return res.json();
+            return res;
         });
     }
 
