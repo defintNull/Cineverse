@@ -1,6 +1,7 @@
 import { Button } from "../Components/Button";
 import { Card } from "../Components/Card";
 import { Input } from "../Components/Input";
+import { InputError } from "../Components/InputError";
 import { SPAFetchService } from "../Services/SPAFetchService";
 import { View } from "./View";
 
@@ -8,12 +9,14 @@ export class RegisterView extends View {
     #card;
     #input;
     #button;
+    #input_error;
 
     constructor() {
         super();
         this.#card = new Card();
         this.#input = new Input();
         this.#button = new Button();
+        this.#input_error = new InputError();
     }
 
     render() {
@@ -129,6 +132,13 @@ export class RegisterView extends View {
         input_field.placeholder = "Confirm password...";
         container.appendChild(element);
 
+        //Form Error
+        element = this.#input_error.getComponentElement();
+        element.id = "form_error";
+        element.classList.add("pt-6", "hidden");
+        element.innerHTML = "Ops! Something whent wrong!";
+        container.appendChild(element);
+
         //Button
         let div_button = document.createElement("div");
         div_button.classList.add("flex", "flex-col", "items-end", "pt-4")
@@ -151,13 +161,40 @@ export class RegisterView extends View {
         document.getElementById("registration_form").addEventListener("submit", async function(event) {
             event.preventDefault();
 
+            // Resetting error fields
             document.querySelectorAll('p.error-field').forEach(el => {
-
+                el.innerHTML = "";
             });
+            document.getElementById("form_error").classList.add("hidden");
+            document.getElementById("form_error").innerHTML = "Ops! Something whent wrong!";
 
+            // Fetching
             let formData = new FormData(this);
+
             let res = await sap_fetch.POSTFetch('/spa/register', formData);
-            console.log(res);
+            let payload = await res.json();
+
+            //Handling errors
+            if(res.status == 429) {
+                //Too many request
+                document.getElementById("form_error").innerHTML = "Too many attempts! Try again later!";
+                document.getElementById("form_error").classList.remove("hidden");
+            } else if(res.status == 422) {
+                //Validation errors
+                Object.keys(payload.errors).forEach(el => {
+                    let error_field = document.getElementById(el + "_input");
+                    if(error_field != null) {
+                        error_field = error_field.nextElementSibling;
+                        error_field.innerHTML = payload.errors[el];
+                    }
+                });
+            } else if(res.status == 400 && payload.error) {
+                document.getElementById("confirm_password_input").nextElementSibling.innerHTML = payload.error;
+            } else if(res.status == 200) {
+
+            } else {
+                document.getElementById("form_error").classList.remove("hidden");
+            }
         });
     }
 }
