@@ -1,7 +1,15 @@
+import { RegisterView } from "../Views/RegisterView";
 import { Controller } from "./Controller";
 
 export class RegistrationController extends Controller {
-    start() {
+    #registerView;
 
+    constructor() {
+        super();
+        this.#registerView = new RegisterView();
+    }
+
+    start() {
+        this.#registerView.render();
     }
 }

@@ -26,7 +26,8 @@ class Register extends Controller
             'name' => ['required', 'string', 'max:128'],
             'surname' => ['required', 'string', 'max:128'],
             'nationality' => ['required', 'string', 'max:128'],
-            'username' => ['required', 'sting', 'max:128'],
+            'email' => ['required', 'email'],
+            'username' => ['required', 'string', 'max:128'],
             'password' => ['required', 'string', 'max:128', 'min:8'],
             'confirm_password' => ['required', 'string', 'max:128', 'min:8'],
         ]);
@@ -41,8 +42,14 @@ class Register extends Controller
             'name' => $request->name,
             'surname' => $request->surname,
             'nationality' => $request->nationality,
+            'email' => $request->email,
             'username' => $request->username,
             'password' => $request->password,
+            'role' => 'default',
+            'status' => true,
+            'watchlistpriv' => true,
+            'theme' => false,
+            'preferredgenres' => [],
         ]);
 
         return response()->json([
