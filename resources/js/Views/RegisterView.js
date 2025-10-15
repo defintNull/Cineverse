@@ -173,6 +173,10 @@ export class RegisterView extends View {
         }
     }
 
+    resetView() {
+        document.body.querySelector("main").innerHTML = "";
+    }
+
     async addEventListeners(handler1) {
         document.getElementById("registration_form").addEventListener("submit", handler1);
     }

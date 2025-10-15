@@ -19,7 +19,7 @@ export class RegistrationController extends Controller {
     }
 
     destroy() {
-        document.body.querySelector("main").innerHTML = "";
+        this.#registerView.resetView();
     }
 
     async #registerFormHandler(event) {
