@@ -37,7 +37,7 @@
     <!-- Contenuto -->
     <main class="flex-1 w-full max-w-6xl mx-auto px-4 py-8 space-y-8">
 
-        <!-- Barra di ricerca con filtri -->
+        {{-- <!-- Barra di ricerca con filtri -->
         <section class="w-full bg-white rounded-xl shadow-lg p-6 border border-gray-200">
             <form id="searchForm" class="flex flex-col md:flex-row md:flex-wrap items-center gap-4">
                 <input type="text" name="query" placeholder="🔍 Cerca film..." id="searchBox"
@@ -80,7 +80,7 @@
                     <p class="text-sm text-gray-500">Genere • Anno</p>
                 </div>
             </div>
-        </section>
+        </section> --}}
     </main>
 
     <!-- Footer -->

@@ -40,7 +40,7 @@ Route::middleware(AjaxMiddleware::class)->name('spa.')->prefix('spa')->group(fun
  * Collection route for the spa that redirect all the unwanted route to the main route
  */
 Route::get('/{any}', function () {
-    return Redirect::route('main');
+    return view('home');
 })->where('any', '.*');
 
 

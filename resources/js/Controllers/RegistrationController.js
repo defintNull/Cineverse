@@ -1,6 +1,6 @@
 import { Controller } from "./Controller";
 
-export class HomeController extends Controller {
+export class RegistrationController extends Controller {
     start() {
 
     }
