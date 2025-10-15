@@ -19,7 +19,7 @@ class Watchlist extends Model
     ];
 
      /**
-     * Get the attributes that should be cast.
+     * Get the attributes that should be  cast.
      *
      * @return array<string, string>
      */
