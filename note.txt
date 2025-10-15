@@ -1,0 +1,2 @@
+note per la presentazione:
+    problema della separazione delle responsabilità tra view / controller => rimbalzo di compiti tra view e controller (logica sul controllore)
