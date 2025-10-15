@@ -1,4 +1,5 @@
 import { Router } from "../router";
+import { SPAFetchService } from "../Services/SPAFetchService";
 import { RegisterView } from "../Views/RegisterView";
 import { Controller } from "./Controller";
 
@@ -14,17 +15,18 @@ export class RegistrationController extends Controller {
 
     start() {
         this.#registerView.render();
-        this.#registerView.addEventListeners(registerFormHandler);
+        this.#registerView.addEventListeners(this.#registerFormHandler.bind(this));
     }
 
-    async registerFormHandler() {
+    async #registerFormHandler(event) {
+        event.preventDefault();
         let sap_fetch = await SPAFetchService.getInstance();
 
         // Resetting error fields
         this.#registerView.resetErrorFields();
 
         // Fetching
-        let formData = new FormData(this);
+        let formData = new FormData(document.getElementById("registration_form"));
 
         let res = await sap_fetch.POSTFetch('/spa/register', formData);
         let payload = await res.json();
