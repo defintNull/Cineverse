@@ -1,23 +1,21 @@
 import { View } from "./View.js";
-import { SPAFetchService } from "../Services/SPAFetchService.js";
 import { Input } from "../Components/Input.js";
-import { Card } from "../Components/Card.js";
 import { Button } from "../Components/Button.js";
 
+/**
+ * View class that manage the login page
+ */
 export class LoginView extends View {
+    /**
+     * Render method to print the necessary elements
+     */
     render() {
-
 
         // Crea il contenitore principale
         const loginContainer = document.createElement('form');
         loginContainer.id = 'login-section';
         loginContainer.method = 'POST';
         loginContainer.className = "max-w-sm mx-auto";
-
-        // const loginCard = new Card();
-        // const loginCardElement = loginCard.getComponentElement();
-        // loginContainer.appendChild(loginCardElement);
-
 
         // Subtitle
         const subtitle = document.createElement("p");
@@ -71,39 +69,34 @@ export class LoginView extends View {
         divButton.appendChild(loginButtonElement);
         loginContainer.appendChild(divButton);
         document.body.querySelector('main').appendChild(loginContainer);
-
-        // loginContainer.addEventListener('submit', async function (event) {
-        //     event.preventDefault();
-        //     console.log("login");
-        //     console.log(usernameElement.querySelector('input').value);
-        //     let prova = await SPAFetchService.getInstance();
-        //     console.log(prova);
-        //     let formData = new FormData(loginContainer);
-        //     prova.POSTFetch('/spa/login', formData).then(response => {
-        //         response.json();
-        //         console.log(response);
-        //         if (response.status != 200)
-        //             passwordElement.querySelector('p').textContent = "Wrong username or password";
-        //     })
-        // });
-
-
     }
 
+    /**
+     * Print error for the form element
+     */
     gestisciErrori(error) {
         let passwordElement = document.getElementById("password");
         passwordElement.nextElementSibling.innerHTML = error;
     }
 
+    /**
+     * Reset the view to it's default configuration
+     */
     resetView() {
         document.body.querySelector('main').innerHTML = '';
     }
 
+    /**
+     * Set the event listener for the page setting the form event listener for submit
+     */
     addEventListeners(handler1) {
         let form = document.getElementById("login-section");
         form.addEventListener("submit", handler1);
     }
 
+    /**
+     * Reset the form error field
+     */
     resetErrorFields() {
         let passwordElement = document.getElementById("password");
         passwordElement.nextElementSibling.innerHTML = '';

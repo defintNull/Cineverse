@@ -3,6 +3,9 @@ import { LoginView } from "../Views/LoginView";
 import { Router } from "../router";
 import { SPAFetchService } from "../Services/SPAFetchService";
 
+/**
+ * Controller class that manage the login route
+ */
 export class LoginController extends Controller {
 
     #loginView
@@ -14,22 +17,27 @@ export class LoginController extends Controller {
         this.#router = Router.getInstance();
     }
 
+    /**
+     *  Method invoked by the router that build the page and set the event listeners
+     */
     start() {
-
-        //porcata per il momment
-        // document.body.querySelector('main').innerHTML = '';
-
-        // const loginView = new LoginView();
-        // loginView.createFormLogin();
 
         this.#loginView.render();
         this.#loginView.addEventListeners(this.#loginHandler.bind(this));
     }
 
+    /**
+     * Method invoked by the router when the route is changed
+     */
     destroy() {
         this.#loginView.resetView();
     }
 
+    /**
+     * Callback function for the login form
+     *
+     * Execute a fetch using SPAFetchService and try to login the user
+     */
     async #loginHandler(event) {
         event.preventDefault();
         let sap_fetch = await SPAFetchService.getInstance();

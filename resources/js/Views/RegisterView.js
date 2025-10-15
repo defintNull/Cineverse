@@ -4,6 +4,9 @@ import { Input } from "../Components/Input";
 import { InputError } from "../Components/InputError";
 import { View } from "./View";
 
+/**
+ * View class that manage the registration page
+ */
 export class RegisterView extends View {
     #card;
     #input;
@@ -18,6 +21,9 @@ export class RegisterView extends View {
         this.#input_error = new InputError();
     }
 
+    /**
+     * Render method to construct the elements for the page
+     */
     render() {
         // Card element
         let card = this.#card.getComponentElement();
@@ -151,6 +157,9 @@ export class RegisterView extends View {
         document.body.querySelector("main").appendChild(card);
     }
 
+    /**
+     * Reset all the error fields of the form
+     */
     resetErrorFields() {
         // Resetting error fields
         document.querySelectorAll('p.error-field').forEach(el => {
@@ -160,11 +169,17 @@ export class RegisterView extends View {
         document.getElementById("form_error").innerHTML = "Ops! Something whent wrong!";
     }
 
+    /**
+     * Set the error message for the global error field
+     */
     globalErrorField(error) {
         document.getElementById("form_error").innerHTML = error;
         document.getElementById("form_error").classList.remove("hidden");
     }
 
+    /**
+     * Set the error message for a given error field
+     */
     inputErrorField(id, error) {
         let error_field = document.getElementById(id);
         if(error_field != null) {
@@ -173,10 +188,16 @@ export class RegisterView extends View {
         }
     }
 
+    /**
+     * Reset the view to its default settings
+     */
     resetView() {
         document.body.querySelector("main").innerHTML = "";
     }
 
+    /**
+     * Add the event listeners of the page, add the submit event listener for the registration form
+     */
     async addEventListeners(handler1) {
         document.getElementById("registration_form").addEventListener("submit", handler1);
     }

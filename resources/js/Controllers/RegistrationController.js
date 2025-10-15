@@ -3,6 +3,9 @@ import { SPAFetchService } from "../Services/SPAFetchService";
 import { RegisterView } from "../Views/RegisterView";
 import { Controller } from "./Controller";
 
+/**
+ * Controller class that manage the registration route
+ */
 export class RegistrationController extends Controller {
     #registerView;
     #router;
@@ -13,15 +16,26 @@ export class RegistrationController extends Controller {
         this.#router = Router.getInstance();
     }
 
+    /**
+     * Method invoked by the router that build the page and set the event listeners
+     */
     start() {
         this.#registerView.render();
         this.#registerView.addEventListeners(this.#registerFormHandler.bind(this));
     }
 
+    /**
+     * Method invoked by the router when the route is changed
+     */
     destroy() {
         this.#registerView.resetView();
     }
 
+    /**
+     * Callback function for the registration form
+     *
+     * Execute a fetch using SPAFetchService and register the user
+     */
     async #registerFormHandler(event) {
         event.preventDefault();
         let sap_fetch = await SPAFetchService.getInstance();
