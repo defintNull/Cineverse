@@ -5,17 +5,26 @@ import { Card } from "../Components/Card.js";
 import { Button } from "../Components/Button.js";
 
 export class LoginView extends View {
-    createFormLogin() {
+    render() {
 
 
         // Crea il contenitore principale
         const loginContainer = document.createElement('form');
         loginContainer.id = 'login-section';
         loginContainer.method = 'POST';
+        loginContainer.className = "max-w-sm mx-auto";
 
-        const loginCard = new Card();
-        const loginCardElement = loginCard.getComponentElement();
-        loginContainer.appendChild(loginCardElement);
+        // const loginCard = new Card();
+        // const loginCardElement = loginCard.getComponentElement();
+        // loginContainer.appendChild(loginCardElement);
+
+
+        // Subtitle
+        const subtitle = document.createElement("p");
+        subtitle.classList.add("font-semibold", "text-2xl", "dark:text-white", "text-gray-900", "border-b", "dark:border-white", "border-gray-900", "pt-4");
+        subtitle.innerText = "Log-In";
+        loginContainer.appendChild(subtitle);
+        loginContainer.appendChild(document.createElement("br"));
 
         const divUsername = document.createElement('div');
         divUsername.className = "mb-6";
@@ -29,7 +38,7 @@ export class LoginView extends View {
         usernameElement.querySelector('input').name = 'username';
         usernameElement.querySelector('input').placeholder = 'Inserisci il tuo username';
         divUsername.appendChild(usernameElement);
-        loginCardElement.appendChild(divUsername);
+        loginContainer.appendChild(divUsername);
 
         const divPassword = document.createElement('div');
         divPassword.className = "mb-6";
@@ -43,9 +52,13 @@ export class LoginView extends View {
         passwordElement.querySelector('input').name = 'password';
         passwordElement.querySelector('input').placeholder = 'Inserisci la tua password';
         divPassword.appendChild(passwordElement);
-        loginCardElement.appendChild(divPassword);
+        loginContainer.appendChild(divPassword);
 
         // Bottone di invio
+
+        let divButton = document.createElement("div");
+        divButton.classList.add("flex", "flex-col", "items-end", "pt-4");
+
 
         const loginButtonComponent = new Button();
         const loginButtonElement = loginButtonComponent.getComponentElement();
@@ -55,22 +68,44 @@ export class LoginView extends View {
 
 
         // Aggiungi la sezione al body
-        loginCardElement.appendChild(loginButtonElement);
+        divButton.appendChild(loginButtonElement);
+        loginContainer.appendChild(divButton);
         document.body.querySelector('main').appendChild(loginContainer);
 
-        loginContainer.addEventListener('submit', async function (event) {
-            event.preventDefault();
-            console.log("login");
-            console.log(usernameElement.querySelector('input').value);
-            let prova = await SPAFetchService.getInstance();
-            console.log(prova);
-            let formData = new FormData(loginContainer);
-            prova.POSTFetch('/spa/login', formData).then(response => {
-                response.json();
-                console.log(response);
-                if (response.status != 200)
-                    passwordElement.querySelector('p').textContent = "Wrong username or password";
-            })
-        });
+        // loginContainer.addEventListener('submit', async function (event) {
+        //     event.preventDefault();
+        //     console.log("login");
+        //     console.log(usernameElement.querySelector('input').value);
+        //     let prova = await SPAFetchService.getInstance();
+        //     console.log(prova);
+        //     let formData = new FormData(loginContainer);
+        //     prova.POSTFetch('/spa/login', formData).then(response => {
+        //         response.json();
+        //         console.log(response);
+        //         if (response.status != 200)
+        //             passwordElement.querySelector('p').textContent = "Wrong username or password";
+        //     })
+        // });
+
+
+    }
+
+    gestisciErrori(error) {
+        let passwordElement = document.getElementById("password");
+        passwordElement.nextElementSibling.innerHTML = error;
+    }
+
+    resetView() {
+        document.body.querySelector('main').innerHTML = '';
+    }
+
+    addEventListeners(handler1) {
+        let form = document.getElementById("login-section");
+        form.addEventListener("submit", handler1);
+    }
+
+    resetErrorFields() {
+        let passwordElement = document.getElementById("password");
+        passwordElement.nextElementSibling.innerHTML = '';
     }
 }
