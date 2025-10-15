@@ -1,13 +1,11 @@
-export class Button {
-    #element
-    constructor(){
-        this.#element = document.createElement("div");
-        this.#element.appendChild(document.createElement('div'));
-        this.#element.querySelector("div").outerHTML = '<button type="submit" id="search-btn" class="px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition shadow-md">Cerca</button>';
-        this.#element = this.#element.querySelector("button");
-    }
+import { Component } from "./Component";
 
-    getButtonElement(){
-        return this.#element;
+export class Button extends Component{
+    #button = 'button type="button" class="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"></button>';
+
+    getComponentElement(){
+        let temp = document.createElement("div");
+        temp.innerHTML = this.#button;
+        return temp.firstElementChild;
     }
 }
