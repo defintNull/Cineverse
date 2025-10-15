@@ -2,7 +2,6 @@ import { Button } from "../Components/Button";
 import { Card } from "../Components/Card";
 import { Input } from "../Components/Input";
 import { InputError } from "../Components/InputError";
-import { SPAFetchService } from "../Services/SPAFetchService";
 import { View } from "./View";
 
 export class RegisterView extends View {
@@ -150,51 +149,31 @@ export class RegisterView extends View {
 
         //Appending all
         document.body.querySelector("main").appendChild(card);
-
-        //Adding event listeners
-        this.#addEventListeners()
     }
 
-    async #addEventListeners() {
-        let sap_fetch = await SPAFetchService.getInstance();
-
-        document.getElementById("registration_form").addEventListener("submit", async function(event) {
-            event.preventDefault();
-
-            // Resetting error fields
-            document.querySelectorAll('p.error-field').forEach(el => {
-                el.innerHTML = "";
-            });
-            document.getElementById("form_error").classList.add("hidden");
-            document.getElementById("form_error").innerHTML = "Ops! Something whent wrong!";
-
-            // Fetching
-            let formData = new FormData(this);
-
-            let res = await sap_fetch.POSTFetch('/spa/register', formData);
-            let payload = await res.json();
-
-            //Handling errors
-            if(res.status == 429) {
-                //Too many request
-                document.getElementById("form_error").innerHTML = "Too many attempts! Try again later!";
-                document.getElementById("form_error").classList.remove("hidden");
-            } else if(res.status == 422) {
-                //Validation errors
-                Object.keys(payload.errors).forEach(el => {
-                    let error_field = document.getElementById(el + "_input");
-                    if(error_field != null) {
-                        error_field = error_field.nextElementSibling;
-                        error_field.innerHTML = payload.errors[el];
-                    }
-                });
-            } else if(res.status == 400 && payload.error) {
-                document.getElementById("confirm_password_input").nextElementSibling.innerHTML = payload.error;
-            } else if(res.status == 200) {
-
-            } else {
-                document.getElementById("form_error").classList.remove("hidden");
-            }
+    resetErrorFields() {
+        // Resetting error fields
+        document.querySelectorAll('p.error-field').forEach(el => {
+            el.innerHTML = "";
         });
+        document.getElementById("form_error").classList.add("hidden");
+        document.getElementById("form_error").innerHTML = "Ops! Something whent wrong!";
+    }
+
+    globalErrorField(error) {
+        document.getElementById("form_error").innerHTML = error;
+        document.getElementById("form_error").classList.remove("hidden");
+    }
+
+    inputErrorField(id, error) {
+        let error_field = document.getElementById(id);
+        if(error_field != null) {
+            error_field = error_field.nextElementSibling;
+            error_field.innerHTML = error;
+        }
+    }
+
+    async addEventListeners(handler1) {
+        document.getElementById("registration_form").addEventListener("submit", handler1);
     }
 }
