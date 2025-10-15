@@ -18,6 +18,10 @@ export class RegistrationController extends Controller {
         this.#registerView.addEventListeners(this.#registerFormHandler.bind(this));
     }
 
+    destroy() {
+        document.body.querySelector("main").innerHTML = "";
+    }
+
     async #registerFormHandler(event) {
         event.preventDefault();
         let sap_fetch = await SPAFetchService.getInstance();
@@ -43,7 +47,7 @@ export class RegistrationController extends Controller {
         } else if(res.status == 400 && payload.error) {
             this.#registerView.inputErrorField("confirm_password_input", payload.error)
         } else if(res.status == 200) {
-            this.#router.overridePath("/");
+            this.#router.overridePath({}, "/");
         } else {
             this.#registerView.globalErrorField("Ops! Something whent wrong!");
         }

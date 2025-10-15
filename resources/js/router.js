@@ -55,14 +55,16 @@ export class Router {
     /**
      * Push the path in the browser buffer in the last position
      */
-    setNextPath(path) {
-        history.pushState(path);
+    setNextPath(state, path) {
+        history.pushState(state, "", path);
+        window.dispatchEvent(new PopStateEvent('popstate'));
     }
 
     /**
      * Push the path in the browser buffer resetting it
      */
-    overridePath(path) {
-        history.replaceState(path);
+    overridePath(state, path) {
+        history.replaceState(state, "", path);
+        window.dispatchEvent(new PopStateEvent('popstate'));
     }
 }
