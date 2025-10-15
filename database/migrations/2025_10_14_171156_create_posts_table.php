@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('group_id');
             $table->String('content');
-            $table->json('films');
+            $table->json('movies');
             $table->timestamps();
         });
     }

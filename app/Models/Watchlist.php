@@ -26,7 +26,7 @@ class Watchlist extends Model
     protected function casts(): array
     {
         return [
-            'films' => 'array'
+            'movies' => 'array'
         ];
     }
 

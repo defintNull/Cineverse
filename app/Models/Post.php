@@ -16,7 +16,7 @@ class Post extends Model
      */
     protected $fillable = [
         'content',
-        'films',
+        'movies',
         'group_id',
     ];
 
@@ -28,7 +28,7 @@ class Post extends Model
     protected function casts(): array
     {
         return [
-            'films' => 'array'
+            'movies' => 'array'
         ];
     }
 
