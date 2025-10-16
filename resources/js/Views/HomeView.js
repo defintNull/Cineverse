@@ -64,7 +64,8 @@ export class HomeView extends View {
         handler_latest_series,
         handler_popular_series,
         movie_click_callback,
-        serie_click_callback
+        serie_click_callback,
+        search_callback
     ) {
         let main = this;
 
@@ -195,6 +196,7 @@ export class HomeView extends View {
          */
         document.getElementById("search_form").addEventListener("submit", function(event) {
             event.preventDefault();
+            search_callback(this.querySelector("input").value);
         })
 
         /**

@@ -41,7 +41,8 @@ export class HomeController extends Controller {
                 this.getOnTheAirSeries.bind(this),
                 this.getPopularSeries.bind(this),
                 this.movieClickHandler.bind(this),
-                this.serieClickHandler.bind(this)
+                this.serieClickHandler.bind(this),
+                this.searchHandler.bind(this)
             );
         }
 
@@ -128,7 +129,7 @@ export class HomeController extends Controller {
             'type': 'movie',
             'id': id
         }
-        this.#router.setNextPath(status, "/detail")
+        this.#router.setNextPath(status, "/detail");
     }
 
     serieClickHandler(id) {
@@ -136,6 +137,13 @@ export class HomeController extends Controller {
             'type': 'serie',
             'id': id
         }
-        this.#router.setNextPath(status, "/detail")
+        this.#router.setNextPath(status, "/detail");
+    }
+
+    searchHandler(search) {
+        let status = {
+            'search': search
+        }
+        this.#router.setNextPath(status, "/archive");
     }
 }
