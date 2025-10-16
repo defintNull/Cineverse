@@ -2,6 +2,7 @@ import { DebugController } from "./Controllers/DebugController";
 import { HomeController } from "./Controllers/HomeController";
 import { LoginController } from "./Controllers/LoginController";
 import { RegistrationController } from "./Controllers/RegistrationController";
+import { ProfileController } from "./Controllers/PersonalProfileController";
 
 /**
  * The class has the job to manage the routing sistem of the spa application
@@ -15,7 +16,8 @@ export class Router {
         "/": HomeController,
         "/debug": DebugController,
         "/login": LoginController,
-        "/register": RegistrationController
+        "/register": RegistrationController,
+        "/profile": ProfileController,
     }
 
     constructor() {
