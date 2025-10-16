@@ -54,12 +54,30 @@ export class HomeView extends View {
 
     }
 
-    addEventListeners() {
+    addEventListeners(latest_movies, pop_movies, latest_series, popular_series) {
+        let main = this;
+        const scrollHandlers = {};
 
-    }
+        function carouselScrollHandler(element_id, callback) {
+            let element = document.getElementById(element_id).querySelector("div");
+            if((element.scrollWidth - element.clientWidth - element.scrollLeft) < 50) {
+                if(element_id == "latest_movies_carousel") {
+                    main.addLatestMoviesCarouselElements(latest_movies);
+                } else if(element_id == "popular_movies_carousel") {
+                    main.addPopularMoviesCarouselElements(pop_movies);
+                } else if(element_id == "on_air_series_carousel") {
+                    main.adOdnAirSeriesCarouselElements(latest_series);
+                } else if(element_id == "popular_series_carousel") {
+                    main.addPopularSeriesCarouselElements(popular_series);
+                }
+                element.removeEventListener("scroll", scrollHandlers[element_id]);
+            }
+        }
 
-    addCarouselScrollEvent() {
-
+        ["latest_movies_carousel", "popular_movies_carousel", "on_air_series_carousel", "popular_series_carousel"].forEach(id => {
+            scrollHandlers[id] = carouselScrollHandler.bind(null, id);
+            document.getElementById(id).querySelector("div").addEventListener("scroll", scrollHandlers[id]);
+        });
     }
 
     addBGImage(src) {
@@ -73,7 +91,7 @@ export class HomeView extends View {
 
         // Carousel
         let carousel_container = document.createElement("div");
-        carousel_container.id = "latest_movie_carousel";
+        carousel_container.id = "latest_movies_carousel";
         carousel_container.classList.add("flex", "flex-col", 'items-left', "w-full", "pl-8", "overflow-x-auto");
 
         // Carousell title
@@ -94,7 +112,7 @@ export class HomeView extends View {
     }
 
     addLatestMoviesCarouselElements(movies) {
-        let carousel = document.getElementById("latest_movie_carousel").querySelector("div");
+        let carousel = document.getElementById("latest_movies_carousel").querySelector("div");
 
         // Creating carousell elements
         [...movies].forEach(movie => {
@@ -113,7 +131,7 @@ export class HomeView extends View {
 
         // Carousel
         let carousel_container = document.createElement("div");
-        carousel_container.id = "popular_movie_carousel";
+        carousel_container.id = "popular_movies_carousel";
         carousel_container.classList.add("flex", "flex-col", 'items-left', "w-full", "pl-8", "overflow-x-auto");
 
         // Carousell title
@@ -134,7 +152,7 @@ export class HomeView extends View {
     }
 
     addPopularMoviesCarouselElements(movies) {
-        let carousel = document.getElementById("popular_movie_carousel").querySelector("div");
+        let carousel = document.getElementById("popular_movies_carousel").querySelector("div");
 
         // Creating carousell elements
         [...movies].forEach(movie => {
