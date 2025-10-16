@@ -27,16 +27,17 @@ export class HomeView extends View {
         // Search Section
         // Search module
         let container = document.createElement("div");
-        container.classList.add("relative", "w-full", "h-60", "bg-red-500");
+        container.classList.add("relative", "w-full", "h-80");
 
         // Background image
-        let img = document.createElement("div");
+        let img = document.createElement("img");
+        img.id = "bg_image";
         img.classList.add("w-full", 'h-full');
 
         // Searchbar for access the movie catalog
         let sbar = this.#searchbar.getComponentElement();
         sbar.id = "search_form";
-        sbar.classList.add("z-10", "absolute", "top-1/2", "left-1/2", "-translate-x-1/2", "-translate-y-1/2", "w-2/5");
+        sbar.classList.add("z-10", "absolute", "top-16", "left-1/2", "-translate-x-1/2", "w-2/5");
         sbar.querySelector("input").name = "search";
 
         // Append elements
@@ -47,7 +48,7 @@ export class HomeView extends View {
         // Carousel section
         // Carousel container
         container = document.createElement("div");
-        container.classList.add("w-full", "flex", "flex-col", "items-left", "pt-8", "gap-y-8");
+        container.classList.add("w-full", "flex", "flex-col", "items-left", "pt-8", "gap-y-16", "pb-16");
         container.id = "carousel_container";
         document.body.querySelector("main").appendChild(container);
 
@@ -57,12 +58,22 @@ export class HomeView extends View {
 
     }
 
-    addLatestMoviesCarousel(movies) {
+    addCarouselScrollEvent() {
+
+    }
+
+    addBGImage(src) {
+        let img = document.getElementById("bg_image");
+        img.src = src;
+    }
+
+    addLatestMoviesCarousel() {
         // Latest Movies
         let container = document.getElementById("carousel_container");
 
         // Carousel
         let carousel_container = document.createElement("div");
+        carousel_container.id = "latest_movie_carousel";
         carousel_container.classList.add("flex", "flex-col", 'items-left', "w-full", "pl-8", "overflow-x-auto");
 
         // Carousell title
@@ -72,7 +83,18 @@ export class HomeView extends View {
 
         // Carousell element container
         let carousel = document.createElement("div");
-        carousel.classList.add("flex", "flex-row", "relative", "h-72", "overflow-x-auto");
+        carousel.classList.add("flex", "flex-row", "gap-x-16", "relative", "py-4", "h-80", "overflow-x-auto", "mt-6", "scrollbar", "scrollbar-thumb-gray-700", "scrollbar-track-gray-900", "dark:scrollbar-thumb-gray-500", "dark:scrollbar-track-gray-800");
+
+        // Appending elements
+        carousel_container.appendChild(title);
+        carousel_container.appendChild(carousel);
+        container.appendChild(carousel_container);
+
+        document.body.querySelector("main").appendChild(container);
+    }
+
+    addLatestMoviesCarouselElements(movies) {
+        let carousel = document.getElementById("latest_movie_carousel").querySelector("div");
 
         // Creating carousell elements
         [...movies].forEach(movie => {
@@ -83,21 +105,15 @@ export class HomeView extends View {
             element.appendChild(img);
             carousel.appendChild(element);
         });
-
-        // Appending elements
-        carousel_container.appendChild(title);
-        carousel_container.appendChild(carousel);
-        container.appendChild(carousel_container);
-
-        document.body.querySelector("main").appendChild(container);
     }
 
-    addPopularMoviesCarousel(movies) {
+    addPopularMoviesCarousel() {
         // Popular Movies
         let container = document.getElementById("carousel_container");
 
         // Carousel
         let carousel_container = document.createElement("div");
+        carousel_container.id = "popular_movie_carousel";
         carousel_container.classList.add("flex", "flex-col", 'items-left', "w-full", "pl-8", "overflow-x-auto");
 
         // Carousell title
@@ -107,7 +123,18 @@ export class HomeView extends View {
 
         // Carousell element container
         let carousel = document.createElement("div");
-        carousel.classList.add("flex", "flex-row", "relative", "h-72", "overflow-x-auto");
+        carousel.classList.add("flex", "flex-row", "relative", "gap-x-16", "py-4", "h-80", "overflow-x-auto", "mt-6", "scrollbar", "scrollbar-thumb-gray-700", "scrollbar-track-gray-900", "dark:scrollbar-thumb-gray-500", "dark:scrollbar-track-gray-800");
+
+        // Appending elements
+        carousel_container.appendChild(title);
+        carousel_container.appendChild(carousel);
+        container.appendChild(carousel_container);
+
+        document.body.querySelector("main").appendChild(container);
+    }
+
+    addPopularMoviesCarouselElements(movies) {
+        let carousel = document.getElementById("popular_movie_carousel").querySelector("div");
 
         // Creating carousell elements
         [...movies].forEach(movie => {
@@ -118,21 +145,15 @@ export class HomeView extends View {
             element.appendChild(img);
             carousel.appendChild(element);
         });
-
-        // Appending elements
-        carousel_container.appendChild(title);
-        carousel_container.appendChild(carousel);
-        container.appendChild(carousel_container);
-
-        document.body.querySelector("main").appendChild(container);
     }
 
-    addOnAirSeriesCarousel(series) {
+    addOnAirSeriesCarousel() {
         // On Air Series
         let container = document.getElementById("carousel_container");
 
         // Carousel
         let carousel_container = document.createElement("div");
+        carousel_container.id = "on_air_series_carousel";
         carousel_container.classList.add("flex", "flex-col", 'items-left', "w-full", "pl-8", "overflow-x-auto");
 
         // Carousell title
@@ -142,17 +163,7 @@ export class HomeView extends View {
 
         // Carousell element container
         let carousel = document.createElement("div");
-        carousel.classList.add("flex", "flex-row", "relative", "h-72", "overflow-x-auto");
-
-        // Creating carousell elements
-        [...series].forEach(serie => {
-            let element = document.createElement("div");
-            element.classList.add("h-full", "min-w-44");
-            let img = document.createElement("img");
-            img.src = MovieDBService.getImageSrc('original', serie.poster_path);
-            element.appendChild(img);
-            carousel.appendChild(element);
-        });
+        carousel.classList.add("flex", "flex-row", "gap-x-16", "relative", "py-4", "h-80", "overflow-x-auto", "mt-6", "scrollbar", "scrollbar-thumb-gray-700", "scrollbar-track-gray-900", "dark:scrollbar-thumb-gray-500", "dark:scrollbar-track-gray-800");
 
         // Appending elements
         carousel_container.appendChild(title);
@@ -162,22 +173,8 @@ export class HomeView extends View {
         document.body.querySelector("main").appendChild(container);
     }
 
-    addPopularSeriesCarousel(series) {
-        // Popular Series
-        let container = document.getElementById("carousel_container");
-
-        // Carousel
-        let carousel_container = document.createElement("div");
-        carousel_container.classList.add("flex", "flex-col", 'items-left', "w-full", "pl-8", "overflow-x-auto");
-
-        // Carousell title
-        let title = document.createElement("p");
-        title.classList.add("text-gray-900", "dark:text-white", "text-2xl", "font-semibold", "pl-4");
-        title.innerText = "Popular Series";
-
-        // Carousell element container
-        let carousel = document.createElement("div");
-        carousel.classList.add("flex", "flex-row", "relative", "h-72", "overflow-x-auto");
+    adOdnAirSeriesCarouselElements(series) {
+        let carousel = document.getElementById("on_air_series_carousel").querySelector("div");
 
         // Creating carousell elements
         [...series].forEach(serie => {
@@ -188,6 +185,25 @@ export class HomeView extends View {
             element.appendChild(img);
             carousel.appendChild(element);
         });
+    }
+
+    addPopularSeriesCarousel(series) {
+        // Popular Series
+        let container = document.getElementById("carousel_container");
+
+        // Carousel
+        let carousel_container = document.createElement("div");
+        carousel_container.id = "popular_series_carousel";
+        carousel_container.classList.add("flex", "flex-col", 'items-left', "w-full", "pl-8", "overflow-x-auto");
+
+        // Carousell title
+        let title = document.createElement("p");
+        title.classList.add("text-gray-900", "dark:text-white", "text-2xl", "font-semibold", "pl-4");
+        title.innerText = "Popular Series";
+
+        // Carousell element container
+        let carousel = document.createElement("div");
+        carousel.classList.add("flex", "flex-row", "gap-x-16", "relative", "py-4", "h-80", "overflow-x-auto", "mt-6", "scrollbar", "scrollbar-thumb-gray-700", "scrollbar-track-gray-900", "dark:scrollbar-thumb-gray-500", "dark:scrollbar-track-gray-800");
 
         // Appending elements
         carousel_container.appendChild(title);
@@ -195,5 +211,19 @@ export class HomeView extends View {
         container.appendChild(carousel_container);
 
         document.body.querySelector("main").appendChild(container);
+    }
+
+    addPopularSeriesCarouselElements(series) {
+        let carousel = document.getElementById("popular_series_carousel").querySelector("div");
+
+        // Creating carousell elements
+        [...series].forEach(serie => {
+            let element = document.createElement("div");
+            element.classList.add("h-full", "min-w-44");
+            let img = document.createElement("img");
+            img.src = MovieDBService.getImageSrc('original', serie.poster_path);
+            element.appendChild(img);
+            carousel.appendChild(element);
+        });
     }
 }

@@ -35,7 +35,7 @@
     </header>
 
     <!-- Contenuto -->
-    <main class="flex flex-col items-center w-full min-h-[calc(100svh-179px)]">
+    <main class="flex flex-col items-center w-full min-h-[calc(100svh-179px)] ">
 
     </main>
 

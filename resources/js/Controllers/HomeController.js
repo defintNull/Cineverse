@@ -29,10 +29,10 @@ export class HomeController extends Controller {
      */
     start() {
         this.#homeView.render();
-        this.#getCarouselElement();
+        this.#populateCarouselElement();
     }
 
-    async #getCarouselElement() {
+    async #populateCarouselElement() {
         let promises = [
             await this.#movieDBApi.getLatestMovies(this.#latestMoviePage),
             await this.#movieDBApi.getPopularMovies(this.#popularMoviePage),
@@ -48,10 +48,18 @@ export class HomeController extends Controller {
                 return await el.json();
             }));
 
-            this.#homeView.addLatestMoviesCarousel(res1.results);
-            this.#homeView.addPopularMoviesCarousel(res2.results);
-            this.#homeView.addOnAirSeriesCarousel(res3.results);
-            this.#homeView.addPopularSeriesCarousel(res4.results);
+            this.#homeView.addBGImage(MovieDBService.getImageSrc('original', res2.results[0].backdrop_path));
+
+            this.#homeView.addLatestMoviesCarousel();
+            this.#homeView.addLatestMoviesCarouselElements(res1.results.slice(0, Math.floor(res1.results.length / 2)))
+            this.#homeView.addPopularMoviesCarousel();
+            this.#homeView.addPopularMoviesCarouselElements(res2.results.slice(0, Math.floor(res2.results.length / 2)));
+            this.#homeView.addOnAirSeriesCarousel();
+            this.#homeView.addOnAirSeriesCarouselElements(res3.results.slice(0, Math.floor(res3.results.length / 2)));
+            this.#homeView.addPopularSeriesCarousel();
+            this.#homeView.addPopularSeriesCarouselElements(res4.results.slice(0, Math.floor(res4.results.length / 2)));
+
+
         } catch(err) {
             console.log(err);
         }
