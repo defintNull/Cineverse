@@ -18,6 +18,7 @@ class Group extends Model
         'description',
         'visibility',
         'user_id',
+        'propic',
     ];
 
     /**
