@@ -1,3 +1,4 @@
+import { Router } from "../router";
 import { MovieDBService } from "../Services/MovieDBService";
 import { HomeView } from "../Views/HomeView";
 import { Controller } from "./Controller";
@@ -8,6 +9,7 @@ import { Controller } from "./Controller";
 export class HomeController extends Controller {
     #homeView;
     #movieDBApi;
+    #router
 
     #latestMoviePage;
     #popularMoviePage;
@@ -18,6 +20,7 @@ export class HomeController extends Controller {
         super();
         this.#homeView = new HomeView();
         this.#movieDBApi = new MovieDBService();
+        this.#router = Router.getInstance();
         this.#latestMoviePage = 1;
         this.#popularMoviePage = 1;
         this.#latestSeriePage = 1;
@@ -31,20 +34,21 @@ export class HomeController extends Controller {
         this.#homeView.render();
         let res = await this.#populateCarouselElement();
         if(res != false) {
-            console.log(this.#movieDBApi);
             this.#homeView.addEventListeners(
                 res[0], res[1], res[2], res[3],
                 this.getLatestMovies.bind(this),
                 this.getPopulartMovies.bind(this),
                 this.getOnTheAirSeries.bind(this),
-                this.getPopularSeries.bind(this)
+                this.getPopularSeries.bind(this),
+                this.movieClickHandler.bind(this),
+                this.serieClickHandler.bind(this)
             );
         }
 
     }
 
-    stop() {
-        document.body.getElementById("main").innerHTML = "";
+    destroy() {
+        document.body.querySelector("main").innerHTML = "";
     }
 
     async #populateCarouselElement() {
@@ -93,7 +97,6 @@ export class HomeController extends Controller {
     }
 
     async getPopulartMovies() {
-        console.log(this.#movieDBApi);
         let res = await this.#movieDBApi.getPopularMovies(this.#popularMoviePage);
         if(res.status == 200) {
             this.#popularMoviePage += 1;
@@ -118,5 +121,21 @@ export class HomeController extends Controller {
             return res.json();
         }
         return false;
+    }
+
+    movieClickHandler(id) {
+        let status = {
+            'type': 'movie',
+            'id': id
+        }
+        this.#router.setNextPath(status, "/detail")
+    }
+
+    serieClickHandler(id) {
+        let status = {
+            'type': 'serie',
+            'id': id
+        }
+        this.#router.setNextPath(status, "/detail")
     }
 }

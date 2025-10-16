@@ -62,7 +62,9 @@ export class HomeView extends View {
         handler_latest_movies,
         handler_popular_movies,
         handler_latest_series,
-        handler_popular_series
+        handler_popular_series,
+        movie_click_callback,
+        serie_click_callback
     ) {
         let main = this;
 
@@ -194,6 +196,26 @@ export class HomeView extends View {
         document.getElementById("search_form").addEventListener("submit", function(event) {
             event.preventDefault();
         })
+
+        /**
+         * Adding click events for movies
+         */
+        document.body.querySelectorAll("div.movie-card").forEach(movie => {
+            movie.addEventListener("click", function() {
+                let id = this.querySelector("input").value;
+                movie_click_callback(id);
+            });
+        });
+
+        /**
+         * Adding click event for series
+         */
+        document.body.querySelectorAll("div.serie-card").forEach(movie => {
+            movie.addEventListener("click", function() {
+                let id = this.querySelector("input").value;
+                serie_click_callback(id);
+            });
+        });
     }
 
     addBGImage(src) {
@@ -241,10 +263,15 @@ export class HomeView extends View {
         // Creating carousell elements
         [...movies].forEach(movie => {
             let element = document.createElement("div");
-            element.classList.add("h-full", "min-w-44");
+            element.classList.add("h-full", "min-w-44", "cursor-pointer", "movie-card");
             let img = document.createElement("img");
             img.src = MovieDBService.getImageSrc('original', movie.poster_path);
             element.appendChild(img);
+            let input = document.createElement("input");
+            input.type = "text",
+            input.value = movie.id;
+            input.hidden = true;
+            element.appendChild(input);
             carousel.insertBefore(element, carousel.lastElementChild);
         });
     }
@@ -290,10 +317,15 @@ export class HomeView extends View {
         // Creating carousell elements
         [...movies].forEach(movie => {
             let element = document.createElement("div");
-            element.classList.add("h-full", "min-w-44");
+            element.classList.add("h-full", "min-w-44", "cursor-pointer", "movie-card");
             let img = document.createElement("img");
             img.src = MovieDBService.getImageSrc('original', movie.poster_path);
             element.appendChild(img);
+            let input = document.createElement("input");
+            input.type = "text",
+            input.value = movie.id;
+            input.hidden = true;
+            element.appendChild(input);
             carousel.insertBefore(element, carousel.lastElementChild);
         });
     }
@@ -339,10 +371,15 @@ export class HomeView extends View {
         // Creating carousell elements
         [...series].forEach(serie => {
             let element = document.createElement("div");
-            element.classList.add("h-full", "min-w-44");
+            element.classList.add("h-full", "min-w-44", "cursor-pointer", "serie-card");
             let img = document.createElement("img");
             img.src = MovieDBService.getImageSrc('original', serie.poster_path);
             element.appendChild(img);
+            let input = document.createElement("input");
+            input.type = "text",
+            input.value = serie.id;
+            input.hidden = true;
+            element.appendChild(input);
             carousel.insertBefore(element, carousel.lastElementChild);
         });
     }
@@ -388,10 +425,15 @@ export class HomeView extends View {
         // Creating carousell elements
         [...series].forEach(serie => {
             let element = document.createElement("div");
-            element.classList.add("h-full", "min-w-44");
+            element.classList.add("h-full", "min-w-44", "cursor-pointer", "serie-card");
             let img = document.createElement("img");
             img.src = MovieDBService.getImageSrc('original', serie.poster_path);
             element.appendChild(img);
+            let input = document.createElement("input");
+            input.type = "text",
+            input.value = serie.id;
+            input.hidden = true;
+            element.appendChild(input);
             carousel.insertBefore(element, carousel.lastElementChild);
         });
     }
