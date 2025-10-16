@@ -43,6 +43,10 @@ export class HomeController extends Controller {
 
     }
 
+    stop() {
+        document.body.getElementById("main").innerHTML = "";
+    }
+
     async #populateCarouselElement() {
         let promises = [
             await this.getLatestMovies(),

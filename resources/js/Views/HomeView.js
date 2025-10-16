@@ -54,10 +54,19 @@ export class HomeView extends View {
 
     }
 
-    addEventListeners(latest_movies, pop_movies, latest_series, popular_series, handler_latest_movies, handler_popular_movies, handler_latest_series, handler_popular_series) {
+    addEventListeners(
+        latest_movies,
+        pop_movies,
+        latest_series,
+        popular_series,
+        handler_latest_movies,
+        handler_popular_movies,
+        handler_latest_series,
+        handler_popular_series
+    ) {
         let main = this;
-        const scrollHandlers = {};
 
+        const scrollHandlers = {};
         function carouselScrollHandler(element_id, callback) {
             let element = document.getElementById(element_id).querySelector("div");
             if((element.scrollWidth - element.clientWidth - element.scrollLeft) < 50) {
@@ -73,7 +82,6 @@ export class HomeView extends View {
                 element.removeEventListener("scroll", scrollHandlers[element_id]);
             }
         }
-
         ["latest_movies_carousel", "popular_movies_carousel", "on_air_series_carousel", "popular_series_carousel"].forEach(id => {
             scrollHandlers[id] = carouselScrollHandler.bind(null, id);
             document.getElementById(id).querySelector("div").addEventListener("scroll", scrollHandlers[id]);
@@ -104,6 +112,7 @@ export class HomeView extends View {
 
             document.getElementById("latest_movies_carousel").querySelector("div").addEventListener("scroll", scrollHandler);
         });
+
         /**
          * Arrow element popular_movies_carousel onmouseout
          */
@@ -128,6 +137,7 @@ export class HomeView extends View {
 
             document.getElementById("popular_movies_carousel").querySelector("div").addEventListener("scroll", scrollHandler);
         });
+
         /**
          * Arrow element on_air_series_carousel onmouseout
          */
@@ -152,6 +162,7 @@ export class HomeView extends View {
 
             document.getElementById("on_air_series_carousel").querySelector("div").addEventListener("scroll", scrollHandler);
         });
+
         /**
          * Arrow element popular_series_carousel onmouseout
          */
@@ -162,7 +173,7 @@ export class HomeView extends View {
             this.classList.remove("bg-gray-800", "cursor-pointer");
         });
         document.getElementById("popular_series_carousel_arrow").addEventListener("click", async function() {
-            let movies = await handler_latest_series();
+            let movies = await handler_popular_series();
             movies = movies.results;
             main.addPopularSeriesCarouselElements(movies.slice(0, Math.floor(movies.length / 2)));
 
@@ -176,6 +187,13 @@ export class HomeView extends View {
 
             document.getElementById("popular_series_carousel").querySelector("div").addEventListener("scroll", scrollHandler);
         });
+
+        /**
+         * Search event
+         */
+        document.getElementById("search_form").addEventListener("submit", function(event) {
+            event.preventDefault();
+        })
     }
 
     addBGImage(src) {
@@ -190,7 +208,7 @@ export class HomeView extends View {
         // Carousel
         let carousel_container = document.createElement("div");
         carousel_container.id = "latest_movies_carousel";
-        carousel_container.classList.add("flex", "flex-col", 'items-left', "w-full", "overflow-x-auto");
+        carousel_container.classList.add("flex", "flex-col", 'items-left', "w-full", "pl-8", "overflow-x-auto");
 
         // Carousell title
         let title = document.createElement("p");
