@@ -17,7 +17,7 @@
     @endif
 </head>
 
-<body class="bg-gradient-to-br from-gray-100 to-gray-200 min-h-screen flex flex-col">
+<body class="bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900 min-h-screen flex flex-col">
 
     <!-- Header -->
     <header class="w-full bg-blue-600 text-white shadow-md">
@@ -35,52 +35,8 @@
     </header>
 
     <!-- Contenuto -->
-    <main class="flex-1 w-full max-w-6xl mx-auto px-4 py-8 space-y-8">
+    <main class="flex flex-col items-center w-full min-h-[calc(100svh-179px)] ">
 
-        {{-- <!-- Barra di ricerca con filtri -->
-        <section class="w-full bg-white rounded-xl shadow-lg p-6 border border-gray-200">
-            <form id="searchForm" class="flex flex-col md:flex-row md:flex-wrap items-center gap-4">
-                <input type="text" name="query" placeholder="🔍 Cerca film..." id="searchBox"
-                    class="flex-1 min-w-0 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-sm" />
-                <select name="genre" id="genreSelect"
-                    class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-sm">
-                    <option value="">Tutti i generi</option>
-                    <option value="azione">Azione</option>
-                    <option value="commedia">Commedia</option>
-                    <option value="dramma">Dramma</option>
-                </select>
-                <select name="year" id="yearSelect"
-                    class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-sm">
-                    <option value="">Tutti gli anni</option>
-                </select>
-            </form>
-        </section>
-
-        <!-- Sezione film popolari -->
-        <section class="w-full bg-white rounded-xl shadow-lg p-6 border border-gray-200">
-            <h2 class="text-2xl font-bold mb-6 text-center text-blue-600">🔥 Film popolari</h2>
-            <div id="popularMoviesSection" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Film popolari caricati da JS -->
-                <div class="bg-gray-50 rounded-lg shadow hover:shadow-lg transition p-4 text-center">
-                    <div class="h-40 bg-gray-200 rounded mb-3"></div>
-                    <h3 class="font-semibold">Titolo Film</h3>
-                    <p class="text-sm text-gray-500">Genere • Anno</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Sezione film da vedere -->
-        <section class="w-full bg-white rounded-xl shadow-lg p-6 border border-gray-200">
-            <h2 class="text-2xl font-bold mb-6 text-center text-blue-600">📌 Da vedere</h2>
-            <div id="watchlistSection" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Film da vedere caricati da JS -->
-                <div class="bg-gray-50 rounded-lg shadow hover:shadow-lg transition p-4 text-center">
-                    <div class="h-40 bg-gray-200 rounded mb-3"></div>
-                    <h3 class="font-semibold">Titolo Film</h3>
-                    <p class="text-sm text-gray-500">Genere • Anno</p>
-                </div>
-            </div>
-        </section> --}}
     </main>
 
     <!-- Footer -->

@@ -1,25 +1,33 @@
 import { Button } from "../Components/Button";
 import { Card } from "../Components/Card";
-import { Input } from "../Components/input";
-import { SPAFetchService } from "../Services/SPAFetchService";
+import { Input } from "../Components/Input";
+import { InputError } from "../Components/InputError";
 import { View } from "./View";
 
+/**
+ * View class that manage the registration page
+ */
 export class RegisterView extends View {
     #card;
     #input;
     #button;
+    #input_error;
 
     constructor() {
         super();
         this.#card = new Card();
         this.#input = new Input();
         this.#button = new Button();
+        this.#input_error = new InputError();
     }
 
+    /**
+     * Render method to construct the elements for the page
+     */
     render() {
         // Card element
         let card = this.#card.getComponentElement();
-        card.classList.add("flex", "flex-col", "items-center", "py-12");
+        card.classList.add("flex", "flex-col", "items-center", "py-12", "w-2/3", "my-12");
         let title = document.createElement("p");
         title.classList.add("font-semibold", "text-4xl", "dark:text-white", "text-gray-900", "pb-8");
         title.innerText = "Registration";
@@ -129,6 +137,13 @@ export class RegisterView extends View {
         input_field.placeholder = "Confirm password...";
         container.appendChild(element);
 
+        //Form Error
+        element = this.#input_error.getComponentElement();
+        element.id = "form_error";
+        element.classList.add("pt-6", "hidden");
+        element.innerHTML = "Ops! Something whent wrong!";
+        container.appendChild(element);
+
         //Button
         let div_button = document.createElement("div");
         div_button.classList.add("flex", "flex-col", "items-end", "pt-4")
@@ -140,19 +155,50 @@ export class RegisterView extends View {
 
         //Appending all
         document.body.querySelector("main").appendChild(card);
-
-        //Adding event listeners
-        this.#addEventListeners()
     }
 
-    async #addEventListeners() {
-        let sap_fetch = await SPAFetchService.getInstance();
-
-        document.getElementById("registration_form").addEventListener("submit", async function(event) {
-            event.preventDefault();
-            let formData = new FormData(this);
-            let res = await sap_fetch.POSTFetch('/spa/register', formData);
-            console.log(res);
+    /**
+     * Reset all the error fields of the form
+     */
+    resetErrorFields() {
+        // Resetting error fields
+        document.querySelectorAll('p.error-field').forEach(el => {
+            el.innerHTML = "";
         });
+        document.getElementById("form_error").classList.add("hidden");
+        document.getElementById("form_error").innerHTML = "Ops! Something whent wrong!";
+    }
+
+    /**
+     * Set the error message for the global error field
+     */
+    globalErrorField(error) {
+        document.getElementById("form_error").innerHTML = error;
+        document.getElementById("form_error").classList.remove("hidden");
+    }
+
+    /**
+     * Set the error message for a given error field
+     */
+    inputErrorField(id, error) {
+        let error_field = document.getElementById(id);
+        if(error_field != null) {
+            error_field = error_field.nextElementSibling;
+            error_field.innerHTML = error;
+        }
+    }
+
+    /**
+     * Reset the view to its default settings
+     */
+    resetView() {
+        document.body.querySelector("main").innerHTML = "";
+    }
+
+    /**
+     * Add the event listeners of the page, add the submit event listener for the registration form
+     */
+    async addEventListeners(handler1) {
+        document.getElementById("registration_form").addEventListener("submit", handler1);
     }
 }

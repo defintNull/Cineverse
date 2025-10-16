@@ -74,7 +74,7 @@ export class SPAFetchService {
         let config = JSON.parse(JSON.stringify(this.#configPOST));
         config.body = payload;
         return fetch(path, config).then(response => {
-            return response.json();
+            return response;
         });
     }
 
@@ -89,7 +89,7 @@ export class SPAFetchService {
         let uri = path + encodeURIComponent(payload);
 
         return fetch(uri, this.#configGET).then(response => {
-            return response.json();
+            return response;
         });
     }
 }

@@ -1,76 +1,115 @@
 import { View } from "./View.js";
-import { SPAFetchService } from "../Services/SPAFetchService.js";
+import { Input } from "../Components/Input.js";
+import { Button } from "../Components/Button.js";
+import { Card } from "../Components/Card.js";
 
+/**
+ * View class that manage the login page
+ */
 export class LoginView extends View {
-    createFormLogin() {
+    /**
+     * Render method to print the necessary elements
+     */
+    render() {
+        // Div
+        let container = document.createElement("div");
+        container.classList.add("flex", "flex-col", "items-center", "justify-center", "h-full");
+
+        // Card
+        const card = new Card();
+        const cardElement = card.getComponentElement();
+        cardElement.classList.add("flex", "flex-col", "items-center", "py-8", "px-16", "my-12");
+
         // Crea il contenitore principale
         const loginContainer = document.createElement('form');
         loginContainer.id = 'login-section';
         loginContainer.method = 'POST';
-        //   loginContainer.style.border = '1px solid #ccc';
-        //   loginContainer.style.padding = '20px';
-        //   loginContainer.style.width = '300px';
-        //   loginContainer.style.margin = 'auto';
-        //   loginContainer.style.backgroundColor = '#f0f0f0';
+        loginContainer.className = "max-w-sm mx-auto";
 
-        // Titolo
-        const titolo = document.createElement('h2');
-        titolo.textContent = 'Login';
-        loginContainer.appendChild(titolo);
+        // Subtitle
+        const subtitle = document.createElement("p");
+        subtitle.classList.add("font-semibold", "text-2xl", "dark:text-white", "text-gray-900", "border-b", "dark:border-white", "border-gray-900", "pt-4");
+        subtitle.innerText = "Log-In";
+        loginContainer.appendChild(subtitle);
+        loginContainer.appendChild(document.createElement("br"));
 
-        // Campo username
-        const usernameLabel = document.createElement('label');
-        usernameLabel.textContent = 'Username:';
-        usernameLabel.htmlFor = 'username';
-        loginContainer.appendChild(usernameLabel);
+        const divUsername = document.createElement('div');
+        divUsername.className = "mb-6";
 
-        const usernameInput = document.createElement('input');
-        usernameInput.type = 'text';
-        usernameInput.id = 'username';
-        usernameInput.name = 'username';
-        usernameInput.required = true;
-        usernameInput.style.display = 'block';
-        usernameInput.style.marginBottom = '10px';
-        loginContainer.appendChild(usernameInput);
+        const usernameInput = new Input();
+        const usernameElement = usernameInput.getComponentElement();
+        usernameElement.querySelector('label').textContent = 'Username:';
+        usernameElement.querySelector('label').htmlFor = 'username';
+        usernameElement.querySelector('input').type = 'text';
+        usernameElement.querySelector('input').id = 'username';
+        usernameElement.querySelector('input').name = 'username';
+        usernameElement.querySelector('input').placeholder = 'Inserisci il tuo username';
+        divUsername.appendChild(usernameElement);
+        loginContainer.appendChild(divUsername);
 
-        // Campo password
-        const passwordLabel = document.createElement('label');
-        passwordLabel.textContent = 'Password:';
-        passwordLabel.htmlFor = 'password';
-        loginContainer.appendChild(passwordLabel);
+        const divPassword = document.createElement('div');
+        divPassword.className = "mb-6";
 
-        const passwordInput = document.createElement('input');
-        passwordInput.type = 'password';
-        passwordInput.id = 'password';
-        passwordInput.name = 'password';
-        passwordInput.required = true;
-        passwordInput.style.display = 'block';
-        //   passwordInput.style.marginBottom = '10px';
-        loginContainer.appendChild(passwordInput);
+        const passwordInput = new Input();
+        const passwordElement = passwordInput.getComponentElement();
+        passwordElement.querySelector('label').textContent = 'Password:';
+        passwordElement.querySelector('label').htmlFor = 'password';
+        passwordElement.querySelector('input').type = 'password';
+        passwordElement.querySelector('input').id = 'password';
+        passwordElement.querySelector('input').name = 'password';
+        passwordElement.querySelector('input').placeholder = 'Inserisci la tua password';
+        divPassword.appendChild(passwordElement);
+        loginContainer.appendChild(divPassword);
 
         // Bottone di invio
-        const loginButton = document.createElement('button');
-        loginButton.textContent = 'Accedi';
-        loginButton.onclick = function () {
-            const username = usernameInput.value;
-            const password = passwordInput.value;
-            console.log('Username:', username);
-            console.log('Password:', password);
-            // Qui puoi aggiungere la logica di autenticazione
-        };
-        loginContainer.appendChild(loginButton);
+
+        let divButton = document.createElement("div");
+        divButton.classList.add("flex", "flex-col", "items-end", "pt-4");
+
+
+        const loginButtonComponent = new Button();
+        const loginButtonElement = loginButtonComponent.getComponentElement();
+        loginButtonElement.textContent = 'Accedi';
+        loginButtonElement.type = 'submit';
+        loginButtonElement.className = "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800";
+
 
         // Aggiungi la sezione al body
-        document.body.querySelector('main').appendChild(loginContainer);
+        divButton.appendChild(loginButtonElement);
+        loginContainer.appendChild(divButton);
+        cardElement.appendChild(loginContainer);
+        container.appendChild(cardElement)
+        document.body.querySelector('main').appendChild(container);
+    }
 
-        loginContainer.addEventListener('submit', async function (event) {
-            event.preventDefault();
-            let prova = await SPAFetchService.getInstance();
-            console.log(prova);
-            let formData = new FormData(loginContainer);
-            prova.POSTFetch('/login', formData).then(response => {
-                console.log(response);
-            })
-        });
+    /**
+     * Print error for the form element
+     */
+    gestisciErrori(error) {
+        let passwordElement = document.getElementById("password");
+        passwordElement.nextElementSibling.innerHTML = error;
+    }
+
+    /**
+     * Reset the view to it's default configuration
+     */
+    resetView() {
+        document.body.querySelector('main').innerHTML = '';
+    }
+
+    /**
+     * Set the event listener for the page setting the form event listener for submit
+     */
+    addEventListeners(handler1) {
+        let form = document.getElementById("login-section");
+        form.addEventListener("submit", handler1);
+    }
+
+    /**
+     * Reset the form error field
+     */
+    resetErrorFields() {
+        let passwordElement = document.getElementById("password");
+        passwordElement.nextElementSibling.innerHTML = '';
     }
 }
