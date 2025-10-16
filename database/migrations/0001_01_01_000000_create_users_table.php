@@ -25,6 +25,7 @@ return new class extends Migration
             $table->boolean('watchlistpriv'); # 0 = pubbliche 1 = private
             $table->boolean('theme')->default(0); # 0 = dark 1 = white
             $table->json('preferredgenres');
+            $table->string('propic')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
