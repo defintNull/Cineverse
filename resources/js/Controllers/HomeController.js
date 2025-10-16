@@ -31,27 +31,31 @@ export class HomeController extends Controller {
         this.#homeView.render();
         let res = await this.#populateCarouselElement();
         if(res != false) {
-            this.#homeView.addEventListeners(res[0], res[1], res[2], res[3]);
+            console.log(this.#movieDBApi);
+            this.#homeView.addEventListeners(
+                res[0], res[1], res[2], res[3],
+                this.getLatestMovies.bind(this),
+                this.getPopulartMovies.bind(this),
+                this.getOnTheAirSeries.bind(this),
+                this.getPopularSeries.bind(this)
+            );
         }
 
     }
 
     async #populateCarouselElement() {
         let promises = [
-            await this.#movieDBApi.getLatestMovies(this.#latestMoviePage),
-            await this.#movieDBApi.getPopularMovies(this.#popularMoviePage),
-            await this.#movieDBApi.getOnTheAirSeries(this.#latestSeriePage),
-            await this.#movieDBApi.getPopularSeries(this.#popularMoviePage),
+            await this.getLatestMovies(),
+            await this.getPopulartMovies(),
+            await this.getOnTheAirSeries(),
+            await this.getPopularSeries(),
         ]
 
         let result = null;
         try {
-            result = await Promise.all(promises);
-            // Creating carousells
-            let [res1, res2, res3, res4] = await Promise.all(result.map( async el => {
-                return await el.json();
-            }));
+            let [res1, res2, res3, res4] = await Promise.all(promises);
 
+            // Creating carousells
             this.#homeView.addBGImage(MovieDBService.getImageSrc('original', res2.results[0].backdrop_path));
 
             this.#homeView.addLatestMoviesCarousel();
@@ -85,6 +89,7 @@ export class HomeController extends Controller {
     }
 
     async getPopulartMovies() {
+        console.log(this.#movieDBApi);
         let res = await this.#movieDBApi.getPopularMovies(this.#popularMoviePage);
         if(res.status == 200) {
             this.#popularMoviePage += 1;
