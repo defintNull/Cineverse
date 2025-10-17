@@ -94,8 +94,10 @@ export class DetailView extends View {
         time.innerText = this.#element.getDuration() + " min";
 
         date_detail.appendChild(release_date);
-        date_detail.appendChild(interrupt);
-        date_detail.appendChild(time);
+        if (this.#element.getDuration.length != 0){
+            date_detail.appendChild(interrupt);
+            date_detail.appendChild(time);
+        }
 
 
         // Score and add to whatchlist

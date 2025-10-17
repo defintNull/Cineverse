@@ -35,6 +35,7 @@ export class Serie extends MovieSerieInterface {
 
     getDuration() {
         return this.#serieJson.episode_run_time;
+
     }
 
     getScore() {
