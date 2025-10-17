@@ -31,4 +31,10 @@ export class Serie extends MovieSerieInterface {
     getTrama() {
         return this.#serieJson.overview;
     }
+
+    getGenres() {
+        return this.#serieJson.genres.map(el => {
+            return el.name;
+        });
+    }
 }
