@@ -22,15 +22,17 @@
     <!-- Header -->
     <header class="w-full bg-blue-600 text-white shadow-md">
         <div class="max-w-7xl mx-auto flex justify-between items-center px-6 py-4">
-            <h1 class="text-2xl font-bold tracking-wide">🎬 Cineverse</h1>
-            <a href="#" class="flex items-center space-x-2 group">
+            <div id="home" class="flex flex-col items-center cursor-pointer">
+                <h1 class="text-2xl font-bold tracking-wide">🎬 Cineverse</h1>
+            </div>
+            <div class="flex items-center space-x-2 group">
                 <span class="sr-only">Profilo</span>
                 <svg class="w-10 h-10 rounded-full border-2 border-white group-hover:border-yellow-300 bg-white text-blue-600 transition"
                     fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <circle cx="12" cy="8" r="4" />
                     <path d="M4 20c0-4 4-6 8-6s8 2 8 6" />
                 </svg>
-            </a>
+            </div>
         </div>
     </header>
 
@@ -45,4 +47,5 @@
     </footer>
 
 </body>
+
 </html>
