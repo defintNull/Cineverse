@@ -148,7 +148,7 @@ export class DetailView extends View {
 
         if(this.#element instanceof Movie) {
 
-        } else if(his.#element instanceof Serie) {
+        } else if(this.#element instanceof Serie) {
 
         }
 
