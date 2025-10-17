@@ -60,7 +60,7 @@ export class ProfileView extends View {
         let themeSelect = document.createElement("select");
         themeSelect.id = "theme_input";
         themeSelect.name = "theme";
-        themeSelect.classList.add("bg-white", "border", "border-gray-300", "text-gray-900", "text-sm", "rounded-lg", "w-full", "p-2.5");
+        themeSelect.classList.add("bg-white", "border", "border-gray-300", "text-gray-900", "text-sm", "rounded-lg", "w-full", "p-2.5", "dark:bg-gray-700", "dark:border-gray-600", "dark:placeholder-gray-400", "dark:text-white");
         themeSelect.innerHTML = `
             <option value="chiaro">Chiaro</option>
             <option value="scuro">Scuro</option>
@@ -68,22 +68,22 @@ export class ProfileView extends View {
         form.appendChild(themeSelect);
 
         // Generi preferiti
-        let genreLabel = document.createElement("label");
-        genreLabel.classList.add("text-sm", "font-medium", "text-gray-900", "dark:text-white");
-        genreLabel.innerText = "Generi preferiti";
-        form.appendChild(genreLabel);
+        // let genreLabel = document.createElement("label");
+        // genreLabel.classList.add("text-sm", "font-medium", "text-gray-900", "dark:text-white");
+        // genreLabel.innerText = "Generi preferiti";
+        // form.appendChild(genreLabel);
 
-        let genreContainer = document.createElement("div");
-        genreContainer.classList.add("grid", "grid-cols-2", "gap-2");
+        // let genreContainer = document.createElement("div");
+        // genreContainer.classList.add("grid", "grid-cols-2", "gap-2");
 
-        const genres = ["Azione", "Commedia", "Drammatico", "Fantascienza", "Horror", "Romantico"];
-        genres.forEach(genre => {
-            let wrapper = document.createElement("label");
-            wrapper.classList.add("flex", "items-center");
-            wrapper.innerHTML = `<input type="checkbox" value="${genre.toLowerCase()}" name="genres" class="mr-2" /> ${genre}`;
-            genreContainer.appendChild(wrapper);
-        });
-        form.appendChild(genreContainer);
+        // const genres = ["Azione", "Commedia", "Drammatico", "Fantascienza", "Horror", "Romantico"];
+        // genres.forEach(genre => {
+        //     let wrapper = document.createElement("label");
+        //     wrapper.classList.add("flex", "items-center");
+        //     wrapper.innerHTML = `<input type="checkbox" value="${genre.toLowerCase()}" name="genres" class="mr-2" /> ${genre}`;
+        //     genreContainer.appendChild(wrapper);
+        // });
+        // form.appendChild(genreContainer);
 
         // Error
         let error = this.#input_error.getComponentElement();
