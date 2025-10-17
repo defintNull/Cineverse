@@ -27,12 +27,34 @@ export class HomeView extends View {
         // Search Section
         // Search module
         let container = document.createElement("div");
-        container.classList.add("relative", "w-full", "h-80");
+        container.classList.add("relative", "w-full", "h-80","overflow-hidden");
+
+        // Left gradient
+        let gradient = document.createElement("div");
+        gradient.classList.add("absolute", "left-0", "top-0", "w-1/4", "h-full", "bg-gray-800");
+
+        // Image wrapper
+        let imgWrapper = document.createElement("div");
+        imgWrapper.classList.add("absolute", "right-0", "top-0", "w-3/4", "h-full");
+
+        // Gradient Element
+        let gradientOverlay = document.createElement("div");
+        gradientOverlay.classList.add(
+        "absolute",
+        "left-0",
+        "top-0",
+        "w-1/3",
+        "h-full",
+        "bg-gradient-to-l",   // gradient da destra verso sinistra
+        "from-transparent",   // parte destra trasparente
+        "to-gray-800",           // parte sinistra sfumata su bianco (o cambia colore)
+        "pointer-events-none" // il gradient non blocca l'interazione
+        );
 
         // Background image
         let img = document.createElement("img");
         img.id = "bg_image";
-        img.classList.add("w-full", 'h-full');
+        img.classList.add("w-full", 'h-full', "object-cover");
 
         // Searchbar for access the movie catalog
         let sbar = this.#searchbar.getComponentElement();
@@ -41,14 +63,17 @@ export class HomeView extends View {
         sbar.querySelector("input").name = "search";
 
         // Append elements
-        container.appendChild(img);
+        imgWrapper.appendChild(img);
+        imgWrapper.appendChild(gradientOverlay);
+        container.appendChild(gradient);
+        container.appendChild(imgWrapper);
         container.appendChild(sbar);
         document.body.querySelector("main").appendChild(container);
 
         // Carousel section
         // Carousel container
         container = document.createElement("div");
-        container.classList.add("w-full", "flex", "flex-col", "items-left", "pt-8", "gap-y-16", "pb-16");
+        container.classList.add("w-full", "flex", "flex-col", "items-left", "pt-8", "gap-y-16", "pb-16", "bg-gradient-to-br", "dark:from-gray-800", "dark:to-gray-900");
         container.id = "carousel_container";
         document.body.querySelector("main").appendChild(container);
 
@@ -267,7 +292,7 @@ export class HomeView extends View {
             let element = document.createElement("div");
             element.classList.add("h-full", "min-w-44", "cursor-pointer", "movie-card");
             let img = document.createElement("img");
-            img.src = MovieDBService.getImageSrc('original', movie.poster_path);
+            img.src = MovieDBService.getImageSrc('w780', movie.poster_path);
             element.appendChild(img);
             let input = document.createElement("input");
             input.type = "text",
@@ -321,7 +346,7 @@ export class HomeView extends View {
             let element = document.createElement("div");
             element.classList.add("h-full", "min-w-44", "cursor-pointer", "movie-card");
             let img = document.createElement("img");
-            img.src = MovieDBService.getImageSrc('original', movie.poster_path);
+            img.src = MovieDBService.getImageSrc('w780', movie.poster_path);
             element.appendChild(img);
             let input = document.createElement("input");
             input.type = "text",
@@ -375,7 +400,7 @@ export class HomeView extends View {
             let element = document.createElement("div");
             element.classList.add("h-full", "min-w-44", "cursor-pointer", "serie-card");
             let img = document.createElement("img");
-            img.src = MovieDBService.getImageSrc('original', serie.poster_path);
+            img.src = MovieDBService.getImageSrc('w780', serie.poster_path);
             element.appendChild(img);
             let input = document.createElement("input");
             input.type = "text",
@@ -429,7 +454,7 @@ export class HomeView extends View {
             let element = document.createElement("div");
             element.classList.add("h-full", "min-w-44", "cursor-pointer", "serie-card");
             let img = document.createElement("img");
-            img.src = MovieDBService.getImageSrc('original', serie.poster_path);
+            img.src = MovieDBService.getImageSrc('w780', serie.poster_path);
             element.appendChild(img);
             let input = document.createElement("input");
             input.type = "text",
