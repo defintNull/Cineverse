@@ -2,6 +2,7 @@ import { DebugController } from "./Controllers/DebugController";
 import { HomeController } from "./Controllers/HomeController";
 import { LoginController } from "./Controllers/LoginController";
 import { RegistrationController } from "./Controllers/RegistrationController";
+import { DetailController } from "./Controllers/DetailController";
 import { ProfileController } from "./Controllers/PersonalProfileController";
 
 /**
@@ -17,6 +18,7 @@ export class Router {
         "/debug": DebugController,
         "/login": LoginController,
         "/register": RegistrationController,
+        "/detail": DetailController,
         "/profile": ProfileController,
     }
 
@@ -68,5 +70,12 @@ export class Router {
     overridePath(state, path) {
         history.replaceState(state, "", path);
         window.dispatchEvent(new PopStateEvent('popstate'));
+    }
+
+    /**
+     * Retrieve the status of the current route
+     */
+    getState() {
+        return history.state;
     }
 }

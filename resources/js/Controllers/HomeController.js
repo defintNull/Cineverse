@@ -19,7 +19,7 @@ export class HomeController extends Controller {
     constructor() {
         super();
         this.#homeView = new HomeView();
-        this.#movieDBApi = new MovieDBService();
+        this.#movieDBApi = MovieDBService.getInstance();
         this.#router = Router.getInstance();
         this.#latestMoviePage = 1;
         this.#popularMoviePage = 1;

@@ -46,6 +46,22 @@ export class MovieDBService {
     }
 
     /**
+     * Get the movie using its id
+     */
+    getMovie(id) {
+        let query = "/movie/" + id;
+        return this.#makeFetch(query);
+    }
+
+    /**
+     * Get the serie using its id
+     */
+    getSerie(id) {
+        let query = "/tv/" + id;
+        return this.#makeFetch(query);
+    }
+
+    /**
      * Get the upcoming movies
      */
     async getLatestMovies(page) {
