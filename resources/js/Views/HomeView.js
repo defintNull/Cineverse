@@ -266,7 +266,7 @@ export class HomeView extends View {
 
         // Carousell element container
         let carousel = document.createElement("div");
-        carousel.classList.add("flex", "flex-row", "items-center", "pr-8", "gap-x-16", "relative", "py-4", "h-80", "overflow-x-auto", "mt-6", "scrollbar", "scrollbar-thumb-gray-700", "scrollbar-track-gray-900", "dark:scrollbar-thumb-gray-500", "dark:scrollbar-track-gray-800");
+        carousel.classList.add("flex", "flex-row", "items-center", "pr-8", "gap-x-16", "relative", "py-4", "h-80", "overflow-x-auto", "mt-6", "scrollbar", "scrollbar-thumb-gray-400", "scrollbar-track-gray-100", "dark:scrollbar-thumb-gray-500", "dark:scrollbar-track-gray-800");
 
         // Arrow Right
         let cont = document.createElement("div");
@@ -319,7 +319,7 @@ export class HomeView extends View {
 
         // Carousell element container
         let carousel = document.createElement("div");
-        carousel.classList.add("flex", "flex-row", "items-center", "relative", "pr-8", "gap-x-16", "py-4", "h-80", "overflow-x-auto", "mt-6", "scrollbar", "scrollbar-thumb-gray-700", "scrollbar-track-gray-900", "dark:scrollbar-thumb-gray-500", "dark:scrollbar-track-gray-800");
+        carousel.classList.add("flex", "flex-row", "items-center", "relative", "pr-8", "gap-x-16", "py-4", "h-80", "overflow-x-auto", "mt-6", "scrollbar", "scrollbar-thumb-gray-400", "scrollbar-track-gray-100", "dark:scrollbar-thumb-gray-500", "dark:scrollbar-track-gray-800");
 
         // Arrow Right
         let cont = document.createElement("div");
@@ -373,7 +373,7 @@ export class HomeView extends View {
 
         // Carousell element container
         let carousel = document.createElement("div");
-        carousel.classList.add("flex", "flex-row", "items-center", "pr-8", "gap-x-16", "relative", "py-4", "h-80", "overflow-x-auto", "mt-6", "scrollbar", "scrollbar-thumb-gray-700", "scrollbar-track-gray-900", "dark:scrollbar-thumb-gray-500", "dark:scrollbar-track-gray-800");
+        carousel.classList.add("flex", "flex-row", "items-center", "pr-8", "gap-x-16", "relative", "py-4", "h-80", "overflow-x-auto", "mt-6", "scrollbar", "scrollbar-thumb-gray-400", "scrollbar-track-gray-100", "dark:scrollbar-thumb-gray-500", "dark:scrollbar-track-gray-800");
 
         // Arrow Right
         let cont = document.createElement("div");
@@ -427,7 +427,7 @@ export class HomeView extends View {
 
         // Carousell element container
         let carousel = document.createElement("div");
-        carousel.classList.add("flex", "flex-row", "items-center", "pr-8", "gap-x-16", "relative", "py-4", "h-80", "overflow-x-auto", "mt-6", "scrollbar", "scrollbar-thumb-gray-700", "scrollbar-track-gray-900", "dark:scrollbar-thumb-gray-500", "dark:scrollbar-track-gray-800");
+        carousel.classList.add("flex", "flex-row", "items-center", "pr-8", "gap-x-16", "relative", "py-4", "h-80", "overflow-x-auto", "mt-6", "scrollbar", "scrollbar-thumb-gray-400", "scrollbar-track-gray-400", "dark:scrollbar-thumb-gray-500", "dark:scrollbar-track-gray-800");
 
         // Arrow Right
         let cont = document.createElement("div");

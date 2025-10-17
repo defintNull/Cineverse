@@ -17,7 +17,20 @@ export class Serie extends MovieSerieInterface {
     }
 
     getReleaseDate() {
-        return this.#serieJson.first_air_date;
+        // return this.#serieJson.first_air_date;
+        const raw = this.#serieJson.first_air_date;
+        if (!raw) return "";
+        const pad = s => String(s).padStart(2, "0");
+        if (typeof raw === "string" && raw.includes("-")) {
+            const parts = raw.split("-");
+            if (parts.length === 3) {
+                const [yyyy, mm, dd] = parts;
+                return `${pad(dd)}-${pad(mm)}-${yyyy}`;
+            }
+        }
+        const d = new Date(raw);
+        if (isNaN(d)) return String(raw);
+        return `${pad(d.getDate())}-${pad(d.getMonth() + 1)}-${d.getFullYear()}`;
     }
 
     getDuration() {

@@ -17,7 +17,20 @@ export class Movie extends MovieSerieInterface {
     }
 
     getReleaseDate() {
-        return this.#movieJson.release_date;
+        // return this.#movieJson.release_date;
+        const raw = this.#movieJson.release_date;
+        if (!raw) return "";
+        const pad = s => String(s).padStart(2, "0");
+        if (typeof raw === "string" && raw.includes("-")) {
+            const parts = raw.split("-");
+            if (parts.length === 3) {
+                const [yyyy, mm, dd] = parts;
+                return `${pad(dd)}-${pad(mm)}-${yyyy}`;
+            }
+        }
+        const d = new Date(raw);
+        if (isNaN(d)) return String(raw);
+        return `${pad(d.getDate())}-${pad(d.getMonth() + 1)}-${d.getFullYear()}`;
     }
 
     getDuration() {
