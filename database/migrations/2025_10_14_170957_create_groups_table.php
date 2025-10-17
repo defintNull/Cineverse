@@ -17,6 +17,7 @@ return new class extends Migration
             $table->String('name');
             $table->String('description');
             $table->enum('visibility', ['public', 'private']);
+            $table->string('propic')->nullable();
             $table->timestamps();
         });
 
@@ -24,7 +25,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id');
             $table->foreignId('group_id');
-            $table->string('propic')->nullable();
             $table->timestamps();
         });
     }
