@@ -31,11 +31,11 @@ export class HomeView extends View {
 
         // Left gradient
         let gradient = document.createElement("div");
-        gradient.classList.add("absolute", "left-0", "top-0", "w-1/4", "h-full", "bg-gray-800");
+        gradient.classList.add("absolute", "left-0", "top-0", "w-1/5", "h-full", "bg-gray-800");
 
         // Image wrapper
         let imgWrapper = document.createElement("div");
-        imgWrapper.classList.add("absolute", "right-0", "top-0", "w-3/4", "h-full");
+        imgWrapper.classList.add("absolute", "right-0", "top-0", "w-4/5", "h-full");
 
         // Gradient Element
         let gradientOverlay = document.createElement("div");
