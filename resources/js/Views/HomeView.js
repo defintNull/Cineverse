@@ -59,7 +59,7 @@ export class HomeView extends View {
         // Searchbar for access the movie catalog
         let sbar = this.#searchbar.getComponentElement();
         sbar.id = "search_form";
-        sbar.classList.add("z-10", "absolute", "top-16", "left-1/2", "-translate-x-1/2", "w-2/5");
+        sbar.classList.add("z-10", "absolute", "top-1/2", "left-20", "w-1/3", "-translate-y-1/2", "opacity-90");
         sbar.querySelector("input").name = "search";
 
         // Append elements
