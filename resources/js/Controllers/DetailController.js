@@ -21,20 +21,24 @@ export class DetailController extends Controller {
     }
 
     async start() {
-        if(this.#state.type && this.#state.type == "movie") {
+        if (this.#state.type && this.#state.type == "movie") {
             let response = await this.#movieDB.getMovie(this.#state.id);
-            if(response.status == 200) {
+            if (response.status == 200) {
                 this.#element = await response.json();
                 this.#detailView.render(new Movie(this.#element));
             }
-        } else if(this.#state.type && this.#state.type == "serie") {
+        } else if (this.#state.type && this.#state.type == "serie") {
             let response = await this.#movieDB.getSerie(this.#state.id);
-            if(response.status == 200) {
+            if (response.status == 200) {
                 this.#element = await response.json();
                 this.#detailView.render(new Serie(this.#element));
             }
         } else {
             this.#router.overridePath({}, "/");
         }
+    }
+
+    destroy() {
+        document.body.querySelector("main").innerHTML = "";
     }
 }

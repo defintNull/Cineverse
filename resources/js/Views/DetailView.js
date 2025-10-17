@@ -154,9 +154,6 @@ export class DetailView extends View {
 
     }
 
-    destroy(){
-        document.body.querySelector("main").innerHTML = "";
-    }
 
     addEventListeners() {
 
