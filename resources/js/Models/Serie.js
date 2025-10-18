@@ -51,4 +51,40 @@ export class Serie extends MovieSerieInterface {
             return el.name;
         });
     }
+
+    getTitle() {
+        return this.#serieJson.name;
+    }
+
+    getStatus() {
+        return this.#serieJson.status;
+    }
+
+    getAdult() {
+        return this.#serieJson.adult;
+    }
+
+    getLanguage() {
+        return this.#serieJson.original_language;
+    }
+
+    getProductionCompanies() {
+        return this.#serieJson.production_companies.map(el => el.name);
+    }
+
+    getCreator() {
+        return this.#serieJson.created_by.map(el => el.name);
+    }
+
+    getNumberOfSeasons() {
+        return this.#serieJson.number_of_seasons;
+    }
+
+    getNumberOfEpisodes() {
+        return this.#serieJson.number_of_episodes;
+    }
+
+    getSeasons() {
+        return this.#serieJson.seasons;
+    }
 }

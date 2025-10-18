@@ -27,12 +27,14 @@ export class DetailController extends Controller {
                 this.#element = await response.json();
                 this.#detailView.render(new Movie(this.#element));
             }
+            this.#detailView.addEventListeners();
         } else if (this.#state.type && this.#state.type == "serie") {
             let response = await this.#movieDB.getSerie(this.#state.id);
             if (response.status == 200) {
                 this.#element = await response.json();
                 this.#detailView.render(new Serie(this.#element));
             }
+            this.#detailView.addEventListeners();
         } else {
             this.#router.overridePath({}, "/");
         }

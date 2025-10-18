@@ -18,4 +18,14 @@ export class MovieSerieInterface extends Model {
     getTrama() {}
 
     getGenres() {}
+
+    getTitle() {}
+
+    getStatus() {}
+
+    getAdult() {}
+
+    getLanguage() {}
+
+    getProductionCompanies() {}
 }

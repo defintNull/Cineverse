@@ -50,4 +50,33 @@ export class Movie extends MovieSerieInterface {
             return el.name;
         });
     }
+
+    getTitle() {
+        return this.#movieJson.title;
+    }
+
+    getStatus() {
+        return this.#movieJson.status;
+    }
+
+    getAdult() {
+        return this.#movieJson.adult;
+    }
+
+    getLanguage() {
+        return this.#movieJson.original_language;
+    }
+
+    getBudget() {
+        return this.#movieJson.budget;
+    }
+
+    getRevenue() {
+        return this.#movieJson.revenue;
+    }
+
+    getProductionCompanies() {
+        return this.#movieJson.production_companies.map(el => el.name);
+    }
+
 }
