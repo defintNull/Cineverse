@@ -8,6 +8,10 @@ export class Movie extends MovieSerieInterface {
         this.#movieJson = movieJson;
     }
 
+    getId() {
+        return this.#movieJson.id;
+    }
+
     getBGImageSrc() {
         return this.#movieJson.backdrop_path;
     }

@@ -8,6 +8,10 @@ export class Serie extends MovieSerieInterface {
         this.#serieJson = serieJson;
     }
 
+    getId() {
+        return this.#serieJson.id;
+    }
+
     getBGImageSrc() {
         return this.#serieJson.backdrop_path;
     }

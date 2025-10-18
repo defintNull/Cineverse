@@ -5,6 +5,8 @@ export class MovieSerieInterface extends Model {
         super();
     }
 
+    getId() {}
+
     getBGImageSrc() {}
 
     getPosterImageSrc() {}

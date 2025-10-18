@@ -225,23 +225,29 @@ export class HomeView extends View {
         })
 
         /**
-         * Adding click events for movies
+         * Adding click event listeners for movies and series cards
          */
-        document.body.querySelectorAll("div.movie-card").forEach(movie => {
-            movie.addEventListener("click", function() {
-                let id = this.querySelector("input").value;
-                movie_click_callback(id);
-            });
-        });
+        document.addEventListener("click", function(event) {
+            const card = event.target.closest(".movie-card, .serie-card");
 
-        /**
-         * Adding click event for series
-         */
-        document.body.querySelectorAll("div.serie-card").forEach(movie => {
-            movie.addEventListener("click", function() {
-                let id = this.querySelector("input").value;
-                serie_click_callback(id);
-            });
+            if (card && document.body.contains(card)) {
+                const input = card.querySelector("input");
+                if (!input) return;
+
+                const id = input.value;
+
+                if (card.classList.contains("movie-card")) {
+                    /**
+                     * Adding click events for movies
+                     */
+                    movie_click_callback(id);
+                } else if (card.classList.contains("serie-card")) {
+                    /**
+                     * Adding click event for series
+                     */
+                    serie_click_callback(id);
+                }
+            }
         });
     }
 

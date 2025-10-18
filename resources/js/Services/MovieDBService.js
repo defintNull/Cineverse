@@ -92,4 +92,20 @@ export class MovieDBService {
         let query = "/tv/popular?page=" + encodeURIComponent(page);
         return this.#makeFetch(query);
     }
+
+    /**
+     * Get movies similar to the given movie
+     */
+    async getSimilarMovies(id) {
+        let query = "/movie/ " + encodeURIComponent(id) + "/similar" ;
+        return this.#makeFetch(query);
+    }
+
+    /**
+     * Get series similar to the given serie
+     */
+    async getSimilarSeries(id) {
+        let query = "/tv/ " + encodeURIComponent(id) + "/similar" ;
+        return this.#makeFetch(query);
+    }
 }

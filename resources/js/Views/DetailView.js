@@ -24,13 +24,12 @@ export class DetailView extends View {
         let container = this.#getPreviewElement();
         document.body.querySelector("main").appendChild(container);
 
+        // Detail Element
         container = this.#getDetailElement();
         document.body.querySelector("main").appendChild(container);
-
     }
 
-
-    addEventListeners() {
+    addEventListeners(suggested_click_callback) {
         document.getElementById("detail_button").addEventListener("click", function() {
             document.getElementById("preview_button").classList.remove("border-b-2");
             this.classList.add("border-b-2");
@@ -61,6 +60,34 @@ export class DetailView extends View {
             detail.style.height = "0px";
             }, 500);
         });
+
+        if(this.#element instanceof Movie) {
+            /**
+             * Adding click events for movies
+             */
+            document.addEventListener("click", function(event) {
+                const card = event.target.closest(".suggested_card");
+                if (card && document.body.contains(card)) {
+                    const input = card.querySelector("input");
+                    if (input) {
+                        suggested_click_callback(input.value);
+                    }
+                }
+            });
+        } else if(this.#element instanceof Serie) {
+            /**
+             * Adding click event for series
+             */
+            document.addEventListener("click", function(event) {
+                const card = event.target.closest(".suggested_card");
+                if (card && document.body.contains(card)) {
+                    const input = card.querySelector("input");
+                    if (input) {
+                        suggested_click_callback(input.value);
+                    }
+                }
+            });
+        }
     }
 
     #getPreviewElement() {
@@ -195,7 +222,7 @@ export class DetailView extends View {
         // Detail Element
         let container = document.createElement("div");
         container.id = "detail_container";
-        container.classList.add("flex", "flex-col", "w-full", "pt-4", "pb-4", "items-center", "transition-all", "duration-500", "ease-in-out", "overflow-hidden", "opacity-0");
+        container.classList.add("flex", "flex-col", "w-full", "pt-8", "pb-12", "items-center", "transition-all", "duration-500", "ease-in-out", "overflow-hidden", "opacity-0");
         container.style.height = "0px";
 
         let row = document.createElement("div");
@@ -322,10 +349,11 @@ export class DetailView extends View {
             // Seasons
             iter = p.cloneNode(true);
             iter.querySelectorAll("span")[0].innerText = "Seasons:";
+            iter.classList.add("pt-4")
             col.appendChild(iter);
 
             let series_container = document.createElement("div");
-            series_container.classList.add("grid", "grid-cols-5");
+            series_container.classList.add("grid", "grid-cols-4", "gap-x-4", "gap-y-4");
             this.#element.getSeasons().forEach(el => {
                 let serie = document.createElement("div");
                 serie.classList.add("flex", "flex-col", "px-6", "py-4", "dark:bg-gray-700", "bg-slate-50", "rounded-2xl");
@@ -348,5 +376,45 @@ export class DetailView extends View {
         container.appendChild(col);
 
         return container
+    }
+
+    addSuggestedCarousel() {
+        // Carousel
+        let carousel_container = document.createElement("div");
+        carousel_container.id = "suggested_carousel";
+        carousel_container.classList.add("flex", "flex-col", 'items-left', "w-full", "pl-8", "overflow-x-auto");
+
+        // Carousell title
+        let title = document.createElement("p");
+        title.classList.add("text-gray-900", "dark:text-white", "text-2xl", "font-semibold", "pl-4");
+        title.innerText = "Suggested " + ((this.#element instanceof Movie) ? "Movies" : "Series");
+
+        // Carousell element container
+        let carousel = document.createElement("div");
+        carousel.classList.add("flex", "flex-row", "items-center", "pr-8", "gap-x-16", "relative", "py-4", "h-80", "overflow-x-auto", "mt-6", "scrollbar", "scrollbar-thumb-gray-400", "scrollbar-track-gray-100", "dark:scrollbar-thumb-gray-500", "dark:scrollbar-track-gray-800");
+
+        // Appending elements
+        carousel_container.appendChild(title);
+        carousel_container.appendChild(carousel);
+
+        document.body.querySelector("main").appendChild(carousel_container);
+    }
+
+    addSuggestedCarouselElements(elements) {
+        let carousel = document.getElementById("suggested_carousel").querySelector("div");
+        // Creating carousell elements
+        [...elements].forEach(element => {
+            let temp = document.createElement("div");
+            temp.classList.add("h-full", "min-w-44", "cursor-pointer", "suggested_card");
+            let img = document.createElement("img");
+            img.src = MovieDBService.getImageSrc('w780', element.getPosterImageSrc());
+            temp.appendChild(img);
+            let input = document.createElement("input");
+            input.type = "text",
+            input.value = element.getId();
+            input.hidden = true;
+            temp.appendChild(input);
+            carousel.insertBefore(temp, carousel.lastElementChild);
+        });
     }
 }

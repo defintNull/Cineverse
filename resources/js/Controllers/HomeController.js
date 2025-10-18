@@ -36,13 +36,13 @@ export class HomeController extends Controller {
         if(res != false) {
             this.#homeView.addEventListeners(
                 res[0], res[1], res[2], res[3],
-                this.getLatestMovies.bind(this),
-                this.getPopulartMovies.bind(this),
-                this.getOnTheAirSeries.bind(this),
-                this.getPopularSeries.bind(this),
-                this.movieClickHandler.bind(this),
-                this.serieClickHandler.bind(this),
-                this.searchHandler.bind(this)
+                this.#getLatestMovies.bind(this),
+                this.#getPopulartMovies.bind(this),
+                this.#getOnTheAirSeries.bind(this),
+                this.#getPopularSeries.bind(this),
+                this.#movieClickHandler.bind(this),
+                this.#serieClickHandler.bind(this),
+                this.#searchHandler.bind(this)
             );
         }
 
@@ -54,10 +54,10 @@ export class HomeController extends Controller {
 
     async #populateCarouselElement() {
         let promises = [
-            await this.getLatestMovies(),
-            await this.getPopulartMovies(),
-            await this.getOnTheAirSeries(),
-            await this.getPopularSeries(),
+            await this.#getLatestMovies(),
+            await this.#getPopulartMovies(),
+            await this.#getOnTheAirSeries(),
+            await this.#getPopularSeries(),
         ]
 
         let result = null;
@@ -88,7 +88,7 @@ export class HomeController extends Controller {
         return false;
     }
 
-    async getLatestMovies() {
+    async #getLatestMovies() {
         let res = await this.#movieDBApi.getLatestMovies(this.#latestMoviePage);
         if(res.status == 200) {
             this.#latestMoviePage += 1;
@@ -97,7 +97,7 @@ export class HomeController extends Controller {
         return false;
     }
 
-    async getPopulartMovies() {
+    async #getPopulartMovies() {
         let res = await this.#movieDBApi.getPopularMovies(this.#popularMoviePage);
         if(res.status == 200) {
             this.#popularMoviePage += 1;
@@ -106,7 +106,7 @@ export class HomeController extends Controller {
         return false;
     }
 
-    async getOnTheAirSeries() {
+    async #getOnTheAirSeries() {
         let res = await this.#movieDBApi.getOnTheAirSeries(this.#latestSeriePage);
         if(res.status == 200) {
             this.#latestSeriePage += 1;
@@ -115,7 +115,7 @@ export class HomeController extends Controller {
         return false;
     }
 
-    async getPopularSeries() {
+    async #getPopularSeries() {
         let res = await this.#movieDBApi.getPopularSeries(this.#popularMoviePage);
         if(res.status == 200) {
             this.#popularSeriePage += 1;
@@ -124,7 +124,7 @@ export class HomeController extends Controller {
         return false;
     }
 
-    movieClickHandler(id) {
+    #movieClickHandler(id) {
         let status = {
             'type': 'movie',
             'id': id
@@ -132,7 +132,7 @@ export class HomeController extends Controller {
         this.#router.setNextPath(status, "/detail");
     }
 
-    serieClickHandler(id) {
+    #serieClickHandler(id) {
         let status = {
             'type': 'serie',
             'id': id
@@ -140,7 +140,7 @@ export class HomeController extends Controller {
         this.#router.setNextPath(status, "/detail");
     }
 
-    searchHandler(search) {
+    #searchHandler(search) {
         let status = {
             'search': search
         }
