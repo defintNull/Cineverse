@@ -20,6 +20,11 @@ export class ProfileController extends Controller {
      * Method invoked by the router that builds the page and sets the event listeners
      */
     start() {
+        if (localStorage.getItem("auth_token") === null) {
+            this.#router.overridePath({}, "/login");
+            return;
+        }
+
         this.#profileView.render();
         this.#profileView.addEventListeners(this.#profileHandler.bind(this));
     }

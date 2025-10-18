@@ -38,7 +38,7 @@ export class ProfileView extends View {
 
         // Sezione: Informazioni di accesso
         this.#addSectionTitle(form, "Informazioni di accesso");
-        ["username", "password", "email"].forEach(field => {
+        ["username", "email"].forEach(field => { //ho tolto password (da rivedere il meccanismo di cambio password)
             this.#appendInput(form, field, this.#getLabel(field), this.#getPlaceholder(field), this.#getType(field));
         });
 
