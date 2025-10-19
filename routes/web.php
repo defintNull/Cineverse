@@ -3,6 +3,7 @@
 use App\Http\Middleware\AjaxMiddleware;
 use App\Http\Controllers\Authentication\Login;
 use App\Http\Controllers\Authentication\Register;
+use App\Http\Controllers\Portal\Watchlist;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
 
@@ -32,7 +33,10 @@ Route::middleware(AjaxMiddleware::class)->name('spa.')->prefix('spa')->group(fun
      * Route group for the ajax request blocked with authentication of the spa
      */
     Route::middleware('auth:sanctum')->group(function() {
-
+        Route::name('watchlist.')->prefix('watchlist')->group(function() {
+            Route::get('/index', [Watchlist::class, "index"])
+                ->name('index');
+        });
     });
 });
 
