@@ -1,12 +1,15 @@
+import { StorageService } from "./StorageService";
+
 export class AuthService {
     static #instance = null;
-    #logged = false;
+    #storageService;
 
     constructor() {
         if (AuthService.#instance) {
             return AuthService.#instance;
         }
         AuthService.#instance = this;
+        this.#storageService = StorageService.getInstance();
     }
 
     /**
@@ -20,11 +23,19 @@ export class AuthService {
         return AuthService.#instance;
     }
 
-    setLogged(bool) {
-        this.#logged = tru
+    checkAuth() {
+        return this.#storageService.getData("logged") !== null ? true : false;
     }
 
-    async logout(){
-        localStorage.removeItem("auth_token");
+    setAuth(bool) {
+        if(bool) {
+            if(!this.#storageService.getData("logged")) {
+                this.#storageService.setData("logged", true);
+            }
+        } else {
+            if(this.#storageService.getData("logged")) {
+                this.#storageService.removeData("logged");
+            }
+        }
     }
 }
