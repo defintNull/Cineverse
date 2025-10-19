@@ -36,7 +36,7 @@ export class ProfileController extends Controller {
         (async () => {
             try {
                 const spaFetch = await SPAFetchService.getInstance();
-                const res = await spaFetch.GETFetch('/api/user/' + 12, {});
+                const res = await spaFetch.GETFetch('/spa/profile/show/12', {});
 
                 if (res.status === 200) {
                     const payload = await res.json();
