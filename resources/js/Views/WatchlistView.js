@@ -47,6 +47,13 @@ export class WatchlistView extends View {
         const sidebarList = document.createElement("ul");
         sidebarList.classList.add("space-y-2");
 
+        /*
+        let sap_fetch = await SPAFetchService.getInstance();
+
+        let res = await sap_fetch.GETFetch('/spa/watchlist/index', null);
+        let payload = await res.json();
+
+
         async function loadWatchlists() {  //PRENDO LE WATCHLIST DAL DB
         const res = await fetch("/api/watchlists");
         const data = await res.json();
@@ -62,6 +69,7 @@ export class WatchlistView extends View {
             sidebarList.appendChild(li);
         });
         });
+        */
 
         sidebar.appendChild(sidebarList);
 

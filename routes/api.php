@@ -11,7 +11,9 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
+/*
 Route::get('/watchlists', function () {
     //return $request->user()->watchlists;  //CON AUTH
     return response()->json(Watchlist::all()); //SENZA AUTH
 }); //middleware da aggiungere :)
+*/

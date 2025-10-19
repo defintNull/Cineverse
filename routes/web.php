@@ -22,6 +22,7 @@ Route::get('/', function () {
 /**
  * Route group for the ajax request of the spa
  */
+
 Route::middleware(AjaxMiddleware::class)->name('spa.')->prefix('spa')->group(function() {
     Route::post('/login', [Login::class, 'login'])
         ->name('login');
