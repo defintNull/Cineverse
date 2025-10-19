@@ -45,11 +45,11 @@ export class HomeController extends Controller {
                 this.#searchHandler.bind(this)
             );
         }
-
     }
 
     destroy() {
         document.body.querySelector("main").innerHTML = "";
+        this.#homeView.removeDocumentEventListeners();
     }
 
     async #populateCarouselElement() {

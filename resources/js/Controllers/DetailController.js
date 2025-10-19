@@ -60,6 +60,7 @@ export class DetailController extends Controller {
 
     destroy() {
         document.body.querySelector("main").innerHTML = "";
+        this.#detailView.removeDocumentEvents();
     }
 
     async #getSimilarMovies(id) {

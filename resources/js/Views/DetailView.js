@@ -10,6 +10,7 @@ export class DetailView extends View {
     #bgImage;
     #navigator;
     #addButton;
+    #clickhandler;
 
     constructor() {
         super();
@@ -63,9 +64,9 @@ export class DetailView extends View {
 
         if(this.#element instanceof Movie) {
             /**
-             * Adding click events for movies
+             * Click handler function
              */
-            document.addEventListener("click", function(event) {
+            this.#clickhandler = function(event) {
                 const card = event.target.closest(".suggested_card");
                 if (card && document.body.contains(card)) {
                     const input = card.querySelector("input");
@@ -73,21 +74,33 @@ export class DetailView extends View {
                         suggested_click_callback(input.value);
                     }
                 }
-            });
+            }
+            /**
+             * Adding click events for movies
+             */
+            document.addEventListener("click", this.#clickhandler);
         } else if(this.#element instanceof Serie) {
+            /**
+             * Click handler function
+             */
+            this.#clickhandler = function(event) {
+                const card = event.target.closest(".suggested_card");
+                if (card && document.body.contains(card)) {
+                    const input = card.querySelector("input");
+                    if (input) {
+                        suggested_click_callback(input.value);
+                    }
+                }
+            }
             /**
              * Adding click event for series
              */
-            document.addEventListener("click", function(event) {
-                const card = event.target.closest(".suggested_card");
-                if (card && document.body.contains(card)) {
-                    const input = card.querySelector("input");
-                    if (input) {
-                        suggested_click_callback(input.value);
-                    }
-                }
-            });
+            document.addEventListener("click", this.#clickhandler);
         }
+    }
+
+    removeDocumentEvents() {
+        document.removeEventListener("click", this.#clickhandler);
     }
 
     #getPreviewElement() {

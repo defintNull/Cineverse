@@ -12,6 +12,7 @@ export class HomeView extends View {
     #searchbar
     #arrowRight
     #arrowLeft
+    #clickHandle
 
     constructor() {
         super();
@@ -224,10 +225,8 @@ export class HomeView extends View {
             search_callback(this.querySelector("input").value);
         })
 
-        /**
-         * Adding click event listeners for movies and series cards
-         */
-        document.addEventListener("click", function(event) {
+        // Handle click function
+        this.#clickHandle = function(event) {
             const card = event.target.closest(".movie-card, .serie-card");
 
             if (card && document.body.contains(card)) {
@@ -248,7 +247,16 @@ export class HomeView extends View {
                     serie_click_callback(id);
                 }
             }
-        });
+        }
+
+        /**
+         * Adding click event listeners for movies and series cards
+         */
+        document.addEventListener("click", this.#clickHandle);
+    }
+
+    removeDocumentEventListeners() {
+        document.removeEventListener("click", this.#clickHandle);
     }
 
     addBGImage(src) {
