@@ -14,7 +14,9 @@ class Watchlist extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-        return $user->watchlists;
+        return response()->json([
+            'watchlists'=>$user->watchlists,
+        ]);
     }
 
     /**
