@@ -26,13 +26,37 @@ export class ProfileController extends Controller {
         }
 
         this.#profileView.render();
-        this.#profileView.viewPopulateData({
-            'username': 'gerry.scotti',
-            'email':  'gerry.scotti@mediaset.it',
-            'name': 'Gerry',
-            'surname': 'Scotti',
-            'nationality': 'Italy'
-        });
+        // this.#profileView.viewPopulateData({
+        //     'username': 'gerry.scotti',
+        //     'email':  'gerry.scotti@mediaset.it',
+        //     'name': 'Gerry',
+        //     'surname': 'Scotti',
+        //     'nationality': 'Italy'
+        // });
+        (async () => {
+            try {
+                const spaFetch = await SPAFetchService.getInstance();
+                const res = await spaFetch.GETFetch('/api/user/' + 12, {});
+
+                if (res.status === 200) {
+                    const payload = await res.json();
+                    this.#profileView.viewPopulateData({
+                        'username': payload.username ?? '',
+                        'email':    payload.email ?? '',
+                        'name':     payload.name ?? '',
+                        'surname':  payload.surname ?? '',
+                        'nationality': payload.nationality ?? ''
+                    });
+                } else if (res.status === 401) {
+                    this.#router.overridePath({}, "/login");
+                } else {
+                    this.#profileView.globalErrorField("Impossibile caricare i dati del profilo.");
+                }
+            } catch (err) {
+                console.error(err);
+                this.#profileView.globalErrorField("Errore di rete.");
+            }
+        })();
         this.#profileView.addEventListeners(this.#profileHandler.bind(this));
     }
 
