@@ -1,10 +1,10 @@
+import { SPAFetchService } from "../Services/SPAFetchService";
 import { Controller } from "./Controller";
 
 export class DebugController extends Controller {
-    start() {
-        let prova = document.createElement("h1");
-        prova.classList.add("text-white"), "dark:text-gray-900";
-        prova.innerHTML = "PROVA";
-        document.body.querySelector("main").appendChild(prova);
+    async start() {
+        let fe = await SPAFetchService.getInstance();
+        let response = await fe.GETFetch("/spa/watchlist/index", null);
+        console.log(await response.json());
     }
 }

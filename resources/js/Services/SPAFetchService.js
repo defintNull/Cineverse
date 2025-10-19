@@ -82,11 +82,11 @@ export class SPAFetchService {
      * Make a fetch request using the get protocol
      */
     async GETFetch(path, payload) {
-        if (typeof payload !== 'object' || payload === null || Array.isArray(payload)) {
+        if (typeof payload !== 'object' && payload !== null) {
             throw new TypeError('Payload must be a non-null object.');
         }
 
-        let uri = path + encodeURIComponent(payload);
+        let uri = path + "?" + ((payload === null) ? "" : encodeURIComponent(payload));
 
         return fetch(uri, this.#configGET).then(response => {
             return response;
