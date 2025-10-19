@@ -26,6 +26,13 @@ export class ProfileController extends Controller {
         }
 
         this.#profileView.render();
+        this.#profileView.viewPopulateData({
+            'username': 'gerry.scotti',
+            'email':  'gerry.scotti@mediaset.it',
+            'name': 'Gerry',
+            'surname': 'Scotti',
+            'nationality': 'Italy'
+        });
         this.#profileView.addEventListeners(this.#profileHandler.bind(this));
     }
 
