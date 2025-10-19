@@ -149,6 +149,11 @@ export class DetailView extends View {
         let detail_container = document.createElement("div");
         detail_container.classList.add("flex", "flex-col", "gap-y-4");
 
+        //Title insertion
+        let title_detail = document.createElement("h1");
+        title_detail.classList.add("text-white", "text-3xl", "font-bold", "tracking-wide");
+        title_detail.innerText = this.#element.getTitle();
+
         // Poster Image
         let posterImage = document.createElement("img");
         posterImage.classList.add("h-40", "w-30");
@@ -179,7 +184,7 @@ export class DetailView extends View {
         buttons.classList.add("flex", "flex-row", "gap-x-4");
         let score_container = document.createElement("div");
         score_container.classList.add("rounded-4xl", "flex", "flex-col", "items-center", "justify-center", "h-10", "w-10", "bg-gray-700");
-        let score = document.createElement("p");
+        let score = document.createElement("p"); //possibilità di aggiunta dell'animazione
         score.classList.add("text-white", "text-md");
         score.innerText = this.#element.getScore();
         score_container.appendChild(score);
@@ -204,6 +209,7 @@ export class DetailView extends View {
         genres.innerText = "Genre: " + this.#element.getGenres().join(", ");
 
 
+        detail_container.appendChild(title_detail);
         detail_container.appendChild(posterImage);
         detail_container.appendChild(date_detail);
         detail_container.appendChild(buttons);

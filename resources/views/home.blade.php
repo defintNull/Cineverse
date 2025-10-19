@@ -22,9 +22,7 @@
     <!-- Header -->
     <header class="w-full bg-blue-600 text-white shadow-md">
         <div class="max-w-7xl mx-auto flex justify-between items-center px-6 py-4">
-            <div id="home" class="flex flex-col items-center cursor-pointer">
-                <h1 class="text-2xl font-bold tracking-wide">🎬 Cineverse</h1>
-            </div>
+            <img id="home" src="{{ asset('images/cineverselogo.png') }}" alt="Cineverse Logo" class="w-32 h-32 object-contain cursor-pointer self-start"/>
             <div class="flex items-center space-x-2 group">
                 <span class="sr-only">Profilo</span>
                 <svg class="w-10 h-10 rounded-full border-2 border-white group-hover:border-yellow-300 bg-white text-blue-600 transition"
