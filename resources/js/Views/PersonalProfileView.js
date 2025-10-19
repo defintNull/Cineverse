@@ -174,4 +174,12 @@ export class ProfileView extends View {
     async addEventListeners(handler) {
         document.getElementById("profile_form").addEventListener("submit", handler);
     }
+
+    viewPopulateData(data) {
+        document.getElementById("username_input").value = data.username || "";
+        document.getElementById("email_input").value = data.email || "";
+        document.getElementById("name_input").value = data.name || "";
+        document.getElementById("surname_input").value = data.surname || "";
+        document.getElementById("nationality_input").value = data.nationality || "";
+    }
 }
