@@ -35,7 +35,8 @@ class Login extends Controller
             $request->session()->regenerate();
 
             return response()->json([
-                'access' => 'garanted'
+                'access' => 'garanted',
+                'theme' => Auth::user()->theme
             ]);
         }
 

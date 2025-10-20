@@ -63,7 +63,7 @@ export class LoginController extends Controller {
             this.#loginView.gestisciErrori("Wrong username or password")
         } else if(res.status == 200) {
             this.#router.overridePath({}, "/");
-            localStorage.setItem("auth_token", payload.access); //in attesa di futuri meccanismi di auth
+            localStorage.setItem("theme", payload.theme);
         } else {
             this.#loginView.gestisciErrori("Ops! Something whent wrong!");
         }

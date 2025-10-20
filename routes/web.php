@@ -37,20 +37,16 @@ Route::middleware(AjaxMiddleware::class)->name('spa.')->prefix('spa')->group(fun
         Route::name('watchlist.')->prefix('watchlist')->group(function () {
             Route::get('/index', [WatchlistController::class, "index"])
                 ->name('index');
-            Route::post('/update/{id}', [WatchlistController::class, "update"])
+        });
+    });
+
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::name('profile.')->prefix('profileinfo')->group(function () {
+            Route::get('/index', [Profile::class, 'index'])
+                ->name('index');
+            Route::post('/update', [Profile::class, 'update'])
                 ->name('update');
-
         });
-        Route::name('profile.')->prefix('profile')->group(function () {
-            Route::get('/show', [Profile::class, "show"])
-                ->name('show');
-        });
-        //aggiornamento delle watchlist
-        Route::name('profile.')->prefix('profile')->group(function () {
-            Route::get('/show', [Profile::class, "show"])
-                ->name('show');
-        });
-
 
     });
 });
