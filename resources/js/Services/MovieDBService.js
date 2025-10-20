@@ -97,7 +97,7 @@ export class MovieDBService {
      * Get movies similar to the given movie
      */
     async getSimilarMovies(id) {
-        let query = "/movie/ " + encodeURIComponent(id) + "/similar" ;
+        let query = "/movie/" + encodeURIComponent(id) + "/similar" ;
         return this.#makeFetch(query);
     }
 
@@ -105,7 +105,29 @@ export class MovieDBService {
      * Get series similar to the given serie
      */
     async getSimilarSeries(id) {
-        let query = "/tv/ " + encodeURIComponent(id) + "/similar" ;
+        let query = "/tv/" + encodeURIComponent(id) + "/similar" ;
+        return this.#makeFetch(query);
+    }
+
+    /**
+     * Return the supported languages
+     */
+    async getLanguages() {
+        let query = "/configuration/languages";
+        return this.#makeFetch(query);
+    }
+
+    /**
+     * Return the supported genres
+     */
+    async getGenres(selector) {
+        let query = null;
+        if(selector) {
+            query = "/genre/movie/list";
+        } else {
+             query = "/genre/tv/list";
+        }
+
         return this.#makeFetch(query);
     }
 }

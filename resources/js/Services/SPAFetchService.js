@@ -19,6 +19,16 @@ export class SPAFetchService {
         credentials: 'include',
         headers: {
             "X-Requested-With": "XMLHttpRequest",
+            "Content-Type": "application/json",
+        },
+        body: null
+    };
+    // Fetch configuration for the POST protocol with forms
+    #configPOSTForm = {
+        method: "POST",
+        credentials: 'include',
+        headers: {
+            "X-Requested-With": "XMLHttpRequest",
         },
         body: null
     };
@@ -75,6 +85,21 @@ export class SPAFetchService {
         config.body = JSON.stringify(payload);
         //console.log(path);// di debug, ma inutile visto che il path è giusto
         //console.log(config);
+        return fetch(path, config).then(response => {
+            return response;
+        });
+    }
+
+    /**
+     * Make a fetch request using the post protocol
+     */
+    async POSTFetchForm(path, payload) {
+        if (typeof payload !== 'object' || payload === null || Array.isArray(payload)) {
+            throw new TypeError('Payload must be a non-null object.');
+        }
+
+        let config = JSON.parse(JSON.stringify(this.#configPOSTForm));
+        config.body = payload;
         return fetch(path, config).then(response => {
             return response;
         });

@@ -5,6 +5,7 @@ import { RegistrationController } from "./Controllers/RegistrationController";
 import { DetailController } from "./Controllers/DetailController";
 import { ProfileController } from "./Controllers/PersonalProfileController";
 import { WatchlistController } from "./Controllers/WatchlistController";
+import { ArchiveController } from "./Controllers/ArchiveController";
 
 
 /**
@@ -17,10 +18,11 @@ export class Router {
     // Routing deinition
     routes = {
         "/": HomeController,
+        "/detail": DetailController,
+        "/archive": ArchiveController,
         "/debug": DebugController,
         "/login": LoginController,
         "/register": RegistrationController,
-        "/detail": DetailController,
         "/profile": ProfileController,
         "/watchlists": WatchlistController,
     }
