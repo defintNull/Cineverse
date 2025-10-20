@@ -25,15 +25,13 @@ export class WatchlistController extends Controller {
 
         //console.log("AAA")
         this.#WatchlistView.render();
-        let res = await this.#loadwatchlists();
-
-
+        this.#WatchlistView.populatewatchlistelement(this.#loadwatchlists.bind(this));
     }
 
     async #loadwatchlists() {
         let sap_fetch = await SPAFetchService.getInstance();
-        let res = await sap_fetch.GETFetch('/spa/watchlist/index', {});
+        let res = await sap_fetch.GETFetch('/spa/watchlist/index', null);
         let payload = await res.json();
-        console.log(payload.watchlists);
+        return payload.watchlists;
     }
 }
