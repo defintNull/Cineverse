@@ -3,6 +3,7 @@ import { Card } from "../Components/Card";
 import { Input } from "../Components/Input";
 import { InputError } from "../Components/InputError";
 import { View } from "./View";
+import { SPAFetchService } from "../Services/SPAFetchService";
 
 /**
  * View class that manages the profile editing page with thematic separation
@@ -180,6 +181,52 @@ export class ProfileView extends View {
 
     async addEventListeners(handler) {
         document.getElementById("profile_form").addEventListener("submit", handler);
+        // attach username availability check when user finishes typing
+        const usernameInput = document.getElementById("username_input");
+        if (usernameInput) {
+            // debounce helper
+            let debounceTimer = null;
+            usernameInput.addEventListener('input', async (ev) => {
+                const value = ev.target.value.trim();
+                const errorField = document.getElementById('username_input')?.nextElementSibling;
+
+                // clear previous message
+                if (errorField) {
+                    errorField.innerHTML = '';
+                    errorField.classList.remove('text-green-600');
+                }
+
+                if (debounceTimer) clearTimeout(debounceTimer);
+                if (value.length === 0) return;
+
+                debounceTimer = setTimeout(async () => {
+                    try {
+                        const spaFetch = await SPAFetchService.getInstance();
+                        // build query string properly
+                        const res = await spaFetch.GETFetch('/spa/profileinfo/check-username', { username: value });
+                        if (!res.ok) {
+                            // show a non-blocking message
+                            if (errorField) errorField.innerHTML = 'Impossibile verificare disponibilità.';
+                            return;
+                        }
+                        const json = await res.json();
+                        if (json.available) {
+                            if (errorField) {
+                                errorField.innerHTML = 'Disponibile ✅';
+                                errorField.classList.add('text-green-600');
+                            }
+                        } else {
+                            if (errorField) {
+                                errorField.innerHTML = 'Nome utente già in uso';
+                                errorField.classList.remove('text-green-600');
+                            }
+                        }
+                    } catch (e) {
+                        if (errorField) errorField.innerHTML = 'Errore nella verifica';
+                    }
+                }, 500); // 500ms debounce after user stops typing
+            });
+        }
     }
 
     viewPopulateData(data) {

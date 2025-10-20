@@ -83,7 +83,7 @@ export class ProfileController extends Controller {
         // Fetching form data
         let formData = new FormData(document.getElementById("profile_form"));
 
-        let res = await spa_fetch.POSTFetch('/spa/profileinfo/update', formData);
+        let res = await spa_fetch.POSTFetchForm('/spa/profileinfo/update', formData);
         let payload = await res.json();
 
         // Handling errors
@@ -98,7 +98,8 @@ export class ProfileController extends Controller {
         } else if (res.status === 200) {
             this.#router.overridePath({}, "/");
             localStorage.setItem("theme", payload.theme);
-        } else {
+        }
+        else {
             this.#profileView.globalErrorField("Ops! Qualcosa è andato storto.");
         }
     }

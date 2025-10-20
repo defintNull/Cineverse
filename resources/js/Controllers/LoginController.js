@@ -47,7 +47,7 @@ export class LoginController extends Controller {
         // Fetching
         let formData = new FormData(document.getElementById("login-section"));
 
-        let res = await sap_fetch.POSTFetch('/spa/login', formData);
+        let res = await sap_fetch.POSTFetchForm('/spa/login', formData);
         let payload = await res.json();
 
                 //Handling errors
@@ -64,6 +64,8 @@ export class LoginController extends Controller {
         } else if(res.status == 200) {
             this.#router.overridePath({}, "/");
             localStorage.setItem("theme", payload.theme);
+            localStorage.setItem("access", payload.access);
+            localStorage.setItem("auth_token", payload.token);
         } else {
             this.#loginView.gestisciErrori("Ops! Something whent wrong!");
         }
