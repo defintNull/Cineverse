@@ -58,7 +58,7 @@ export class WatchlistView extends View {
 
         const mainTitle = document.createElement("h1");
         mainTitle.classList.add("text-2xl", "font-bold", "mb-6");
-        mainTitle.innerText = "Film della watchlist";
+        mainTitle.innerText = "Film della watchlist"; //QUI CI VA IL NOME DELLA WATCHLIST
         main.appendChild(mainTitle);
 
         const trackList = document.createElement("ul");
