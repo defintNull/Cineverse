@@ -27,13 +27,15 @@ export class WatchlistController extends Controller {
      */
 
     async start() {
-
-        //console.log("AAA")
-        this.#loadwatchlists();
+        let moviezz = await this.#loadwatchlists()
+        //console.log(moviezz);
+        let moviez = await this.GetEachMovie(moviezz[0].movies);
         this.#WatchlistView.render();
-        //this.#WatchlistView.addWatchlistSidebar(this.#loadwatchlists.bind(this));
+        this.#WatchlistView.populateWatchlistsLayout(this.#loadwatchlists.bind(this));
+        this.#WatchlistView.renderMovies(moviez);
     }
 
+    /*
     async #getLatestMovies() {
         let res = await this.#movieDB.getLatestMovies(this.#latestMoviePage);
         if(res.status == 200) {
@@ -41,12 +43,14 @@ export class WatchlistController extends Controller {
             return res.json();
         }
         return false;
-    }
+    }*/
 
     async #loadwatchlists() {
         let sap_fetch = await SPAFetchService.getInstance();
         let res = await sap_fetch.GETFetch('/spa/watchlist/index', null);
         let payload = await res.json();
+        //console.log(payload.watchlists);
+        return payload.watchlists;
         //al carousel va passata una watchlist
         this.#WatchlistView.addWatchlistSidebar(payload.watchlists)
         this.#WatchlistView.addWatchlistGrid(payload.watchlists[0]);
