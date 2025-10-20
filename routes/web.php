@@ -41,10 +41,13 @@ Route::middleware(AjaxMiddleware::class)->name('spa.')->prefix('spa')->group(fun
     });
 
     Route::middleware('auth:sanctum')->group(function () {
-        Route::name('profile.')->prefix('profile')->group(function () {
-            Route::get('/show', [Profile::class, "show"])
-                ->name('show');
+        Route::name('profile.')->prefix('profileinfo')->group(function () {
+            Route::get('/index', [Profile::class, 'index'])
+                ->name('index');
+            Route::post('/update', [Profile::class, 'update'])
+                ->name('update');
         });
+
     });
 });
 

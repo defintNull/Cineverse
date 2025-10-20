@@ -37,19 +37,26 @@ export class ProfileView extends View {
         card.appendChild(form);
 
         // Sezione: Informazioni di accesso
-        this.#addSectionTitle(form, "Informazioni di accesso");
+        let sectionTitle = document.createElement("h3");
+        sectionTitle.classList.add("text-xl", "font-semibold", "text-gray-800", "dark:text-white", "border-b", "pb-2", "mb-4");
+        sectionTitle.innerText = "Informazioni di accesso";
+        form.appendChild(sectionTitle);
         ["username", "email"].forEach(field => { //ho tolto password (da rivedere il meccanismo di cambio password)
             this.#appendInput(form, field, this.#getLabel(field), this.#getPlaceholder(field), this.#getType(field));
         });
 
         // Sezione: Informazioni personali
         this.#addSectionTitle(form, "Informazioni personali");
+        let lastSectionTitle = form.querySelector("h3:last-of-type");
+        if (lastSectionTitle) lastSectionTitle.classList.add("dark:text-white");
         ["name", "surname", "nationality"].forEach(field => {
             this.#appendInput(form, field, this.#getLabel(field), this.#getPlaceholder(field));
         });
 
         // Sezione: Preferenze
         this.#addSectionTitle(form, "Preferenze");
+        let prefSectionTitle = form.querySelector("h3:last-of-type");
+        if (prefSectionTitle) prefSectionTitle.classList.add("dark:text-white");
 
         // Tema dell'applicazione
         let themeLabel = document.createElement("label");
@@ -62,8 +69,8 @@ export class ProfileView extends View {
         themeSelect.name = "theme";
         themeSelect.classList.add("bg-white", "border", "border-gray-300", "text-gray-900", "text-sm", "rounded-lg", "w-full", "p-2.5", "dark:bg-gray-700", "dark:border-gray-600", "dark:placeholder-gray-400", "dark:text-white");
         themeSelect.innerHTML = `
-            <option value="chiaro">Chiaro</option>
-            <option value="scuro">Scuro</option>
+            <option value="1">Chiaro</option>
+            <option value="0">Scuro</option>
         `;
         form.appendChild(themeSelect);
 
