@@ -16,10 +16,6 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     @endif
 
-    <style>
-        @custom-variant dark (&:where(.dark, .dark *));
-    </style>
-
     <script>
     // On page load or when changing themes, best to add inline in `head` to avoid FOUC
     (function () {

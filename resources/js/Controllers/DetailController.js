@@ -21,7 +21,7 @@ export class DetailController extends Controller {
     }
 
     async start() {
-        if (this.#state.type && this.#state.type == "movie") {
+        if (this.#state !== null && 'type' in this.#state && this.#state.type == "movie") {
             let response = await this.#movieDB.getMovie(this.#state.id);
             if (response.status == 200) {
                 this.#element = new Movie(await response.json());
@@ -37,7 +37,7 @@ export class DetailController extends Controller {
                 // Events
                 this.#detailView.addEventListeners(this.#movieClickHandler.bind(this));
             }
-        } else if (this.#state.type && this.#state.type == "serie") {
+        } else if (this.#state !== null && 'type' in this.#state && this.#state.type == "serie") {
             let response = await this.#movieDB.getSerie(this.#state.id);
             if (response.status == 200) {
                 this.#element = new Serie(await response.json());

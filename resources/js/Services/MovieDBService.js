@@ -130,4 +130,28 @@ export class MovieDBService {
 
         return this.#makeFetch(query);
     }
+
+    /**
+     * Get the elements matching the parameters and search
+     */
+    async getAdvanceSearch(type, search, language, year, page) {
+        let query = "/search/" + ((type == "movie") ? "movie" : "tv") + "?";
+        query += "query=" + encodeURIComponent(search) + "&";
+        (language != null && language != "") ? query += "language=" + encodeURIComponent(language) + "&" : null;
+        (year != null && year != "") ? query += "year=" + encodeURIComponent(year) + "&" : null;
+        query += "page=" + encodeURIComponent(page);
+        return this.#makeFetch(query);
+    }
+
+    /**
+     * Get the elements matching the filters
+     */
+    async getAdvanceDiscovery(type, genres, language, year, page) {
+        let query = "/discover/" + ((type == "movie") ? "movie" : "tv") + "?";
+        (language != null && language != "") ? query += "language=" + encodeURIComponent(language) + "&" : null;
+        (year != null && year != "") ? query += "primary_release_year=" + encodeURIComponent(year) + "&" : null;
+        (genres != null && genres.length != 0) ? query += "with_genres=" + encodeURIComponent(genres) + "&" : null;
+        query += "page=" + encodeURIComponent(page);
+        return this.#makeFetch(query);
+    }
 }
