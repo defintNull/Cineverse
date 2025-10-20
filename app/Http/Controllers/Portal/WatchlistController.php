@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class WatchlistController extends Controller
 {
@@ -31,7 +32,7 @@ class WatchlistController extends Controller
     /**
      * Update the specified resource in storage.
      */
-        public function update(Request $request, Watchlist $w) : JsonResponse
+    public function update(Request $request) : JsonResponse
     {
         try {
             // Recuperiamo la watchlist dal model (puoi usare direttamente $w)
@@ -58,6 +59,22 @@ class WatchlistController extends Controller
                 'error' => 'Failed to update watchlist.'
             ], 500);
         }
+    }
+
+    public function addMovie(Request $request) : JsonResponse
+    {
+        //print(var_dump($request->watchlist));
+        //exit();
+        $request->validate([
+            'watchlist'   => ['required','integer',Rule::exists('Watchlists','id')],
+            'movie' => ['required','integer'],
+        ]);
+        $watchlist = Watchlist::where('id',$request->watchlist)->get()[0];
+        $watchlist->movies[] = $request->movie;
+        $watchlist->save();
+        return response()->json([
+            'status'=>'200'
+        ]);
     }
 
     /**

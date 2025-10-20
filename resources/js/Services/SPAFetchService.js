@@ -72,7 +72,9 @@ export class SPAFetchService {
         }
 
         let config = JSON.parse(JSON.stringify(this.#configPOST));
-        config.body = payload;
+        config.body = JSON.stringify(payload);
+        //console.log(path);// di debug, ma inutile visto che il path è giusto
+        //console.log(config);
         return fetch(path, config).then(response => {
             return response;
         });

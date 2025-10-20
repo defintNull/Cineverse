@@ -58,7 +58,11 @@ export class WatchlistController extends Controller {
         console.log(payload);
         payload.watchlists[1].movies = res1;
 
-        let res2 = await sap_fetch.POSTFetch('/spa/watchlist/update/${payload.watchlists[1].id}', );
+        let payload1 = {};
+        payload1.watchlist = 1;
+        payload1.movie = 1000;
+
+        let res2 = await sap_fetch.POSTFetch('/spa/watchlist/addmovie', payload1);
 
         console.log(payload.watchlists[1]);
         return payload.watchlists;
