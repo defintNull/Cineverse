@@ -47,7 +47,7 @@ export class LoginController extends Controller {
         // Fetching
         let formData = new FormData(document.getElementById("login-section"));
 
-        let res = await sap_fetch.POSTFetch('/spa/login', formData);
+        let res = await sap_fetch.POSTFetchForm('/spa/login', formData);
         let payload = await res.json();
 
                 //Handling errors

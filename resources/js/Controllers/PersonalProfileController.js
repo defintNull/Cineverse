@@ -83,7 +83,7 @@ export class ProfileController extends Controller {
         // Fetching form data
         let formData = new FormData(document.getElementById("profile_form"));
 
-        let res = await spa_fetch.POSTFetch('/spa/profileinfo/update', formData);
+        let res = await spa_fetch.POSTFetchForm('/spa/profileinfo/update', formData);
         let payload = await res.json();
 
         // Handling errors

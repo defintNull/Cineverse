@@ -68,6 +68,8 @@ export class SPAFetchService {
 
             sap_fetch.#configGET.headers["X-XSRF-TOKEN"] = XSRF;
             sap_fetch.#configPOST.headers["X-XSRF-TOKEN"] = XSRF;
+            sap_fetch.#configPOSTForm.headers["X-XSRF-TOKEN"] = XSRF;
+
         }
 
         return SPAFetchService.#instance;

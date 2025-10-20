@@ -4,6 +4,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use App\Models\User;
 
 class Profile extends Controller
@@ -33,8 +34,14 @@ class Profile extends Controller
     public function update(Request $request) : JsonResponse {
         try {
             $user = Auth::user();
+            if (!$user) {
+                return response()->json(['error' => 'Unauthenticated.'], 401);
+            }
             // ensure we operate on the Eloquent User model so update() is available
             $userModel = User::find($user->id);
+            if (!$userModel) {
+                return response()->json(['error' => 'User not found.'], 404);
+            }
             $validatedData = $request->validate([
                 'name' => 'required|string|max:255',
                 'surname' => 'required|string|max:255',
@@ -49,6 +56,8 @@ class Profile extends Controller
                 'theme' => $userModel->theme,
             ]);
         } catch (\Exception $e) {
+            // Log full exception for debugging
+            Log::error('Profile update failed: ' . $e->getMessage(), ['exception' => $e]);
             return response()->json([
                 'error' => 'Failed to update profile data.'
             ], 500);
