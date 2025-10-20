@@ -37,6 +37,8 @@ Route::middleware(AjaxMiddleware::class)->name('spa.')->prefix('spa')->group(fun
         Route::name('watchlist.')->prefix('watchlist')->group(function () {
             Route::get('/index', [WatchlistController::class, "index"])
                 ->name('index');
+            Route::post('/update', [WatchlistController::class, 'update'])
+                ->name('update');
         });
     });
 

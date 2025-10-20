@@ -57,8 +57,8 @@ export class WatchlistController extends Controller {
         let res1 = await this.#getLatestMovies(); //per test
         console.log(payload);
         payload.watchlists[1].movies = res1;
-        let sap_post = await SPAPostService.getInstance();
-        let res2 = await sap_post.POSTFetch('/spa/watchlist/update/${payload.watchlists[1].id}', null);
+
+        let res2 = await sap_fetch.POSTFetch('/spa/watchlist/update/${payload.watchlists[1].id}', );
 
         console.log(payload.watchlists[1]);
         return payload.watchlists;

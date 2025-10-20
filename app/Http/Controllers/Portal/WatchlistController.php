@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Http\Controllers\Portal;
-use App\Models\Watchlist;  //BOOOOOH
+use App\Models\Watchlist;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -30,22 +31,33 @@ class WatchlistController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+        public function update(Request $request, Watchlist $w) : JsonResponse
     {
-    $watchlist = Watchlist::findOrFail($id);  //Bisogna importare il model
+        try {
+            // Recuperiamo la watchlist dal model (puoi usare direttamente $w)
+            $watchlist = Watchlist::findOrFail($w->id);
 
-    $validated = $request->validate([
-        'name'   => 'required|string|max:255',
-        'movies' => 'required|array', // ci aspettiamo un array
-    ]);
+            // Validazione dei campi effettivamente presenti nella tabella
+            $validatedData = $request->validate([
+                'name'   => 'required|string|max:255',
+                'movies' => 'required|array', // ci aspettiamo un array di film
+            ]);
 
-    // Salviamo come JSON
-    $watchlist->name   = $validated['name'];
-    $watchlist->movies = json_encode($validated['movies']);
-    $watchlist->save();
+            // Aggiorniamo i campi
+            $watchlist->update([
+                'name'   => $validatedData['name'],
+                'movies' => json_encode($validatedData['movies']), // salviamo come JSON
+            ]);
 
-    return redirect()->route('watchlist.index')
-                     ->with('success', 'Watchlist aggiornata con successo!');
+            return response()->json([
+                'message' => 'Watchlist updated successfully.',
+                'watchlist' => $watchlist,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Failed to update watchlist.'
+            ], 500);
+        }
     }
 
     /**
