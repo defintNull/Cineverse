@@ -38,9 +38,6 @@ Route::middleware(AjaxMiddleware::class)->name('spa.')->prefix('spa')->group(fun
             Route::get('/index', [Watchlist::class, "index"])
                 ->name('index');
         });
-    });
-
-    Route::middleware('auth:sanctum')->group(function () {
         Route::name('profile.')->prefix('profile')->group(function () {
             Route::get('/show', [Profile::class, "show"])
                 ->name('show');
