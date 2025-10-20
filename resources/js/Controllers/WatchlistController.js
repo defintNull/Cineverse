@@ -29,11 +29,9 @@ export class WatchlistController extends Controller {
     async start() {
 
         //console.log("AAA")
+        this.#loadwatchlists();
         this.#WatchlistView.render();
-        this.#WatchlistView.populatewatchlistelement(this.#loadwatchlists.bind(this));
-
-
-
+        //this.#WatchlistView.addWatchlistSidebar(this.#loadwatchlists.bind(this));
     }
 
     async #getLatestMovies() {
@@ -50,11 +48,12 @@ export class WatchlistController extends Controller {
         let res = await sap_fetch.GETFetch('/spa/watchlist/index', null);
         let payload = await res.json();
         //al carousel va passata una watchlist
-        this.#WatchlistView.addWatchlistCarousel(payload.watchlists[0]);
+        this.#WatchlistView.addWatchlistSidebar(payload.watchlists)
+        this.#WatchlistView.addWatchlistGrid(payload.watchlists[0]);
         //PER ORA HO SOLO L'ARRAY DI INTERI, MA MI SERVE UN ARRAY DI MOVIES
         res = await this.GetEachMovie(payload.watchlists[0].movies);
         //Ora che ho l'array di movies lo posso visualizzare
-        this.#WatchlistView.addWatchlistCarouselElements(res);
+        this.#WatchlistView.addWatchlistGridElements(res);
 
         //TEST INSERIMENTO
         /*
