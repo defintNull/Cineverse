@@ -48,14 +48,17 @@ Route::middleware(AjaxMiddleware::class)->name('spa.')->prefix('spa')->group(fun
         Route::name('profile.')->prefix('profileinfo')->group(function () {
             Route::get('/index', [Profile::class, 'index'])
                 ->name('index');
-            Route::get('/check-username', [Profile::class, 'checkUsername'])
+            Route::get('/check-username/{username}', [Profile::class, 'checkUsername'])
                 ->name('check-username');
+            Route::get('/check-email/{email}', [Profile::class, 'checkEmail'])
+                ->name('check-email');
             Route::post('/update', [Profile::class, 'update'])
                 ->name('update');
         });
-
     });
 });
+
+Route::get('/check-username/{username}', [Profile::class, 'checkUsername']);
 
 /**
  * Collection route for the spa that redirect all the unwanted route to the main route

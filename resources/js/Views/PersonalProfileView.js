@@ -203,8 +203,9 @@ export class ProfileView extends View {
                     try {
                         const spaFetch = await SPAFetchService.getInstance();
                         // build query string properly
-                        const res = await spaFetch.GETFetch('/spa/profileinfo/check-username', { username: value });
-                        if (!res.ok) {
+                        const res = await spaFetch.GETFetch('/spa/profileinfo/check-username/'+value,{});
+
+                        if (res.status && res.status !== 200) {
                             // show a non-blocking message
                             if (errorField) errorField.innerHTML = 'Impossibile verificare disponibilità.';
                             return;
@@ -218,13 +219,62 @@ export class ProfileView extends View {
                         } else {
                             if (errorField) {
                                 errorField.innerHTML = 'Nome utente già in uso';
-                                errorField.classList.remove('text-green-600');
+                                errorField.classList.remove('text-red-600');
                             }
                         }
                     } catch (e) {
+                        console.log(e);
                         if (errorField) errorField.innerHTML = 'Errore nella verifica';
                     }
                 }, 500); // 500ms debounce after user stops typing
+            });
+        }
+
+        // attach email availability check when user finishes typing
+        const emailInput = document.getElementById("email_input");
+        if (emailInput) {
+            let debounceTimerEmail = null;
+            emailInput.addEventListener('input', async (ev) => {
+                const value = ev.target.value.trim();
+                const errorField = document.getElementById('email_input')?.nextElementSibling;
+
+                // clear previous message
+                if (errorField) {
+                    errorField.innerHTML = '';
+                    errorField.classList.remove('text-green-600');
+                }
+
+                if (debounceTimerEmail) clearTimeout(debounceTimerEmail);
+                if (value.length === 0) return;
+
+                debounceTimerEmail = setTimeout(async () => {
+                    try {
+                        const spaFetch = await SPAFetchService.getInstance();
+                        // encode email to be URL-safe
+                        const encoded = encodeURIComponent(value);
+                        const res = await spaFetch.GETFetch('/spa/profileinfo/check-email/'+encoded,{});
+
+                        if (res.status && res.status !== 200) {
+                            if (errorField) errorField.innerHTML = 'Impossibile verificare disponibilit\u00e0.';
+                            return;
+                        }
+                        const json = await res.json();
+                        if (json.available) {
+                            if (errorField) {
+                                errorField.innerHTML = 'Disponibile \u2705';
+                                errorField.classList.add('text-green-600');
+                            }
+                        } else {
+                            if (errorField) {
+                                errorField.innerHTML = 'Email gi\u00e0 in uso';
+                                errorField.classList.remove('text-red-600');
+                            }
+                        }
+                    } catch (e) {
+                        console.log(e);
+                        if (errorField) errorField.innerHTML = 'Errore nella verifica';
+                    }
+                }, 500);
             });
         }
     }
