@@ -52,7 +52,8 @@ export class ArchiveView extends View {
         // Search
         let sbar = this.#searchbar.getComponentElement();
         sbar.id = "search_form";
-        sbar.querySelector("input").value = ((state !== undefined && state !== null) ? state.search : "");
+        console.log(state);
+        sbar.querySelector("input").value = ((state !== undefined && state !== null && state.search !== undefined) ? state.search : "");
         sbar.classList.add("pb-6", "border-b", "border-gray-600", "mb-2");
         filter_container.appendChild(sbar);
 
@@ -285,7 +286,7 @@ export class ArchiveView extends View {
         let elements_container = document.getElementById("elements_container");
         elements.forEach(el => {
             let card = document.createElement("div");
-            card.classList.add("bg-slate-50", "dark:bg-gray-700", "rounded-xl", "flex", "flex-col", "pb-2", "cursor-pointer");
+            card.classList.add("bg-slate-50", "dark:bg-gray-700", "max-h-[440px]", "rounded-xl", "flex", "flex-col", "pb-2", "cursor-pointer");
             el instanceof Movie ? card.classList.add("movie-card") : card.classList.add("serie-card");
             let img = document.createElement("img");
             img.classList.add("rounded-t-xl");
