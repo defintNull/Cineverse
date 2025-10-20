@@ -37,6 +37,7 @@ export class WatchlistView extends View {
 
         // Sidebar (left list)
         const sidebar = document.createElement("aside");
+        sidebar.id = "left"
         sidebar.classList.add("w-64", "bg-gray-800", "p-4");
 
         const sidebarTitle = document.createElement("h2");
@@ -45,31 +46,9 @@ export class WatchlistView extends View {
         sidebar.appendChild(sidebarTitle);
 
         const sidebarList = document.createElement("ul");
+        sidebarList.id = "watchlist"
         sidebarList.classList.add("space-y-2");
 
-        /*
-        let sap_fetch = await SPAFetchService.getInstance();
-
-        let res = await sap_fetch.GETFetch('/spa/watchlist/index', null);
-        let payload = await res.json();
-
-
-        async function loadWatchlists() {  //PRENDO LE WATCHLIST DAL DB
-        const res = await fetch("/api/watchlists");
-        const data = await res.json();
-        return data.map(w => Watchlist.fromJson(w));
-        }
-        //watchlists[0].name è il nome della prima watchlist presa
-        //QUI PRENDO I NOMI DELLE WATCHLIST E LI VISUALIZZO NELLA LISTA A SX
-        loadWatchlists().then(watchlists => {
-            watchlists.forEach(item => {
-            const li = document.createElement("li");
-            li.classList.add("hover:bg-gray-700", "p-2", "rounded", "cursor-pointer");
-            li.innerText = item.name;
-            sidebarList.appendChild(li);
-        });
-        });
-        */
 
         sidebar.appendChild(sidebarList);
 
@@ -79,7 +58,7 @@ export class WatchlistView extends View {
 
         const mainTitle = document.createElement("h1");
         mainTitle.classList.add("text-2xl", "font-bold", "mb-6");
-        mainTitle.innerText = "Film della watchlist";
+        mainTitle.innerText = "Film della watchlist"; //QUI CI VA IL NOME DELLA WATCHLIST
         main.appendChild(mainTitle);
 
         const trackList = document.createElement("ul");
@@ -119,4 +98,19 @@ export class WatchlistView extends View {
         // Append to <main> in DOM
         document.body.querySelector("main").appendChild(container);
     }
+
+
+    async populatewatchlistelement(callback){
+        let sidebar = document.getElementById("left");
+        let sidebarList = document.getElementById("watchlist");
+        let watchlists = await callback();
+        watchlists.forEach(item => {
+            const li = document.createElement("li");
+            li.classList.add("hover:bg-gray-700", "p-2", "rounded", "cursor-pointer");
+            li.innerText = item.name;
+            sidebarList.appendChild(li);
+            });
+        sidebar.appendChild(sidebarList);
+    }
+
 }

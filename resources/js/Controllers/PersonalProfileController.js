@@ -36,7 +36,7 @@ export class ProfileController extends Controller {
         (async () => {
             try {
                 const spaFetch = await SPAFetchService.getInstance();
-                const res = await spaFetch.GETFetch('/spa/profile/show/12', {});
+                const res = await spaFetch.GETFetch('/spa/profileinfo/index', {});
 
                 if (res.status === 200) {
                     const payload = await res.json();
@@ -45,7 +45,8 @@ export class ProfileController extends Controller {
                         'email':    payload.email ?? '',
                         'name':     payload.name ?? '',
                         'surname':  payload.surname ?? '',
-                        'nationality': payload.nationality ?? ''
+                        'nationality': payload.nationality ?? '',
+                        'theme': payload.theme ?? '0'
                     });
                 } else if (res.status === 401) {
                     this.#router.overridePath({}, "/login");
@@ -82,7 +83,7 @@ export class ProfileController extends Controller {
         // Fetching form data
         let formData = new FormData(document.getElementById("profile_form"));
 
-        let res = await spa_fetch.POSTFetch('/spa/profile/update', formData);
+        let res = await spa_fetch.POSTFetch('/spa/profileinfo/update', formData);
         let payload = await res.json();
 
         // Handling errors
@@ -96,6 +97,7 @@ export class ProfileController extends Controller {
             this.#profileView.globalErrorField("Non autorizzato. Effettua il login.");
         } else if (res.status === 200) {
             this.#router.overridePath({}, "/");
+            localStorage.setItem("theme", payload.theme);
         } else {
             this.#profileView.globalErrorField("Ops! Qualcosa è andato storto.");
         }

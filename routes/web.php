@@ -3,7 +3,7 @@
 use App\Http\Middleware\AjaxMiddleware;
 use App\Http\Controllers\Authentication\Login;
 use App\Http\Controllers\Authentication\Register;
-use App\Http\Controllers\Portal\Watchlist;
+use App\Http\Controllers\Portal\WatchlistController;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Authentication\Profile;
@@ -35,16 +35,21 @@ Route::middleware(AjaxMiddleware::class)->name('spa.')->prefix('spa')->group(fun
      */
     Route::middleware('auth:sanctum')->group(function () {
         Route::name('watchlist.')->prefix('watchlist')->group(function () {
-            Route::get('/index', [Watchlist::class, "index"])
+            Route::get('/index', [WatchlistController::class, "index"])
                 ->name('index');
+            Route::post('/update', [WatchlistController::class, 'update'])
+                ->name('update');
         });
     });
 
     Route::middleware('auth:sanctum')->group(function () {
-        Route::name('profile.')->prefix('profile')->group(function () {
-            Route::get('/show', [Profile::class, "show"])
-                ->name('show');
+        Route::name('profile.')->prefix('profileinfo')->group(function () {
+            Route::get('/index', [Profile::class, 'index'])
+                ->name('index');
+            Route::post('/update', [Profile::class, 'update'])
+                ->name('update');
         });
+
     });
 });
 
