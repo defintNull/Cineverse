@@ -55,4 +55,32 @@ class Profile extends Controller
         }
     }
 
+    /**
+     * Check if a username is available for use by other users.
+     * Returns { available: true } when no other user uses the same username,
+     * allowing the current authenticated user to keep their username.
+     */
+    public function checkUsername(Request $request) : JsonResponse {
+        try {
+            $username = $request->query('username');
+            if (!$username) {
+                return response()->json(['error' => 'Missing username parameter.'], 400);
+            }
+
+            $user = Auth::user();
+
+            $query = User::where('username', $username);
+            if ($user) {
+                // exclude current user from the check so they can keep their username
+                $query->where('id', '!=', $user->id);
+            }
+
+            $exists = $query->exists();
+
+            return response()->json([ 'available' => !$exists ]);
+        } catch (\Exception $e) {
+            return response()->json([ 'error' => 'Failed to check username.' ], 500);
+        }
+    }
+
 }

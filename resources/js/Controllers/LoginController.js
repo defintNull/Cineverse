@@ -64,6 +64,8 @@ export class LoginController extends Controller {
         } else if(res.status == 200) {
             this.#router.overridePath({}, "/");
             localStorage.setItem("theme", payload.theme);
+            localStorage.setItem("access", payload.access);
+            localStorage.setItem("auth_token", payload.token);
         } else {
             this.#loginView.gestisciErrori("Ops! Something whent wrong!");
         }

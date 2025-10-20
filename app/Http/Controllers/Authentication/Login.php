@@ -36,7 +36,8 @@ class Login extends Controller
 
             return response()->json([
                 'access' => 'garanted',
-                'theme' => Auth::user()->theme
+                'theme' => Auth::user()->theme,
+                'token' => $request->session()->token(),
             ]);
         }
 

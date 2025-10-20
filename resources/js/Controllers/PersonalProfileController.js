@@ -98,7 +98,8 @@ export class ProfileController extends Controller {
         } else if (res.status === 200) {
             this.#router.overridePath({}, "/");
             localStorage.setItem("theme", payload.theme);
-        } else {
+        }
+        else {
             this.#profileView.globalErrorField("Ops! Qualcosa è andato storto.");
         }
     }

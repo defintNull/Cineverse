@@ -16,13 +16,22 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     @endif
 
+    <style>
+        @custom-variant dark (&:where(.dark, .dark *));
+    </style>
+
     <script>
     // On page load or when changing themes, best to add inline in `head` to avoid FOUC
-    if (localStorage.getItem('theme') === 0 || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-        document.documentElement.classList.add('dark');
-    } else {
-        document.documentElement.classList.remove('dark')
-    }
+    (function () {
+        // localStorage stores strings: '0' = dark, '1' = light
+        const theme = localStorage.getItem('theme');
+
+        if (theme === '0' || (theme === null && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    })();
 </script>
 </head>
 
