@@ -39,13 +39,14 @@ class Profile extends Controller
                 'name' => 'required|string|max:255',
                 'surname' => 'required|string|max:255',
                 'nationality' => 'required|string|max:255',
-                'theme' => 'required|string|max:255',
+                'theme' => 'required|boolean|max:1',
                 'email' => 'required|email|max:255|unique:users,email,' . $user->id,
                 'username' => 'required|string|max:255|unique:users,username,' . $user->id,
             ]);
             $userModel->update($validatedData);
             return response()->json([
-                'message' => 'Profile updated successfully.'
+                'message' => 'Profile updated successfully.',
+                'theme' => $userModel->theme,
             ]);
         } catch (\Exception $e) {
             return response()->json([

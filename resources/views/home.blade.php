@@ -15,6 +15,15 @@
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     @endif
+
+    <script>
+    // On page load or when changing themes, best to add inline in `head` to avoid FOUC
+    if (localStorage.getItem('theme') === 0 || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+    } else {
+        document.documentElement.classList.remove('dark')
+    }
+</script>
 </head>
 
 <body class="bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900 min-h-screen flex flex-col">
@@ -22,15 +31,16 @@
     <!-- Header -->
     <header class="w-full bg-blue-600 text-white shadow-md">
         <div class="max-w-7xl mx-auto flex justify-between items-center px-6 py-4">
-            <img id="home" src="{{ asset('images/cineverselogo.png') }}" alt="Cineverse Logo" class="w-32 h-32 object-contain cursor-pointer self-start"/>
-            <div class="flex items-center space-x-2 group">
+            <img id="home" src="{{ asset('images/cineverselogo.png') }}" alt="Cineverse Logo"
+                class="w-32 h-32 object-contain cursor-pointer self-start" />
+            <a href="{{ url('/profile') }}" title="Profilo" class="flex items-center space-x-2 group focus:outline-none focus:ring-2 focus:ring-yellow-300 rounded">
                 <span class="sr-only">Profilo</span>
                 <svg class="w-10 h-10 rounded-full border-2 border-white group-hover:border-yellow-300 bg-white text-blue-600 transition"
-                    fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                     fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                     <circle cx="12" cy="8" r="4" />
                     <path d="M4 20c0-4 4-6 8-6s8 2 8 6" />
                 </svg>
-            </div>
+            </a>
         </div>
     </header>
 

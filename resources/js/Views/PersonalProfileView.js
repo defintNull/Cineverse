@@ -188,5 +188,6 @@ export class ProfileView extends View {
         document.getElementById("name_input").value = data.name || "";
         document.getElementById("surname_input").value = data.surname || "";
         document.getElementById("nationality_input").value = data.nationality || "";
+        document.getElementById("theme_input").value = data.theme || "0";
     }
 }
