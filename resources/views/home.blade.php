@@ -20,19 +20,6 @@
         @custom-variant dark (&:where(.dark, .dark *));
     </style>
 
-    <script>
-    // On page load or when changing themes, best to add inline in `head` to avoid FOUC
-    (function () {
-        // localStorage stores strings: '0' = dark, '1' = light
-        const theme = localStorage.getItem('theme');
-
-        if (theme === '0' || (theme === null && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
-    })();
-</script>
 </head>
 
 <body class="bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900 min-h-screen flex flex-col">
