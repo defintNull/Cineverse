@@ -25,10 +25,6 @@ export class WatchlistView extends View {
 
 
     render(element) {
-
-
-
-
         this.#element = element;
 
         // Root container
@@ -111,6 +107,61 @@ export class WatchlistView extends View {
             sidebarList.appendChild(li);
             });
         sidebar.appendChild(sidebarList);
+    }
+
+    addWatchlistCarousel(watchlist) {
+        // Container
+        let carousel_container = document.createElement("div");
+        carousel_container.id = "watchlist_carousel";
+        carousel_container.classList.add(
+            "flex", "flex-col", "items-left", "w-full", "pl-8", "overflow-x-auto"
+        );
+
+        // Titolo
+        let title = document.createElement("p");
+        title.classList.add(
+            "text-gray-900", "dark:text-white", "text-2xl", "font-semibold", "pl-4"
+        );
+        title.innerText = "Film della watchlist: " + watchlist.name;
+
+        // Contenitore orizzontale
+        let carousel = document.createElement("div");
+        carousel.classList.add(
+            "flex", "flex-row", "items-center", "pr-8", "gap-x-16",
+            "relative", "py-4", "h-80", "overflow-x-auto", "mt-6",
+            "scrollbar", "scrollbar-thumb-gray-400", "scrollbar-track-gray-100",
+            "dark:scrollbar-thumb-gray-500", "dark:scrollbar-track-gray-800"
+        );
+
+        // Append
+        carousel_container.appendChild(title);
+        carousel_container.appendChild(carousel);
+
+        document.body.querySelector("main").appendChild(carousel_container);
+    }
+
+    addWatchlistCarouselElements(movies) {
+    let carousel = document.getElementById("watchlist_carousel").querySelector("div");
+
+        movies.forEach(movie => {
+            let card = document.createElement("div");
+            card.classList.add("h-full", "min-w-44", "cursor-pointer", "watchlist_card");
+
+            // Poster
+            let img = document.createElement("img");
+            img.src = MovieDBService.getImageSrc('w780', movie.poster_path);
+            img.alt = movie.title;
+            card.appendChild(img);
+
+            // Hidden id
+            let input = document.createElement("input");
+            input.type = "text";
+            input.value = movie.id;
+            input.hidden = true;
+            card.appendChild(input);
+
+            carousel.appendChild(card);
+        });
     }
 
 }

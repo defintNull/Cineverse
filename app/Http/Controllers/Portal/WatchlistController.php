@@ -32,6 +32,9 @@ class WatchlistController extends Controller
     /**
      * Update the specified resource in storage.
      */
+
+    //DA VEDERE DOPO
+    /*
     public function update(Request $request) : JsonResponse
     {
         try {
@@ -61,6 +64,9 @@ class WatchlistController extends Controller
         }
     }
 
+    */
+
+    //Si aggiunge un film alla lista
     public function addMovie(Request $request) : JsonResponse
     {
         //print(var_dump($request->watchlist));
@@ -70,7 +76,16 @@ class WatchlistController extends Controller
             'movie' => ['required','integer'],
         ]);
         $watchlist = Watchlist::where('id',$request->watchlist)->get()[0];
-        $watchlist->movies[] = $request->movie;
+        //echo($watchlist);
+        //exit();
+        /*
+        $watchlist = Watchlist::create([
+            "name"=>"bla bla ",
+
+        ])*/
+        $movies = $watchlist->movies;
+        $movies[] = $request->movie;
+        $watchlist->movies = $movies;
         $watchlist->save();
         return response()->json([
             'status'=>'200'
