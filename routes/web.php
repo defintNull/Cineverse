@@ -44,6 +44,8 @@ Route::middleware(AjaxMiddleware::class)->name('spa.')->prefix('spa')->group(fun
         Route::name('profile.')->prefix('profileinfo')->group(function () {
             Route::get('/index', [Profile::class, 'index'])
                 ->name('index');
+            Route::get('/check-username', [Profile::class, 'checkUsername'])
+                ->name('check-username');
             Route::post('/update', [Profile::class, 'update'])
                 ->name('update');
         });
