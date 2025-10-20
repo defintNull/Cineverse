@@ -25,6 +25,13 @@ export class ProfileController extends Controller {
             return;
         }
 
+        const theme = localStorage.getItem('theme');
+
+        if (theme === '0' || (theme === null && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
         this.#profileView.render();
         // this.#profileView.viewPopulateData({
         //     'username': 'gerry.scotti',
@@ -42,9 +49,9 @@ export class ProfileController extends Controller {
                     const payload = await res.json();
                     this.#profileView.viewPopulateData({
                         'username': payload.username ?? '',
-                        'email':    payload.email ?? '',
-                        'name':     payload.name ?? '',
-                        'surname':  payload.surname ?? '',
+                        'email': payload.email ?? '',
+                        'name': payload.name ?? '',
+                        'surname': payload.surname ?? '',
                         'nationality': payload.nationality ?? '',
                         'theme': payload.theme ?? '0'
                     });
@@ -98,6 +105,16 @@ export class ProfileController extends Controller {
         } else if (res.status === 200) {
             this.#router.overridePath({}, "/");
             localStorage.setItem("theme", payload.theme);
+            (function () {
+                // localStorage stores strings: '0' = dark, '1' = light
+                const theme = localStorage.getItem('theme');
+
+                if (theme === '0' || (theme === null && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+            })();
         }
         else {
             this.#profileView.globalErrorField("Ops! Qualcosa è andato storto.");

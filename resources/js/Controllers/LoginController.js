@@ -50,22 +50,32 @@ export class LoginController extends Controller {
         let res = await sap_fetch.POSTFetchForm('/spa/login', formData);
         let payload = await res.json();
 
-                //Handling errors
-        if(res.status == 429) {
+        //Handling errors
+        if (res.status == 429) {
             //Too many request
             this.#loginView.gestisciErrori("Too many requests!");
-        } else if(res.status == 422) {
+        } else if (res.status == 422) {
             //Validation errors
             Object.keys(payload.errors).forEach(el => {
                 this.#loginView.gestisciErrori(el + "_input", payload.errors[el]);
             });
-        } else if(res.status == 401 && payload.access) {
+        } else if (res.status == 401 && payload.access) {
             this.#loginView.gestisciErrori("Wrong username or password")
-        } else if(res.status == 200) {
+        } else if (res.status == 200) {
             this.#router.overridePath({}, "/");
             localStorage.setItem("theme", payload.theme);
             localStorage.setItem("access", payload.access);
             localStorage.setItem("auth_token", payload.token);
+            (function () {
+                // localStorage stores strings: '0' = dark, '1' = light
+                const theme = localStorage.getItem('theme');
+
+                if (theme === '0' || (theme === null && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+            })();
         } else {
             this.#loginView.gestisciErrori("Ops! Something whent wrong!");
         }
