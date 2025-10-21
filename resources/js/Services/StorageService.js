@@ -5,7 +5,6 @@ export class StorageService {
         if (StorageService.#instance) {
             return StorageService.#instance;
         }
-        localStorage.clear();
         StorageService.#instance = this;
     }
 
