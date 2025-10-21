@@ -23,7 +23,7 @@ export class ProfileController extends Controller {
      * Method invoked by the router that builds the page and sets the event listeners
      */
     start() {
-        this.#navbar.changeSelectedNavbarLink("profile");
+        this.#navbar.changeSelectedNavbarLink("personal_profile");
 
         this.#profileView.render();
         // this.#profileView.viewPopulateData({

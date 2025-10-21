@@ -7,6 +7,7 @@ import { ProfileController } from "./Controllers/PersonalProfileController";
 import { WatchlistController } from "./Controllers/WatchlistController";
 import { ArchiveController } from "./Controllers/ArchiveController";
 import { LogoutController } from "./Controllers/LogoutController";
+import { AuthService } from "./Services/AuthService";
 
 
 /**
@@ -15,25 +16,26 @@ import { LogoutController } from "./Controllers/LogoutController";
 export class Router {
     static #instance = null;
     #currentController = null;
+    #authService;
 
     // Routing deinition
     routes = {
-        "/": HomeController,
-        "/detail": DetailController,
-        "/archive": ArchiveController,
-        "/debug": DebugController,
-        "/login": LoginController,
-        "/logout": LogoutController,
-        "/register": RegistrationController,
-        "/profile": ProfileController,
-        "/watchlists": WatchlistController,
+        "/": [HomeController, null],
+        "/detail": [DetailController, null],
+        "/archive": [ArchiveController, null],
+        "/debug": [DebugController, null],
+        "/login": [LoginController, null],
+        "/logout": [LogoutController, "auth"],
+        "/register": [RegistrationController, null],
+        "/profile": [ProfileController, "auth"],
+        "/watchlists": [WatchlistController, "auth"],
     }
 
     constructor() {
         if(Router.#instance != null) {
             return Router.#instance;
         }
-
+        this.#authService = AuthService.getInstance();
         Router.#instance = this;
     }
 
@@ -53,10 +55,18 @@ export class Router {
      */
     resolve(path) {
         if(this.#currentController != null) {
+            window.scrollTo({top: 0, behavior: 'smooth'});
             this.#currentController.destroy();
         }
 
-        let controller = this.routes[path];
+        let route = this.routes[path];
+        if(route[1] == "auth") {
+            if(!this.#authService.checkAuth()) {
+                this.overridePath({}, "/");
+                return;
+            }
+        }
+        let controller = route[0];
         if(controller) {
             this.#currentController = new controller();
             this.#currentController.start();
