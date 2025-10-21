@@ -1,3 +1,4 @@
+import { Navbar } from "../navbar";
 import { Router } from "../router";
 import { MovieDBService } from "../Services/MovieDBService";
 import { HomeView } from "../Views/HomeView";
@@ -31,6 +32,8 @@ export class HomeController extends Controller {
      *  Method invoked by the router that build the page and set the event listeners
      */
     async start() {
+        (new Navbar()).changeSelectedNavbarLink("home");
+
         this.#homeView.render();
         let res = await this.#populateCarouselElement();
         if(res != false) {

@@ -2,6 +2,7 @@ import { Controller } from "./Controller";
 import { LoginView } from "../Views/LoginView";
 import { Router } from "../router";
 import { SPAFetchService } from "../Services/SPAFetchService";
+import { Navbar } from "../navbar";
 
 /**
  * Controller class that manage the login route
@@ -20,6 +21,7 @@ export class LoginController extends Controller {
      *  Method invoked by the router that build the page and set the event listeners
      */
     start() {
+        (new Navbar()).changeSelectedNavbarLink("login");
 
         this.#loginView.render();
         this.#loginView.addEventListeners(this.#loginHandler.bind(this));

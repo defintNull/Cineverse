@@ -1,6 +1,7 @@
 import { Language } from "../Models/Language";
 import { Movie } from "../Models/Movie";
 import { Serie } from "../Models/Serie";
+import { Navbar } from "../navbar";
 import { Router } from "../router";
 import { MovieDBService } from "../Services/MovieDBService";
 import { ArchiveView } from "../Views/ArchiveView";
@@ -24,6 +25,8 @@ export class ArchiveController extends Controller {
     }
 
     async start() {
+        (new Navbar()).changeSelectedNavbarLink("archive");
+
         await this.#archiveView.render(this.#advanceSearchHandle.bind(this), this.#router.getState());
         this.#archiveView.setLanguageList(this.#languageListHandler.bind(this));
         this.#archiveView.setGenresList(this.#genreListHandler.bind(this));

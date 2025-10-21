@@ -22,7 +22,7 @@
 
     <!-- Header -->
     <header class="w-full bg-indigo-500 dark:bg-gray-900 text-gray-900 dark:text-white shadow-md">
-        <div class="max-w-7xl mx-auto flex justify-between items-center px-6 py-4">
+        <div id="navbar" class="max-w-7xl mx-auto flex justify-between items-center px-6 py-4">
             <div class="flex flex-row gap-x-12 items-center justify-center">
                 <img id="home" src="{{ asset('images/cineverselogo.png') }}" alt="Cineverse Logo" class="w-16 h-16 object-contain cursor-pointer self-start" />
                 <div class="flex flex-row gap-x-10 items-center justify-center text-center font-semibold">

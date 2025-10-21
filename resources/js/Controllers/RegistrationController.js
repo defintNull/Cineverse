@@ -1,3 +1,4 @@
+import { Navbar } from "../navbar";
 import { Router } from "../router";
 import { SPAFetchService } from "../Services/SPAFetchService";
 import { RegisterView } from "../Views/RegisterView";
@@ -20,6 +21,8 @@ export class RegistrationController extends Controller {
      * Method invoked by the router that build the page and set the event listeners
      */
     start() {
+        (new Navbar()).changeSelectedNavbarLink("register");
+
         this.#registerView.render();
         this.#registerView.addEventListeners(this.#registerFormHandler.bind(this));
     }

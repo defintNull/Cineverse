@@ -11,6 +11,9 @@ class App {
     }
 
     start() {
+        // Deciding light-mode
+        document.documentElement.classList.toggle("dark", window.matchMedia("(prefers-color-scheme: dark)").matches);
+
         // Adding on change path event
         window.addEventListener('popstate', () => {
             this.#router.resolve(window.location.pathname);
