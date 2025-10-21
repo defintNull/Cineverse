@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Models\Watchlist;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
@@ -15,13 +16,14 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // User::factory(10)->create();
+        User::factory(10)->create();
 
         User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
         ]);
 
-        User::factory(10)->create();
+
 
         User::factory()->create([
             'name' => 'Gerry',
@@ -36,6 +38,17 @@ class DatabaseSeeder extends Seeder
             'theme' => 0,
             'preferredgenres' => ['Game Show', 'Reality'],
             'nationality' => 'Italy'
+        ]);
+
+        Watchlist::factory()->create([
+            'name' => 'My Watchlist1',
+            'movies' => [550,120],
+        ]);
+
+        Watchlist::factory()->create([
+            'name' => 'My Watchlist2',
+            'movies' => [550],
+            'user_id' => 12,
         ]);
     }
 }

@@ -25,10 +25,14 @@ export class WatchlistController extends Controller {
     /**
      * Method invoked by the router that build the page and set the event listeners
      */
-
+    //L'idea è quella di creare
+    //1) La struttura di base per le watchlist
+    //2)Popolare le watchlist e mettere la struttura per la griglia perchè so quanti
+    // film ci sono in ogni watchlist
+    //3)Popolare la griglia con i film effettivi
     async start() {
         let moviezz = await this.#loadwatchlists()
-        //console.log(moviezz);
+        console.log(moviezz[0]);
         let moviez = await this.GetEachMovie(moviezz[0].movies);
         this.#WatchlistView.render();
         this.#WatchlistView.populateWatchlistsLayout(this.#loadwatchlists.bind(this));
@@ -79,6 +83,7 @@ export class WatchlistController extends Controller {
 
     //IMP per trasformare un array di interi di id dei film in un array di film effettivi
     async GetEachMovie(movies) {
+        console.log("Array di ID film:", movies);
         let res = await Promise.all(
             movies.map(element => this.#movieDB.getMovie(element))
         );

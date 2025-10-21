@@ -30,7 +30,7 @@ export class WatchlistView extends View {
 
     }
 
-    //crea il layout di base chiamato da render e sincrono
+    //step 1)crea il layout di base chiamato da render e sincrono
     createWatchlistsLayout() {
         // Root container con flex row
         const container = document.createElement("div");
@@ -53,7 +53,6 @@ export class WatchlistView extends View {
         document.body.querySelector("main").appendChild(container);
     }
 
-    //popola il layout chiamato dal controller ed asincrono
     async populateWatchlistsLayout(watchlistsfunc) {
         let watchlists = await watchlistsfunc();
         const sidebar = document.getElementById("watchlist_sidebar");
@@ -107,17 +106,6 @@ export class WatchlistView extends View {
         }
     }
 
-
-
-    async renderMovies(movies){
-        //let moviez = WatchlistController.GetEachMovie(watchlists[0].movies)
-        console.log(movies);
-        this.addWatchlistGridElements(movies);
-
-    }
-
-
-
     addWatchlistGrid(watchlist) {
         // Container griglia
         const grid_container = document.createElement("div");
@@ -130,7 +118,7 @@ export class WatchlistView extends View {
         title.innerText = "Film della watchlist: " + watchlist.name;
         grid_container.appendChild(title);
 
-        // Griglia
+        // Griglia (vuota, verrà popolata dopo)
         const grid = document.createElement("div");
         grid.classList.add(
             "grid",
@@ -144,6 +132,11 @@ export class WatchlistView extends View {
 
         return grid_container; // ritorno il contenitore
     }
+
+    async renderMovies(movies) {
+    console.log(movies);
+    this.addWatchlistGridElements(movies);
+}
 
     addWatchlistGridElements(movies) {
         let grid = document.getElementById("watchlist_grid").querySelector("div");
@@ -163,7 +156,6 @@ export class WatchlistView extends View {
 
             // Poster
             const img = document.createElement("img");
-            //console.log(movie);
             img.src = MovieDBService.getImageSrc('w780', movie.poster_path);
             img.alt = movie.title;
             img.classList.add("w-full", "h-64", "object-cover");
@@ -188,6 +180,5 @@ export class WatchlistView extends View {
             grid.appendChild(card);
         });
     }
-
 
 }
