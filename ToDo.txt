@@ -6,3 +6,6 @@ movie:
 Serie:
     In corso
     popular
+
+
+AGGIUNGERE IL RESET DELLO SCROLL

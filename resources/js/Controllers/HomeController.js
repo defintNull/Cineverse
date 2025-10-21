@@ -1,6 +1,8 @@
 import { Navbar } from "../navbar";
 import { Router } from "../router";
+import { AuthService } from "../Services/AuthService";
 import { MovieDBService } from "../Services/MovieDBService";
+import { StorageService } from "../Services/StorageService";
 import { HomeView } from "../Views/HomeView";
 import { Controller } from "./Controller";
 
@@ -11,6 +13,9 @@ export class HomeController extends Controller {
     #homeView;
     #movieDBApi;
     #router
+    #navbar
+    #authService
+    #storageService;
 
     #latestMoviePage;
     #popularMoviePage;
@@ -22,6 +27,9 @@ export class HomeController extends Controller {
         this.#homeView = new HomeView();
         this.#movieDBApi = MovieDBService.getInstance();
         this.#router = Router.getInstance();
+        this.#navbar = new Navbar();
+        this.#authService = AuthService.getInstance();
+        this.#storageService = StorageService.getInstance();
         this.#latestMoviePage = 1;
         this.#popularMoviePage = 1;
         this.#latestSeriePage = 1;
@@ -32,7 +40,16 @@ export class HomeController extends Controller {
      *  Method invoked by the router that build the page and set the event listeners
      */
     async start() {
-        (new Navbar()).changeSelectedNavbarLink("home");
+        // Enabling auth navbar
+        if(this.#authService.checkAuth()) {
+            this.#navbar.enableAuthnavbar();
+            document.documentElement.classList.toggle("dark", this.#storageService.getData("theme") == 0);
+        } else {
+            // Deciding light-mode
+            document.documentElement.classList.toggle("dark", window.matchMedia("(prefers-color-scheme: dark)").matches);
+        }
+
+        this.#navbar.changeSelectedNavbarLink("home");
 
         this.#homeView.render();
         let res = await this.#populateCarouselElement();
