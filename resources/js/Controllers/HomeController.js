@@ -14,8 +14,6 @@ export class HomeController extends Controller {
     #movieDBApi;
     #router
     #navbar
-    #authService
-    #storageService;
 
     #latestMoviePage;
     #popularMoviePage;
@@ -28,8 +26,6 @@ export class HomeController extends Controller {
         this.#movieDBApi = MovieDBService.getInstance();
         this.#router = Router.getInstance();
         this.#navbar = new Navbar();
-        this.#authService = AuthService.getInstance();
-        this.#storageService = StorageService.getInstance();
         this.#latestMoviePage = 1;
         this.#popularMoviePage = 1;
         this.#latestSeriePage = 1;
@@ -40,15 +36,6 @@ export class HomeController extends Controller {
      *  Method invoked by the router that build the page and set the event listeners
      */
     async start() {
-        // Enabling auth navbar
-        if(this.#authService.checkAuth()) {
-            this.#navbar.enableAuthnavbar();
-            document.documentElement.classList.toggle("dark", this.#storageService.getData("theme") == 0);
-        } else {
-            // Deciding light-mode
-            document.documentElement.classList.toggle("dark", window.matchMedia("(prefers-color-scheme: dark)").matches);
-        }
-
         this.#navbar.changeSelectedNavbarLink("home");
 
         this.#homeView.render();

@@ -5,6 +5,10 @@ export class StorageService {
         if (StorageService.#instance) {
             return StorageService.#instance;
         }
+        if(!sessionStorage.getItem("isActiveSession")) {
+            localStorage.clear();
+            sessionStorage.setItem("isActiveSession", true);
+        }
         StorageService.#instance = this;
     }
 
@@ -20,14 +24,11 @@ export class StorageService {
     }
 
     setData(key, value) {
-        console.log('Saving key:', key, 'value:', value);
         localStorage.setItem(key, value);
     }
 
     getData(key) {
-        const val = localStorage.getItem(key);
-        console.log('Getting key:', key, 'value:', val);
-        return val;
+        return localStorage.getItem(key);
     }
 
     removeData(key) {

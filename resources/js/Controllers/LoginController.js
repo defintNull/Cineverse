@@ -14,6 +14,7 @@ export class LoginController extends Controller {
     #router
     #authService;
     #storageService;
+    #navbar;
 
     constructor() {
         super();
@@ -21,6 +22,7 @@ export class LoginController extends Controller {
         this.#router = Router.getInstance();
         this.#authService = AuthService.getInstance();
         this.#storageService = StorageService.getInstance();
+        this.#navbar = Navbar.getInstance();
     }
 
     /**
@@ -72,9 +74,11 @@ export class LoginController extends Controller {
         } else if (res.status == 200) {
             this.#authService.setAuth(true);
 
+            this.#navbar.render();
+
             // Setting theme
             this.#storageService.setData("theme", payload.theme);
-            document.documentElement.classList.toggle("dark", payload.theme == 0);
+            document.documentElement.classList.toggle("dark", this.#storageService.getData("theme") == 0);
 
             this.#router.overridePath({}, "/");
         } else {
