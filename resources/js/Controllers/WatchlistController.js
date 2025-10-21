@@ -31,14 +31,30 @@ export class WatchlistController extends Controller {
     // film ci sono in ogni watchlist
     //3)Popolare la griglia con i film effettivi
     async start() {
-        let moviezz = await this.#loadwatchlists()
-        console.log(moviezz[0]);
-        let moviez = await this.GetEachMovie(moviezz[0].movies);
+        let watchlists = await this.#loadwatchlists();
+        let watchlistsWithMovies = await Promise.all(
+            watchlists
+                .filter(w => Array.isArray(w.movies) && w.movies.length > 0)
+                .map(async w => {
+                let movies = await this.GetEachMovie(w.movies);
+                return { watchlist: w, movies };
+                })
+            );
+
+        console.log("watchlistsWithMovies:", watchlistsWithMovies);
         this.#WatchlistView.render();
         const refs = await this.#WatchlistView.populateWatchlistsLayout(this.#loadwatchlists.bind(this));
         console.log("refs", refs);
-        const refs2 = await this.#WatchlistView.renderMovies(moviez);
-        this.#WatchlistView.addEventListeners(refs);
+        //const refs2 = await this.#WatchlistView.renderMovies(moviez[0]); //questo va messo dinamico
+        // Mostro di default la prima watchlist con i suoi film
+        if (watchlistsWithMovies.length > 0) {
+        await this.#WatchlistView.renderMovies(
+            watchlistsWithMovies[0].movies,
+            watchlistsWithMovies[0].watchlist
+        );
+        }
+        this.#WatchlistView.addEventListeners(refs, watchlistsWithMovies);
+
     }
 
     /*
@@ -58,29 +74,6 @@ export class WatchlistController extends Controller {
         //console.log(payload.watchlists);
         return payload.watchlists;
         //al carousel va passata una watchlist
-        this.#WatchlistView.addWatchlistSidebar(payload.watchlists)
-        this.#WatchlistView.addWatchlistGrid(payload.watchlists[0]);
-        //PER ORA HO SOLO L'ARRAY DI INTERI, MA MI SERVE UN ARRAY DI MOVIES
-        res = await this.GetEachMovie(payload.watchlists[0].movies);
-        //Ora che ho l'array di movies lo posso visualizzare
-        this.#WatchlistView.addWatchlistGridElements(res);
-
-        //TEST INSERIMENTO
-        /*
-        let res1 = await this.#getLatestMovies(); //per test
-        //console.log(payload);
-        payload.watchlists[1].movies = res1;
-
-        //let payload1 = {};
-        payload1.watchlist = 2;  //ID DELLA WATCHLIST A CUI AGGIUNGERE UN FILM
-        payload1.movie = res1.results[0].id; //Secondo elemento della coppia, l'ID del film da aggiundere
-        console.log(res1.results[0].id);
-        //aggiungo il film
-        //let res2 = await sap_fetch.POSTFetch('/spa/watchlist/addmovie', payload1);
-
-        //console.log(payload.watchlists[1]);
-        */
-        return payload.watchlists;
     }
 
     //IMP per trasformare un array di interi di id dei film in un array di film effettivi
