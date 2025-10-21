@@ -11,12 +11,38 @@ use Illuminate\Support\Facades\Auth;
 class PostController extends Controller
 {
     /**
+     * Controller per la gestione dei Post all'interno dei gruppi.
+     * Metodi disponibili:
+     * - index: lista dei post di un gruppo (controlla membership)
+     * - store: crea un post per un gruppo (salva author_id e movies come JSON)
+     * - show: mostra un singolo post (carica l'autore)
+     * - update: aggiorna content/movies (solo autore)
+     * - destroy: elimina il post (solo autore)
+     *
+     * Nota: i controlli di autorizzazione sono implementati manualmente qui
+     * (controllo Auth::user() e membership). In progetti più grandi è preferibile
+     * usare Policies di Laravel.
+     */
+    /**
      * Display a listing of the resource.
      */
     public function index(Group $group): JsonResponse
     {
         // Restituisce la lista dei post appartenenti al gruppo specificato.
         // Carichiamo anche l'autore (solo alcuni campi) per evitare N+1.
+        if (!$group) {
+            return response()->json(['error' => 'Group not found'], 404);
+        }
+        // Verifica che l'utente sia autenticato
+        if (!Auth::check()) {
+            return response()->json(['error' => 'Unauthenticated'], 401);
+        }
+        // Verifica che l'utente faccia parte del gruppo (membership)
+        // Qui si assume che la relazione groups sia già caricabile in memoria
+        // (es. tramite eager loading nel middleware) oppure venga richiesta ora.
+        if (!Auth::user()->groups->contains($group)) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
         $posts = Post::where('group_id', $group->id)
             ->with('author:id,username,propic')
             ->orderBy('created_at', 'desc')
@@ -43,9 +69,15 @@ class PostController extends Controller
 
         // Prepara i dati del post. Salviamo l'autore corrente e l'array di movies
         // direttamente nel campo JSON (il modello Post ha il cast a array).
+        // Prendiamo l'utente autenticato e verifichiamo membership
         $user = Auth::user();
         if (!$user) {
             return response()->json(['error' => 'Unauthenticated'], 401);
+        }
+
+        // Controllo di membership: se l'utente non appartiene al gruppo non può postare
+        if (!Auth::user()->groups->contains($group->id)) {
+            return response()->json(['error' => 'Unauthorized'], 403);
         }
 
         $post = Post::create([
@@ -66,10 +98,13 @@ class PostController extends Controller
     public function show(Post $post): JsonResponse
     {
         // Restituisce il post richiesto. Carichiamo anche l'autore per comodità.
+        // Il metodo si limita a restituire il post; eventuali controlli di
+        // visibilità (ad es. membership del gruppo) dovrebbero essere fatti dal
+        // chiamante o da un middleware.
         $post->load('author:id,username,propic');
 
         return response()->json([
-            'post' => $post,
+            'post' => null,
         ]);
     }
 
