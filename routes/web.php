@@ -7,6 +7,7 @@ use App\Http\Controllers\Portal\WatchlistController;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Authentication\Profile;
+use App\Http\Controllers\PostController;
 
 /**
  * Main route of the spa
@@ -56,9 +57,13 @@ Route::middleware(AjaxMiddleware::class)->name('spa.')->prefix('spa')->group(fun
                 ->name('update');
         });
     });
+
+    Route::middleware('auth:sanctum')->group(function(){
+        Route::apiResource('groups.posts', PostController::class);
+    });
 });
 
-Route::get('/check-username/{username}', [Profile::class, 'checkUsername']);
+Route::apiResource('groups.posts', PostController::class); //tmp per debug
 
 /**
  * Collection route for the spa that redirect all the unwanted route to the main route

@@ -14,8 +14,10 @@ return new class extends Migration
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('group_id');
-            $table->String('content');
-            $table->json('movies');
+            $table->foreignId('author_id');
+            $table->string('content');
+            // movies può essere vuoto; salviamo come JSON nullable
+            $table->json('movies')->nullable();
             $table->timestamps();
         });
     }

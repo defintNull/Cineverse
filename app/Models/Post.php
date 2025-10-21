@@ -18,25 +18,30 @@ class Post extends Model
         'content',
         'movies',
         'group_id',
+        'author_id',
     ];
 
-     /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
+    /**
+     * I cast per gli attributi del modello.
+     * "movies" è salvato come JSON nel db, lo vogliamo sempre come array in PHP.
+     * @var array<string,string>
      */
-    protected function casts(): array
-    {
-        return [
-            'movies' => 'array'
-        ];
-    }
+    protected $casts = [
+        'movies' => 'array',
+    ];
 
     /**
      * Get the comments of the posts
      */
     public function comments() : HasMany {
         return $this->hasMany(Comment::class);
+    }
+
+    /**
+     * Autore del post
+     */
+    public function author() {
+        return $this->belongsTo(User::class, 'author_id');
     }
 
     /**

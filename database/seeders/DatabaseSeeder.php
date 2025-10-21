@@ -2,11 +2,13 @@
 
 namespace Database\Seeders;
 
+use App\Models\Group;
 use App\Models\User;
 use App\Models\Watchlist;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
+use App\Models\Post;
 
 class DatabaseSeeder extends Seeder
 {
@@ -46,13 +48,32 @@ class DatabaseSeeder extends Seeder
 
         Watchlist::factory()->create([
             'name' => 'My Watchlist1',
-            'movies' => [550,120],
+            'movies' => [550, 120],
         ]);
 
         Watchlist::factory()->create([
             'name' => 'My Watchlist2',
             'movies' => [550],
             'user_id' => 12,
+        ]);
+
+        Group::factory()->create([
+            'name' => 'Cinephiles United',
+            'description' => 'A group for movie enthusiasts to share reviews and recommendations.',
+        ]);
+
+        Post::factory()->create([
+            'content' => 'Hello World!',
+            'group_id' => 1,
+            'author_id' => 12,
+            'movies' => [550, 120],
+        ]);
+
+        Post::factory()->create([
+            'content' => 'Second Post',
+            'group_id' => 1,
+            'author_id' => 1,
+            'movies' => null,
         ]);
     }
 }
