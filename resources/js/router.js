@@ -6,6 +6,7 @@ import { DetailController } from "./Controllers/DetailController";
 import { ProfileController } from "./Controllers/PersonalProfileController";
 import { WatchlistController } from "./Controllers/WatchlistController";
 import { ArchiveController } from "./Controllers/ArchiveController";
+import { LogoutController } from "./Controllers/LogoutController";
 
 
 /**
@@ -22,6 +23,7 @@ export class Router {
         "/archive": ArchiveController,
         "/debug": DebugController,
         "/login": LoginController,
+        "/logout": LogoutController,
         "/register": RegistrationController,
         "/profile": ProfileController,
         "/watchlists": WatchlistController,

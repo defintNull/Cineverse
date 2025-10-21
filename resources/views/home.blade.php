@@ -29,7 +29,7 @@
                     <p id="navbar_home" class="text-gray-900 dark:text-white border-b-2 border-gray-600 dark:border-gray-200 cursor-pointer">Home</p>
                     <p id="navbar_archive" class="text-gray-900 dark:text-white border-gray-600 dark:border-gray-200 cursor-pointer">Archive</p>
                 </div>
-                <div class="hidden w-px h-14 bg-gray-300"></div>
+                <div id="navbar_separator" class="hidden w-px h-14 bg-gray-300"></div>
                 <div class="hidden flex flex-row gap-x-10 items-center justify-center text-center font-semibold">
                     <p class="text-gray-900 dark:text-white border-gray-600 dark:border-gray-200 cursor-pointer">Watchlists</p>
                     <p class="text-gray-900 dark:text-white border-gray-600 dark:border-gray-200 cursor-pointer">Posts</p>
@@ -37,26 +37,22 @@
                 </div>
             </div>
 
-            <div class="flex hidden flex-row gap-x-12 items-center justify-center text-center font-semibold">
+            <div id="navbar_authentication" class="flex flex-row gap-x-12 items-center justify-center text-center font-semibold">
                 <p id="navbar_login" class="text-gray-900 dark:text-white border-gray-600 dark:border-gray-200 cursor-pointer">Login</p>
                 <p id="navbar_register" class="text-gray-900 dark:text-white border-gray-600 dark:border-gray-200 cursor-pointer">Register</p>
             </div>
-            <div>
-                <div>
-                    <div id="avatarButton" class="relative w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600 cursor-pointer">
+            <div id="navbar_avatar" class="flex flex-col hidden relative items-center justify-center px-8">
+                <div id="avatarButton" class="relative w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600 cursor-pointer">
                     <img type="button" class="hidden w-10 h-10 rounded-full" src="" alt="">
                     <svg class="absolute w-12 h-12 text-gray-400 -left-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
                 </div>
-                <div id="avatarDropdown" class="z-10 absolute right-20 top-20 bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700 dark:divide-gray-600">
+                <div id="avatarDropdown" class="z-10 hidden absolute right-0 top-full mt-4 bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700 dark:divide-gray-600">
                     <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="avatarButton">
                         <li>
-                            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dashboard</a>
+                            <p id="navbar_profile" class="block px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Profile</p>
                         </li>
                         <li>
-                            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Settings</a>
-                        </li>
-                        <li>
-                            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Earnings</a>
+                            <p id="navbar_logout" class="block px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Logout</p>
                         </li>
                     </ul>
                 </div>

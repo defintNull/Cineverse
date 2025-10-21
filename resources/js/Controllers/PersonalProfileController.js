@@ -2,6 +2,7 @@ import { Controller } from "./Controller";
 import { ProfileView } from "../Views/PersonalProfileView";
 import { Router } from "../router";
 import { SPAFetchService } from "../Services/SPAFetchService";
+import { Navbar } from "../navbar";
 
 /**
  * Controller class that manages the profile editing route
@@ -9,29 +10,21 @@ import { SPAFetchService } from "../Services/SPAFetchService";
 export class ProfileController extends Controller {
     #profileView;
     #router;
+    #navbar;
 
     constructor() {
         super();
         this.#profileView = new ProfileView();
         this.#router = Router.getInstance();
+        this.#navbar = Navbar.getInstance();
     }
 
     /**
      * Method invoked by the router that builds the page and sets the event listeners
      */
     start() {
-        if (localStorage.getItem("auth_token") === null) {
-            this.#router.overridePath({}, "/login");
-            return;
-        }
+        this.#navbar.changeSelectedNavbarLink("profile");
 
-        const theme = localStorage.getItem('theme');
-
-        if (theme === '0' || (theme === null && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
         this.#profileView.render();
         // this.#profileView.viewPopulateData({
         //     'username': 'gerry.scotti',

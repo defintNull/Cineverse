@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\Storage;
 
 class Login extends Controller
 {
@@ -34,10 +35,18 @@ class Login extends Controller
         ])) {
             $request->session()->regenerate();
 
+            $user = Auth::user();
+
+            $image_src = null;
+            if(Storage::disk('local')->exists($user->propic)) {
+                $image_src = 'data:image/jpeg;base64,'.base64_encode(Storage::disk('local')->get($user->propic));
+            }
+
             return response()->json([
                 'access' => 'garanted',
-                'theme' => Auth::user()->theme,
-                'token' => $request->session()->token(),
+                'theme' => $user->theme,
+                'img_src' => $image_src,
+                'alt' => $user->username,
             ]);
         }
 

@@ -34,4 +34,8 @@ export class StorageService {
     removeData(key) {
         localStorage.removeItem(key);
     }
+
+    clearStorage() {
+        localStorage.clear();
+    }
 }
