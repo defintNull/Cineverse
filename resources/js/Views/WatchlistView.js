@@ -147,13 +147,23 @@ export class WatchlistView extends View {
     }
 
     async renderMovies(movies) {
-        console.log(movies);
-        this.addWatchlistGridElements(movies);
-    }
+    this.addWatchlistGridElements(movies);
+}
 
     async addWatchlistGridElements(movies) {
-        let grid = document.getElementById("watchlist_grid").querySelector("div");
+        const grid = document.getElementById("watchlist_grid").querySelector("div");
+        grid.innerHTML = ""; // resetto sempre il contenuto
 
+        // Caso watchlist vuota
+        if (!movies || movies.length === 0) {
+            const emptyMsg = document.createElement("p");
+            emptyMsg.classList.add("text-gray-400", "italic", "p-4");
+            emptyMsg.innerText = "Nessun film in questa watchlist.";
+            grid.appendChild(emptyMsg);
+            return;
+        }
+
+        // Caso watchlist con film
         movies.forEach(movie => {
             const card = document.createElement("div");
             card.classList.add(
@@ -169,7 +179,7 @@ export class WatchlistView extends View {
 
             // Poster
             const img = document.createElement("img");
-            img.src = MovieDBService.getImageSrc('w780', movie.poster_path);
+            img.src = MovieDBService.getImageSrc("w780", movie.poster_path);
             img.alt = movie.title;
             img.classList.add("w-full", "h-64", "object-cover");
             card.appendChild(img);
@@ -193,5 +203,6 @@ export class WatchlistView extends View {
             grid.appendChild(card);
         });
     }
+
 
 }

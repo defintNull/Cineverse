@@ -33,13 +33,13 @@ export class WatchlistController extends Controller {
     async start() {
         let watchlists = await this.#loadwatchlists();
         let watchlistsWithMovies = await Promise.all(
-            watchlists
-                .filter(w => Array.isArray(w.movies) && w.movies.length > 0)
-                .map(async w => {
-                let movies = await this.GetEachMovie(w.movies);
+            watchlists.map(async w => {
+                let movies = Array.isArray(w.movies) && w.movies.length > 0
+                ? await this.GetEachMovie(w.movies)
+                : []; // se vuota, restituisco array vuoto
                 return { watchlist: w, movies };
-                })
-            );
+            })
+        );
 
         console.log("watchlistsWithMovies:", watchlistsWithMovies);
         this.#WatchlistView.render();
