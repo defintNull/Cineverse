@@ -37,9 +37,29 @@
                 </div>
             </div>
 
-            <div class="flex flex-row gap-x-12 items-center justify-center text-center font-semibold">
+            <div class="flex hidden flex-row gap-x-12 items-center justify-center text-center font-semibold">
                 <p id="navbar_login" class="text-gray-900 dark:text-white border-gray-600 dark:border-gray-200 cursor-pointer">Login</p>
                 <p id="navbar_register" class="text-gray-900 dark:text-white border-gray-600 dark:border-gray-200 cursor-pointer">Register</p>
+            </div>
+            <div>
+                <div>
+                    <div id="avatarButton" class="relative w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600 cursor-pointer">
+                    <img type="button" class="hidden w-10 h-10 rounded-full" src="" alt="">
+                    <svg class="absolute w-12 h-12 text-gray-400 -left-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
+                </div>
+                <div id="avatarDropdown" class="z-10 absolute right-20 top-20 bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700 dark:divide-gray-600">
+                    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="avatarButton">
+                        <li>
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dashboard</a>
+                        </li>
+                        <li>
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Settings</a>
+                        </li>
+                        <li>
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Earnings</a>
+                        </li>
+                    </ul>
+                </div>
             </div>
             {{-- <a href="{{ url('/profile') }}" title="Profilo" class="flex items-center space-x-2 group focus:outline-none focus:ring-2 focus:ring-yellow-300 rounded">
                 <span class="sr-only">Profilo</span>
