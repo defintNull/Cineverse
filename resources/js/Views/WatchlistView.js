@@ -85,12 +85,12 @@ export class WatchlistView extends View {
             );
             li.innerText = w.name;
 
-            // Al click aggiorno la griglia a destra
+            // Al click aggiorno la griglia a destra (SOLO struttura)
             li.addEventListener("click", () => {
                 document.getElementById("watchlist_grid")?.remove();
                 const grid = this.addWatchlistGrid(w);
                 main.appendChild(grid);
-                this.addWatchlistGridElements(w.movies);
+                //NON QUI i film verranno popolati nella Parte 3
             });
 
             list.appendChild(li);
@@ -98,11 +98,11 @@ export class WatchlistView extends View {
 
         sidebar.appendChild(list);
 
-        // Mostro di default la prima watchlist
+        // Mostro di default la prima watchlist (SOLO struttura)
         if (watchlists.length > 0) {
             const grid = this.addWatchlistGrid(watchlists[0]);
             main.appendChild(grid);
-            this.addWatchlistGridElements(watchlists[0].movies);
+            // NON QUI niente popolamento film qui
         }
     }
 
@@ -134,9 +134,9 @@ export class WatchlistView extends View {
     }
 
     async renderMovies(movies) {
-    console.log(movies);
-    this.addWatchlistGridElements(movies);
-}
+        console.log(movies);
+        this.addWatchlistGridElements(movies);
+    }
 
     addWatchlistGridElements(movies) {
         let grid = document.getElementById("watchlist_grid").querySelector("div");

@@ -15,6 +15,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        //reminder, usare il comando
+        //php artisan migrate:fresh --seed
+        //droppa tutto,remigra e riesegue i seeder
+
         // User::factory(10)->create();
         User::factory(10)->create();
 
