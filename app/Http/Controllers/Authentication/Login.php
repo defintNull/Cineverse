@@ -38,7 +38,7 @@ class Login extends Controller
             $user = Auth::user();
 
             $image_src = null;
-            if(Storage::disk('local')->exists($user->propic)) {
+            if($user->propic != null && Storage::disk('local')->exists($user->propic)) {
                 $image_src = 'data:image/jpeg;base64,'.base64_encode(Storage::disk('local')->get($user->propic));
             }
 
