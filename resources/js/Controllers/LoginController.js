@@ -75,6 +75,7 @@ export class LoginController extends Controller {
             this.#authService.setAuth(true);
 
             this.#navbar.render();
+            this.#navbar.setAvatarButtonImage(payload.img_src, payload.alt);
 
             // Setting theme
             this.#storageService.setData("theme", payload.theme);
