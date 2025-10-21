@@ -49,7 +49,7 @@ export class RegistrationController extends Controller {
         // Fetching
         let formData = new FormData(document.getElementById("registration_form"));
 
-        let res = await sap_fetch.POSTFetch('/spa/register', formData);
+        let res = await sap_fetch.POSTFetchForm('/spa/register', formData);
         let payload = await res.json();
 
         //Handling errors
