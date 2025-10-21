@@ -1,5 +1,6 @@
 import { Button } from "../Components/Button";
 import { Card } from "../Components/Card";
+import { ImageInput } from "../Components/ImageInput";
 import { Input } from "../Components/Input";
 import { InputError } from "../Components/InputError";
 import { View } from "./View";
@@ -12,6 +13,7 @@ export class RegisterView extends View {
     #input;
     #button;
     #input_error;
+    #imageInput;
 
     constructor() {
         super();
@@ -19,6 +21,7 @@ export class RegisterView extends View {
         this.#input = new Input();
         this.#button = new Button();
         this.#input_error = new InputError();
+        this.#imageInput = new ImageInput();
     }
 
     /**
@@ -135,6 +138,20 @@ export class RegisterView extends View {
         input_field.type = "password";
         input_field.name = "confirm_password";
         input_field.placeholder = "Confirm password...";
+        container.appendChild(element);
+
+        // Profile picture
+        element = this.#imageInput.getComponentElement();
+        label = element.querySelector("label");
+        label.innerHTML = "Profile foto picture"
+        label.setAttribute("for", "profile_foto_picture_input");
+        input_field = element.querySelector("input");
+        input_field.id = "profile_foto_picture_input";
+        input_field.name = "profile_foto_picture";
+        input_field.placeholder = "Profile foto picture...";
+        input_field.setAttribute("aria-describedby", "profile_foto_picture_descriptor");
+        let descriptor = element.querySelector("p");
+        descriptor.id = "profile_foto_picture_descriptor";
         container.appendChild(element);
 
         //Form Error

@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\Storage;
 
 class Register extends Controller
 {
@@ -30,6 +31,7 @@ class Register extends Controller
             'username' => ['required', 'string', 'max:128'],
             'password' => ['required', 'string', 'max:128', 'min:8'],
             'confirm_password' => ['required', 'string', 'max:128', 'min:8'],
+            'profile_picture_foto' => ['image', 'mimes:jpeg,jpg']
         ]);
 
         if($request->password != $request->confirm_password) {
@@ -37,6 +39,15 @@ class Register extends Controller
                 'error' => 'Password and Confirm Password don\'t match!'
             ], 400);
         }
+
+        // Saving the profile foto picture
+        $file = $request->file('profile_foto_picture');
+        $time = explode(" ", microtime());
+        $temp = explode(".", $time[0]);
+        $time = [$temp[1], $time[1]];
+        $profile_foto_picture_name = implode("_", $time)."_".$request->username.".jpg";
+        $profile_foto_picture_path = "ProfilePictureFoto/".$profile_foto_picture_name;
+        Storage::disk('local')->putFileAs("ProfilePictureFoto/", $file, $profile_foto_picture_name);
 
         User::create([
             'name' => $request->name,
@@ -50,6 +61,7 @@ class Register extends Controller
             'watchlistpriv' => true,
             'theme' => false,
             'preferredgenres' => [],
+            'propic' => $profile_foto_picture_path,
         ]);
 
         return response()->json([
