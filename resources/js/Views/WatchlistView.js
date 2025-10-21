@@ -26,16 +26,28 @@ export class WatchlistView extends View {
         this.createWatchlistsLayout();
     }
 
-    addEventListeners({ items, main }) {
-        items.forEach(({ element, data }) => {
-        element.addEventListener("click", () => {
+    addEventListeners(refs, watchlistsWithMovies) {
+        const main = document.getElementById("watchlist_main");
+        refs.items.forEach(({ element, data }) => {
+            element.addEventListener("click", () => {
+            // Rimuovo eventuale griglia precedente
             document.getElementById("watchlist_grid")?.remove();
+
+            // Ricreo la struttura base della griglia
             const grid = this.addWatchlistGrid(data);
             main.appendChild(grid);
-        });
-    });
 
+            // Trovo la watchlist corrispondente
+            const match = watchlistsWithMovies.find(w => w.watchlist.id === data.id);
+            if (match) {
+                // Ora posso popolare i film
+                this.renderMovies(match.movies, match.watchlist);
+            }
+            });
+        });
     }
+
+
 
     //step 1)crea il layout di base chiamato da render e sincrono
     createWatchlistsLayout() {
