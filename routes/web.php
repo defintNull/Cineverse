@@ -42,6 +42,10 @@ Route::middleware(AjaxMiddleware::class)->name('spa.')->prefix('spa')->group(fun
                 ->name('update');
             Route::post('/addmovie', [WatchlistController::class, 'addMovie'])
                 ->name('addmovie');
+            Route::post('/removemovie', [WatchlistController::class, 'removeMovie'])
+                ->name('removemovie');
+            Route::post('/store', [WatchlistController::class, 'store'])
+                ->name('store');
         });
     });
 

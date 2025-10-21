@@ -24,16 +24,32 @@ class WatchlistController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+    //AL MOMENTO POSSO CREARE SOLO LA WATCHLIST VUOTA
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name'   => ['required','string','max:255'],
+            'movies' => ['nullable','array'], // opzionale per ora
+        ]);
+
+        $user = Auth::user();
+
+        $watchlist = Watchlist::create([
+            'name'    => $request->name,
+            'movies'  => $request->movies ?? [], // se non arriva, array vuoto
+            'user_id' => $user->id,
+        ]);
+
+        return response()->json([
+            'watchlist' => $watchlist,
+        ], 201);
     }
 
     /**
      * Update the specified resource in storage.
      */
 
-    //DA VEDERE DOPO
+    //DA VEDERE DOPO perchè lo userò con il rename della watchlist
     /*
     public function update(Request $request) : JsonResponse
     {
