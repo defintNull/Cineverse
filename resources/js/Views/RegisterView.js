@@ -199,8 +199,11 @@ export class RegisterView extends View {
      */
     inputErrorField(id, error) {
         let error_field = document.getElementById(id);
-        if(error_field != null) {
+        if(error_field != null && id != "profile_foto_picture_input") {
             error_field = error_field.nextElementSibling;
+            error_field.innerHTML = error;
+        } else if(error_field != null) {
+            error_field = error_field.nextElementSibling.nextElementSibling;
             error_field.innerHTML = error;
         }
     }

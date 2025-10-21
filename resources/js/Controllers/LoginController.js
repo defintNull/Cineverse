@@ -3,6 +3,8 @@ import { LoginView } from "../Views/LoginView";
 import { Router } from "../router";
 import { SPAFetchService } from "../Services/SPAFetchService";
 import { Navbar } from "../navbar";
+import { AuthService } from "../Services/AuthService";
+import { StorageService } from "../Services/StorageService";
 
 /**
  * Controller class that manage the login route
@@ -10,11 +12,15 @@ import { Navbar } from "../navbar";
 export class LoginController extends Controller {
     #loginView
     #router
+    #authService;
+    #storageService;
 
     constructor() {
         super();
         this.#loginView = new LoginView();
         this.#router = Router.getInstance();
+        this.#authService = AuthService.getInstance();
+        this.#storageService = StorageService.getInstance();
     }
 
     /**
@@ -64,20 +70,13 @@ export class LoginController extends Controller {
         } else if (res.status == 401 && payload.access) {
             this.#loginView.gestisciErrori("Wrong username or password")
         } else if (res.status == 200) {
-            this.#router.overridePath({}, "/");
-            localStorage.setItem("theme", payload.theme);
-            localStorage.setItem("access", payload.access);
-            localStorage.setItem("auth_token", payload.token);
-            (function () {
-                // localStorage stores strings: '0' = dark, '1' = light
-                const theme = localStorage.getItem('theme');
+            this.#authService.setAuth(true);
 
-                if (theme === '0' || (theme === null && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                    document.documentElement.classList.add('dark');
-                } else {
-                    document.documentElement.classList.remove('dark');
-                }
-            })();
+            // Setting theme
+            this.#storageService.setData("theme", payload.theme);
+            document.documentElement.classList.toggle("dark", payload.theme == 0);
+
+            this.#router.overridePath({}, "/");
         } else {
             this.#loginView.gestisciErrori("Ops! Something whent wrong!");
         }

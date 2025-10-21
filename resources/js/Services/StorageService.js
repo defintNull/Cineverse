@@ -21,11 +21,14 @@ export class StorageService {
     }
 
     setData(key, value) {
+        console.log('Saving key:', key, 'value:', value);
         localStorage.setItem(key, value);
     }
 
     getData(key) {
-        return localStorage.getItem(key);
+        const val = localStorage.getItem(key);
+        console.log('Getting key:', key, 'value:', val);
+        return val;
     }
 
     removeData(key) {
