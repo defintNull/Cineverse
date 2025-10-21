@@ -35,8 +35,10 @@ export class WatchlistController extends Controller {
         console.log(moviezz[0]);
         let moviez = await this.GetEachMovie(moviezz[0].movies);
         this.#WatchlistView.render();
-        this.#WatchlistView.populateWatchlistsLayout(this.#loadwatchlists.bind(this));
-        this.#WatchlistView.renderMovies(moviez);
+        const refs = await this.#WatchlistView.populateWatchlistsLayout(this.#loadwatchlists.bind(this));
+        console.log("refs", refs);
+        const refs2 = await this.#WatchlistView.renderMovies(moviez);
+        this.#WatchlistView.addEventListeners(refs);
     }
 
     /*

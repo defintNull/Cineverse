@@ -26,7 +26,14 @@ export class WatchlistView extends View {
         this.createWatchlistsLayout();
     }
 
-    addEventListeners() {
+    addEventListeners({ items, main }) {
+        items.forEach(({ element, data }) => {
+        element.addEventListener("click", () => {
+            document.getElementById("watchlist_grid")?.remove();
+            const grid = this.addWatchlistGrid(data);
+            main.appendChild(grid);
+        });
+    });
 
     }
 
@@ -63,17 +70,16 @@ export class WatchlistView extends View {
             return;
         }
 
-        // Titolo sidebar
         const sidebarTitle = document.createElement("h2");
         sidebarTitle.classList.add("text-lg", "font-bold", "mb-4", "text-white");
         sidebarTitle.innerText = "Le tue watchlist";
         sidebar.appendChild(sidebarTitle);
 
-        // Lista watchlist
         const list = document.createElement("ul");
         list.classList.add("space-y-2");
 
-        watchlists.forEach(w => {
+        // Creo gli <li> ma NON aggiungo ancora i listener
+        const items = watchlists.map(w => {
             const li = document.createElement("li");
             li.classList.add(
                 "bg-gray-700",
@@ -84,27 +90,22 @@ export class WatchlistView extends View {
                 "transition"
             );
             li.innerText = w.name;
-
-            // Al click aggiorno la griglia a destra (SOLO struttura)
-            li.addEventListener("click", () => {
-                document.getElementById("watchlist_grid")?.remove();
-                const grid = this.addWatchlistGrid(w);
-                main.appendChild(grid);
-                //NON QUI i film verranno popolati nella Parte 3
-            });
-
+            li.dataset.watchlistId = w.id; // salvo un riferimento utile
             list.appendChild(li);
+            return { element: li, data: w };
         });
-
         sidebar.appendChild(list);
 
-        // Mostro di default la prima watchlist (SOLO struttura)
+        // Mostro di default la prima watchlist
         if (watchlists.length > 0) {
             const grid = this.addWatchlistGrid(watchlists[0]);
             main.appendChild(grid);
-            // NON QUI niente popolamento film qui
         }
+        // Ritorno i riferimenti per l'uso in addEventListeners
+        return { items, main };
     }
+
+
 
     addWatchlistGrid(watchlist) {
         // Container griglia
@@ -138,7 +139,7 @@ export class WatchlistView extends View {
         this.addWatchlistGridElements(movies);
     }
 
-    addWatchlistGridElements(movies) {
+    async addWatchlistGridElements(movies) {
         let grid = document.getElementById("watchlist_grid").querySelector("div");
 
         movies.forEach(movie => {
