@@ -63,7 +63,7 @@ Route::middleware(AjaxMiddleware::class)->name('spa.')->prefix('spa')->group(fun
     });
 });
 
-Route::apiResource('groups.posts', PostController::class); //tmp per debug
+Route::resource('groups.posts', PostController::class); //tmp per debug
 
 /**
  * Collection route for the spa that redirect all the unwanted route to the main route
