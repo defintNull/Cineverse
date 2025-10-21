@@ -41,13 +41,16 @@ class Register extends Controller
         }
 
         // Saving the profile foto picture
-        $file = $request->file('profile_foto_picture');
-        $time = explode(" ", microtime());
-        $temp = explode(".", $time[0]);
-        $time = [$temp[1], $time[1]];
-        $profile_foto_picture_name = implode("_", $time)."_".$request->username.".jpg";
-        $profile_foto_picture_path = "ProfilePictureFoto/".$profile_foto_picture_name;
-        Storage::disk('local')->putFileAs("ProfilePictureFoto/", $file, $profile_foto_picture_name);
+        $profile_foto_picture_path = null;
+        if($request->has('profile_foto_picture')) {
+            $file = $request->file('profile_foto_picture');
+            $time = explode(" ", microtime());
+            $temp = explode(".", $time[0]);
+            $time = [$temp[1], $time[1]];
+            $profile_foto_picture_name = implode("_", $time)."_".$request->username.".jpg";
+            $profile_foto_picture_path = "ProfilePictureFoto/".$profile_foto_picture_name;
+            Storage::disk('local')->putFileAs("ProfilePictureFoto/", $file, $profile_foto_picture_name);
+        }
 
         User::create([
             'name' => $request->name,

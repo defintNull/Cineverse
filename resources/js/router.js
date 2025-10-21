@@ -8,6 +8,7 @@ import { WatchlistController } from "./Controllers/WatchlistController";
 import { ArchiveController } from "./Controllers/ArchiveController";
 import { LogoutController } from "./Controllers/LogoutController";
 import { AuthService } from "./Services/AuthService";
+import { GroupController } from "./Controllers/GroupController";
 
 
 /**
@@ -29,6 +30,7 @@ export class Router {
         "/register": [RegistrationController, null],
         "/profile": [ProfileController, "auth"],
         "/watchlists": [WatchlistController, "auth"],
+        "/groups": [GroupController, "auth"],
     }
 
     constructor() {
