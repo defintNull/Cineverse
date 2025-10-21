@@ -75,5 +75,29 @@ class DatabaseSeeder extends Seeder
             'author_id' => 1,
             'movies' => null,
         ]);
+
+        // assegnazione membri ai gruppi
+        $group = Group::first();
+
+        if ($group) {
+            $specificUserIds = [1, 12]; // utenti creati esplicitamente sopra
+            $randomUserIds = User::whereNotIn('id', $specificUserIds)
+                                 ->inRandomOrder()
+                                 ->take(3)
+                                 ->pluck('id')
+                                 ->toArray();
+
+            $group->users()->syncWithoutDetaching(array_merge($specificUserIds, $randomUserIds));
+        }
+
+        // crea un secondo gruppo e assegna membri casuali
+        $secondGroup = Group::factory()->create([
+            'name' => 'Weekend Watchers',
+            'description' => 'Casual weekend movie club.',
+        ]);
+
+        $secondGroup->users()->syncWithoutDetaching(
+            User::inRandomOrder()->take(4)->pluck('id')->toArray()
+        );
     }
 }

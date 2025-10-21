@@ -18,7 +18,7 @@ class PostFactory extends Factory
     {
         return [
             //
-            'content' => fake()->name(),
+            'content' => fake()->paragraph(),
             'movies' => json_encode([1,2,3]),
         ];
     }
