@@ -132,28 +132,28 @@ export class GroupView extends View {
                     group_card.classList.remove("shadow-xl", "dark:bg-gray-700", "bg-indigo-600");
                     group_card.classList.add("border", "border-gray-400");
 
-                    let posts = await getPostsHandler(1);
+                    let posts = await getPostsHandler(group_card.querySelector("input").value);
 
                     // Setting Post Structure layout
-                    main.#setPostStructureLayout(true);
+                    if(!document.querySelector("div.header")) {
+                        main.#setPostStructureLayout(true);
+                    }
 
                     let scroll = document.getElementById("scroll");
                     scroll.innerHTML = "";
                     posts.forEach(post => {
-                        for(let i=0; i<5; i++) {
-                            let post_element = main.#postComponent.getComponentElement();
-                            post_element.querySelector("p.username").innerText = post.getAuthorUsername();
-                            post_element.querySelector("p.title").innerText = post.getTitle();
-                            post_element.querySelector("p.content").innerText = post.getContent();
-                            let img = post.getAuthorPropicSrc();
-                            if(img !== null) {
-                                let propic = post_element.querySelector("div.author-avatar > img");
-                                propic.src = img;
-                                post_element.querySelector("div.author-avatar > svg").classList.add("hidden");
-                                propic.classList.remove("hidden");
-                            }
-                            scroll.appendChild(post_element);
+                        let post_element = main.#postComponent.getComponentElement();
+                        post_element.querySelector("p.username").innerText = post.getAuthorUsername();
+                        post_element.querySelector("p.title").innerText = post.getTitle();
+                        post_element.querySelector("p.content").innerText = post.getContent();
+                        let img = post.getAuthorPropicSrc();
+                        if(img !== null) {
+                            let propic = post_element.querySelector("div.author-avatar > img");
+                            propic.src = img;
+                            post_element.querySelector("div.author-avatar > svg").classList.add("hidden");
+                            propic.classList.remove("hidden");
                         }
+                        scroll.appendChild(post_element);
                     });
                 }
             }
@@ -206,11 +206,10 @@ export class GroupView extends View {
         let groups = await groupHandler();
         let group_card_container = document.getElementById("group_card_container");
         groups.forEach(group => {
-            for(let i=0; i<5; i++) {
-                let element = this.#groupCard.getComponentElement();
-                element.querySelector("p").innerText = group.getName();
-                group_card_container.append(element);
-            }
+            let element = this.#groupCard.getComponentElement();
+            element.querySelector("p").innerText = group.getName();
+            element.querySelector("input").value = group.getId();
+            group_card_container.append(element);
         });
     }
 
@@ -218,11 +217,9 @@ export class GroupView extends View {
         let groups = await groupHandler();
         let scroll = document.getElementById("scroll");
         groups.forEach(group => {
-            for(let i=0; i<5; i++) {
-                let element = this.#groupComponent.getComponentElement();
-                element.querySelector("p").innerText = group.getName();
-                scroll.append(element);
-            }
+            let element = this.#groupComponent.getComponentElement();
+            element.querySelector("p").innerText = group.getName();
+            scroll.append(element);
         });
     }
 
