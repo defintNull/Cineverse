@@ -12,7 +12,7 @@ export class WatchlistView extends View {
     #bgImage;
     #navigator;
     #addButton;
-
+    #clickHandle
 
 
     constructor() {
@@ -59,13 +59,11 @@ export class WatchlistView extends View {
             addButton.addEventListener("click", () => {
                 // Recupero la UL già esistente
                 const watchlistContainer = document.getElementById("watchlist_list2");
-
-                // Creo un nuovo LI conforme agli altri
-                //HA SENSO CREARE UN OGGETTO WATCHLIST QUI?
                 //Ho la necessità di creare un oggetto watchlist per passarlo
                 const newWatchlist = {
                 "name": "New Watchlist"
                 };
+                //mi salvo la watchlist di base
                 let watchlistdb = createnewwatchlistfunc(newWatchlist); //chiamo la funzione del controller per salvare nel db
                 const newItem = document.createElement("li");
                 newItem.classList.add(
@@ -87,12 +85,45 @@ export class WatchlistView extends View {
             });
         }
 
+        // Handle click function
+        this.#clickHandle = function(event) {
+            //devo aggiungere queste classi, movie-card e serie-card, alle card dei film e delle serie
+            const card = event.target.closest(".movie-card, .serie-card");
+
+            if (card && document.body.contains(card)) {
+                const input = card.querySelector("input");
+                if (!input) return;
+
+                const id = input.value;
+
+                if (card.classList.contains("movie-card")) {
+                    /**
+                     * Adding click events for movies
+                     */
+                    movie_click_callback(id);
+                } else if (card.classList.contains("serie-card")) {
+                    /**
+                     * Adding click event for series
+                     */
+                    serie_click_callback(id);
+                }
+            }
+        }
+
+        /**
+         * Adding click event listeners for movies and series cards
+         */
+        document.addEventListener("click", this.#clickHandle);
 
     }
 
+    removeDocumentEventListeners() {
+        //document.removeEventListener("click", this.#clickHandle);
+    }
 
 
     //step 1)crea il layout di base chiamato da render e sincrono
+    //NULLA DA CAMBIARE QUI
     createWatchlistsLayout() {
     // Root container con grid
     const container = document.createElement("div");
@@ -163,9 +194,11 @@ export class WatchlistView extends View {
 
     // Append al DOM
     document.body.querySelector("main").appendChild(container);
-}
+    }
 
-    async populateWatchlistsLayout(watchlistsfunc) {
+
+
+    /* async populateWatchlistsLayout(watchlistsfunc) {
         let watchlists = await watchlistsfunc();
         const sidebar = document.getElementById("watchlist_sidebar");
         const main = document.getElementById("watchlist_main");
@@ -175,12 +208,6 @@ export class WatchlistView extends View {
             return;
         }
 
-        /*
-        const sidebarTitle = document.createElement("h2");
-        sidebarTitle.classList.add("text-lg", "font-bold", "mb-4", "text-white");
-        sidebarTitle.innerText = "Le tue watchlist";
-        sidebar.appendChild(sidebarTitle);
-        */
         const list = document.createElement("ul");
         list.id = "watchlist_list2";
         list.classList.add("space-y-2");
@@ -210,7 +237,55 @@ export class WatchlistView extends View {
         }
         // Ritorno i riferimenti per l'uso in addEventListeners
         return { items, main };
+    } */
+async populateWatchlistsLayout(watchlistsfunc) {
+    let watchlists = await watchlistsfunc();
+    const sidebar = document.getElementById("watchlist_sidebar");
+    const main = document.getElementById("watchlist_main");
+
+    if (!sidebar || !main) {
+        console.error("La struttura non è stata ancora creata. Chiama createWatchlistsLayout() prima.");
+        return;
     }
+
+    const list = document.createElement("ul");
+    list.id = "watchlist_list2";
+    list.classList.add("space-y-2");
+
+    // Creo gli <li> per ogni watchlist
+    const items = watchlists.map(w => {
+        const li = document.createElement("li");
+        li.classList.add(
+            "bg-gray-700",
+            "rounded",
+            "p-3",
+            "cursor-pointer",
+            "hover:bg-gray-600",
+            "transition"
+        );
+        li.innerText = w.name;
+        li.dataset.watchlistId = w.id; // salvo un riferimento utile
+        list.appendChild(li);
+        return { element: li, data: w };
+    });
+
+    sidebar.appendChild(list);
+
+    // Mostro di default la prima watchlist
+    if (watchlists.length > 0) {
+        const grid = this.addWatchlistGrid(watchlists[0]);
+        main.appendChild(grid);
+
+        // Qui puoi già renderizzare i contenuti perché watchlistsfunc li ha forniti
+        if (Array.isArray(watchlists[0].items) && watchlists[0].items.length > 0) {
+            this.renderItems(watchlists[0].items, watchlists[0].watchlist ?? watchlists[0]);
+        }
+    }
+
+    // Ritorno i riferimenti per l'uso in addEventListeners
+    return { items, main };
+}
+
 
 
 
@@ -246,6 +321,7 @@ addWatchlistGrid(watchlist) {
     );
 
     // Se la watchlist è vuota → placeholder elegante
+
     if (!watchlist.movies || watchlist.movies.length === 0) {
         const placeholder = document.createElement("div");
         placeholder.classList.add(
@@ -285,7 +361,74 @@ addWatchlistGrid(watchlist) {
     this.addWatchlistGridElements(movies);
     }
 
-    async addWatchlistGridElements(movies) {
+async addWatchlistGridElements(items) {
+    const grid = document.getElementById("watchlist_grid").querySelector("div");
+    grid.innerHTML = ""; // resetto sempre il contenuto
+
+    // Caso watchlist vuota
+    if (!items || items.length === 0) {
+        const emptyMsg = document.createElement("p");
+        emptyMsg.classList.add("text-gray-400", "italic", "p-4");
+        emptyMsg.innerText = "Nessun contenuto in questa watchlist.";
+        grid.appendChild(emptyMsg);
+        return;
+    }
+
+    // Caso watchlist con contenuti (film o serie)
+    items.forEach(item => {
+        const card = document.createElement("div");
+        card.classList.add(
+            "bg-gray-800",
+            "rounded-lg",
+            "overflow-hidden",
+            "shadow-lg",
+            "cursor-pointer",
+            "hover:scale-105",
+            "transition",
+            "duration-200",
+            "h-[250px]"
+        );
+
+        // Aggiungo la classe specifica in base al tipo
+        if (item.title) {
+            // I film di TMDB hanno la proprietà "title"
+            card.classList.add("movie-card");
+        } else if (item.name) {
+            // Le serie hanno la proprietà "name"
+            card.classList.add("serie-card");
+        }
+
+        // Poster
+        const img = document.createElement("img");
+        img.src = MovieDBService.getImageSrc("w780", item.poster_path);
+        img.alt = item.title || item.name;
+        img.classList.add("w-full", "h-64", "object-cover");
+        card.appendChild(img);
+
+        // Info
+        const info = document.createElement("div");
+        info.classList.add("p-3");
+
+        const title = document.createElement("h3");
+        title.classList.add("text-lg", "font-semibold");
+        title.innerText = item.title || item.name;
+
+        const extra = document.createElement("p");
+        extra.classList.add("text-gray-400", "text-sm");
+        if (item.runtime) {
+            extra.innerText = `${item.runtime} min`;
+        } else if (item.number_of_seasons) {
+            extra.innerText = `${item.number_of_seasons} stagioni`;
+        }
+
+        info.appendChild(title);
+        info.appendChild(extra);
+        card.appendChild(info);
+
+        grid.appendChild(card);
+    });
+}
+    /* async addWatchlistGridElements(movies) {
         const grid = document.getElementById("watchlist_grid").querySelector("div");
         grid.innerHTML = ""; // resetto sempre il contenuto
 
@@ -320,25 +463,9 @@ addWatchlistGrid(watchlist) {
             img.classList.add("w-full", "h-64", "object-cover");
             card.appendChild(img);
 
-            // Info
-            const info = document.createElement("div");
-            info.classList.add("p-3");
-
-            const title = document.createElement("h3");
-            title.classList.add("text-lg", "font-semibold");
-            title.innerText = movie.title;
-
-            const duration = document.createElement("p");
-            duration.classList.add("text-gray-400", "text-sm");
-            duration.innerText = movie.runtime ? `${movie.runtime} min` : "";
-
-            info.appendChild(title);
-            info.appendChild(duration);
-            card.appendChild(info);
-
             grid.appendChild(card);
         });
-    }
+    } */
 
 
 }

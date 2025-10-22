@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId("user_id");
             $table->string('name');
-            $table->json('movies')->nullable();
+            $table->json('content')->nullable();
             $table->timestamps();
         });
     }
