@@ -18,7 +18,7 @@ class WatchlistFactory extends Factory
     {
         return [
             'name' => fake()->name(),
-            'movies' => [],
+            'content' => [],
             'user_id' => 12,
         ];
     }

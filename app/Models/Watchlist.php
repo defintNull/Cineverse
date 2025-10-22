@@ -19,7 +19,7 @@ class Watchlist extends Model
      */
     protected $fillable = [
         'name',
-        'movies',
+        'content',
         'user_id'
     ];
 
@@ -31,7 +31,7 @@ class Watchlist extends Model
     protected function casts(): array
     {
         return [
-            'movies' => 'array'
+            'content' => 'array'
         ];
     }
 

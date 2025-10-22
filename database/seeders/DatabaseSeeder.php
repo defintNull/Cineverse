@@ -63,12 +63,19 @@ class DatabaseSeeder extends Seeder
 
         Watchlist::factory()->create([
             'name' => 'My Watchlist1',
-            'movies' => [550, 120],
+            'content' => [
+            [ 'type' => 'Movie', 'id' => 550 ],
+            [ 'type' => 'Serie', 'id' => 108 ],
+            ],
+            'user_id' => 12,
         ]);
 
         Watchlist::factory()->create([
             'name' => 'My Watchlist2',
-            'movies' => [550],
+            'content' => [
+            [ 'type' => 'Movie', 'id' => 550 ],
+            [ 'type' => 'Serie', 'id' => 107 ],
+            ],
             'user_id' => 12,
         ]);
 
@@ -81,7 +88,7 @@ class DatabaseSeeder extends Seeder
             'content' => 'Hello World!',
             'group_id' => 1,
             'author_id' => 12,
-            'movies' => [550, 120],
+            'movies' => [ 550, 120],
         ]);
 
         Post::factory()->create([

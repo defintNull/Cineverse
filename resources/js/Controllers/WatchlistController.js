@@ -32,32 +32,45 @@ export class WatchlistController extends Controller {
     //3)Popolare la griglia con i film effettivi
     async start() {
         let watchlists = await this.#loadwatchlists();
-        let watchlistsWithMovies = await Promise.all(
+        console.log("Watchlists caricate:", watchlists);
+
+        let watchlistsWithContent = await Promise.all(
             watchlists.map(async w => {
-                let movies = Array.isArray(w.movies) && w.movies.length > 0
-                ? await this.GetEachMovie(w.movies)
-                : []; // se vuota, restituisco array vuoto
-                return { watchlist: w, movies };
+                let items = Array.isArray(w.content) && w.content.length > 0
+                    ? await this.GetEachContent(w.content) // gestisce sia Movie che Serie
+                    : []; // se vuota, restituisco array vuoto
+
+                return { watchlist: w, items };
             })
         );
+        console.log("Watchlists con contenuto caricate:", watchlistsWithContent);
+
+
+
+        //ora ho i dati corretti ma devo capire come gestirli
+
+
+
 
         //console.log("watchlistsWithMovies:", watchlistsWithMovies);
         this.#WatchlistView.render();
+
+        //nella parte di popolazione devo cambiare qualcosa
         const refs = await this.#WatchlistView.populateWatchlistsLayout(this.#loadwatchlists.bind(this));
         //console.log("refs", refs);
         //const refs2 = await this.#WatchlistView.renderMovies(moviez[0]); //questo va messo dinamico
         // Mostro di default la prima watchlist con i suoi film
-        if (watchlistsWithMovies.length > 0) {
+        if (watchlistsWithContent.length > 0) {
         await this.#WatchlistView.renderMovies(
-            watchlistsWithMovies[0].movies,
-            watchlistsWithMovies[0].watchlist
+            watchlistsWithContent[0].movies,
+            watchlistsWithContent[0].watchlist
         );
         }
         //Ho bisogno di passare qua anche la parte del salvataggio del db
         //per permettere di usare l'azione nel bottone
         this.#WatchlistView.addEventListeners(
             refs,
-            watchlistsWithMovies,
+            watchlistsWithContent,
             this.#createnewwatchlist.bind(this)
         );
 
@@ -93,16 +106,52 @@ export class WatchlistController extends Controller {
     }
 
     //IMP per trasformare un array di interi di id dei film in un array di film effettivi
-    async GetEachMovie(movies) {
-        console.log("Array di ID film:", movies);
-        let res = await Promise.all(
+    //questo metodo viene chiamato per ogni watchlist e va generalizzato per film e serie
+    //async GetEachContent(contentArray)
+    async GetEachContent(contentArray) {
+        //console.log("Array di ID film:", movies);
+        // contentArray è del tipo:
+    // [
+    //   { type: "Movie", id: 101 },
+    //   { type: "Serie", id: 107 }
+    // ]
+
+    // Primo giro: faccio le fetch in parallelo
+    const responses = await Promise.all(
+        contentArray.map(item => {
+            if (item.type === "Movie") {
+                return this.#movieDB.getMovie(item.id);
+            } else if (item.type === "Serie") {
+                return this.#movieDB.getSerie(item.id);
+            } else {
+                // fallback: ignoro o lancio errore
+                return Promise.resolve(null);
+            }
+        })
+    );
+
+    // Secondo giro: trasformo in JSON solo le risposte valide
+    const results = await Promise.all(
+        responses.map(r => (r ? r.json() : null))
+    );
+    console.log("Array di contenuti:", results);
+    return results.filter(Boolean); // rimuovo eventuali null
+
+        /* let res = await Promise.all(
             movies.map(element => this.#movieDB.getMovie(element))
         );
         let moviez = await Promise.all(
             res.map(element => element.json())
         );
         //console.log("Array di film:", moviez);
-        return moviez;
+        return moviez; */
     }
+
+
+    destroy() {
+        document.body.querySelector("main").innerHTML = "";
+        this.#WatchlistView.removeDocumentEventListeners();
+    }
+
 
 }
