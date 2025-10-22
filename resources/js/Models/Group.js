@@ -15,4 +15,8 @@ export class Group extends Model {
     getId() {
         return this.#groupJson.id;
     }
+
+    getDescription() {
+        return this.#groupJson.description;
+    }
 }
