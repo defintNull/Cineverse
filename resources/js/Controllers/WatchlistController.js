@@ -53,7 +53,13 @@ export class WatchlistController extends Controller {
             watchlistsWithMovies[0].watchlist
         );
         }
-        this.#WatchlistView.addEventListeners(refs, watchlistsWithMovies);
+        //Ho bisogno di passare qua anche la parte del salvataggio del db
+        //per permettere di usare l'azione nel bottone
+        this.#WatchlistView.addEventListeners(
+            refs,
+            watchlistsWithMovies,
+            this.#createnewwatchlist.bind(this)
+        );
 
     }
 
@@ -77,12 +83,9 @@ export class WatchlistController extends Controller {
         //al carousel va passata una watchlist
     }
 
-
-
-
     async #loadwatchlists() {
         let sap_fetch = await SPAFetchService.getInstance();
-        let res = await sap_fetch.GETFetch('/spa/watchlist/index', null);
+        let res = await sap_fetch.GETFetch('/spa/watchlist/index', {});
         let payload = await res.json();
         //console.log(payload.watchlists);
         return payload.watchlists;

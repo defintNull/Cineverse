@@ -58,6 +58,10 @@ export class Navbar {
             this.#router.setNextPath({}, "/archive");
         });
 
+        document.getElementById("navbar_watchlists").addEventListener("click", () => {
+            this.#router.setNextPath({}, "/watchlists");
+        });
+
         document.getElementById("navbar_groups").addEventListener("click", () => {
             this.#router.setNextPath({}, "/groups");
         });

@@ -29,7 +29,7 @@ class WatchlistController extends Controller
     {
         $request->validate([
             'name'   => ['required','string','max:255'],
-            'movies' => ['nullable','array'], // opzionale per ora
+            //'movies' => ['nullable','array'], // opzionale per ora
         ]);
 
         $user = Auth::user();

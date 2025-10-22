@@ -26,7 +26,7 @@ export class WatchlistView extends View {
         this.createWatchlistsLayout();
     }
 
-    addEventListeners(refs, watchlistsWithMovies) {
+    addEventListeners(refs, watchlistsWithMovies, createnewwatchlistfunc) {
         const main = document.getElementById("watchlist_main");
         const list = document.getElementById("watchlist_list2");//da fixare ci dovrebbe essere una watchlist sola
         // Listener unico sul contenitore
@@ -63,6 +63,10 @@ export class WatchlistView extends View {
                 // Creo un nuovo LI conforme agli altri
                 //HA SENSO CREARE UN OGGETTO WATCHLIST QUI?
                 //Ho la necessità di creare un oggetto watchlist per passarlo
+                const newWatchlist = {
+                "name": "New Watchlist"
+                };
+                let watchlistdb = createnewwatchlistfunc(newWatchlist); //chiamo la funzione del controller per salvare nel db
                 const newItem = document.createElement("li");
                 newItem.classList.add(
                     "bg-gray-700",
@@ -76,8 +80,8 @@ export class WatchlistView extends View {
                 newItem.dataset.watchlistId = Date.now();
 
                 // Inserisco come primo elemento della lista esistente
+                //list.prepend(newItem);
                 watchlistContainer.prepend(newItem);
-
 
                 console.log("Nuova watchlist aggiunta!");
             });
