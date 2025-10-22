@@ -140,18 +140,20 @@ export class GroupView extends View {
                     let scroll = document.getElementById("scroll");
                     scroll.innerHTML = "";
                     posts.forEach(post => {
-                        let post_element = main.#postComponent.getComponentElement();
-                        post_element.querySelector("p.username").innerText = post.getAuthorUsername();
-                        post_element.querySelector("p.title").innerText = post.getTitle();
-                        post_element.querySelector("p.content").innerText = post.getContent();
-                        let img = post.getAuthorPropicSrc();
-                        if(img !== null) {
-                            let propic = post_element.querySelector("div.author-avatar > img");
-                            propic.src = img;
-                            post_element.querySelector("div.author-avatar > svg").classList.add("hidden");
-                            propic.classList.remove("hidden");
+                        for(let i=0; i<5; i++) {
+                            let post_element = main.#postComponent.getComponentElement();
+                            post_element.querySelector("p.username").innerText = post.getAuthorUsername();
+                            post_element.querySelector("p.title").innerText = post.getTitle();
+                            post_element.querySelector("p.content").innerText = post.getContent();
+                            let img = post.getAuthorPropicSrc();
+                            if(img !== null) {
+                                let propic = post_element.querySelector("div.author-avatar > img");
+                                propic.src = img;
+                                post_element.querySelector("div.author-avatar > svg").classList.add("hidden");
+                                propic.classList.remove("hidden");
+                            }
+                            scroll.appendChild(post_element);
                         }
-                        scroll.appendChild(post_element);
                     });
                 }
             }
