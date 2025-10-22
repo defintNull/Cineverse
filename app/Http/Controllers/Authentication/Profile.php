@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use App\Models\User;
+use Exception;
+use Illuminate\Validation\Rule;
 
 class Profile extends Controller
 {
@@ -47,19 +49,20 @@ class Profile extends Controller
                 'surname' => 'required|string|max:255',
                 'nationality' => 'required|string|max:255',
                 'theme' => 'required|boolean|max:1',
-                'email' => 'required|email|max:255|unique:users,email,' . $user->id,
-                'username' => 'required|string|max:255|unique:users,username,' . $user->id,
+                'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($user->id)],
+                'username' => ['required', 'string', 'max:255', Rule::unique('users', 'username')->ignore($user->id)],
             ]);
             $userModel->update($validatedData);
             return response()->json([
                 'message' => 'Profile updated successfully.',
                 'theme' => $userModel->theme,
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // Log full exception for debugging
             Log::error('Profile update failed: ' . $e->getMessage(), ['exception' => $e]);
             return response()->json([
-                'error' => 'Failed to update profile data.'
+                'error' => 'Failed to update profile data.',
+                'temp' => [Auth::user()->id, $request->email]
             ], 500);
         }
     }

@@ -45,7 +45,6 @@ export class SPAFetchService {
      * Retrieve the XSRF-TOKEN from the cookie
      */
     static #getXSRFCookie() {
-        console.log(document.cookie);
         let cookie = document.cookie.split(";");
         for (let i = 0; i < cookie.length; i++) {
             let el = cookie[i].trim().split("=");
@@ -56,11 +55,18 @@ export class SPAFetchService {
         return false;
     }
 
+    refreshXSRFCookie() {
+
+        let XSRF = SPAFetchService.#getXSRFCookie();
+        this.#configGET.headers["X-XSRF-TOKEN"] = XSRF;
+        this.#configPOST.headers["X-XSRF-TOKEN"] = XSRF;
+        this.#configPOSTForm.headers["X-XSRF-TOKEN"] = XSRF;
+    }
+
     /**
      * Retrieve the instance and set the XSRF-TOOKEN for the next fetch requests
      */
     static async getInstance() {
-        console.log("ciao");
         if (SPAFetchService.#instance == null) {
             let sap_fetch = new SPAFetchService();
             SPAFetchService.#instance = sap_fetch;
@@ -87,8 +93,6 @@ export class SPAFetchService {
 
         let config = JSON.parse(JSON.stringify(this.#configPOST));
         config.body = JSON.stringify(payload);
-        //console.log(path);// di debug, ma inutile visto che il path è giusto
-        //console.log(config);
         return fetch(path, config).then(response => {
             return response;
         });
@@ -104,9 +108,6 @@ export class SPAFetchService {
 
         let config = JSON.parse(JSON.stringify(this.#configPOSTForm));
         config.body = payload;
-        console.log(config);
-        console.log(this.#configGET);
-        console.log(this.#configPOST);
         return fetch(path, config).then(response => {
             return response;
         });

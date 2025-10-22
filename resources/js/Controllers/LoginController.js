@@ -15,6 +15,7 @@ export class LoginController extends Controller {
     #authService;
     #storageService;
     #navbar;
+    #spa_fetch;
 
     constructor() {
         super();
@@ -49,7 +50,7 @@ export class LoginController extends Controller {
      */
     async #loginHandler(event) {
         event.preventDefault();
-        let sap_fetch = await SPAFetchService.getInstance();
+        this.#spa_fetch = await SPAFetchService.getInstance();
 
         // Resetting error fields
         this.#loginView.resetErrorFields();
@@ -57,7 +58,7 @@ export class LoginController extends Controller {
         // Fetching
         let formData = new FormData(document.getElementById("login-section"));
 
-        let res = await sap_fetch.POSTFetchForm('/spa/login', formData);
+        let res = await this.#spa_fetch.POSTFetchForm('/spa/login', formData);
         let payload = await res.json();
 
         //Handling errors
@@ -73,6 +74,8 @@ export class LoginController extends Controller {
             this.#loginView.gestisciErrori("Wrong username or password")
         } else if (res.status == 200) {
             this.#authService.setAuth(true);
+
+            this.#spa_fetch.refreshXSRFCookie();
 
             this.#navbar.render();
             this.#navbar.setAvatarButtonImage(payload.img_src, payload.alt);
