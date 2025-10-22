@@ -7,6 +7,7 @@ use App\Http\Controllers\Portal\WatchlistController;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Authentication\Profile;
+use App\Http\Controllers\Portal\GroupController;
 use App\Http\Controllers\PostController;
 
 /**
@@ -42,6 +43,13 @@ Route::middleware(AjaxMiddleware::class)->name('spa.')->prefix('spa')->group(fun
                 ->name('update');
             Route::post('/addmovie', [WatchlistController::class, 'addMovie'])
                 ->name('addmovie');
+        });
+
+        Route::name('group.')->prefix("group")->group(function() {
+            Route::get('/index', [GroupController::class, 'index'])
+                ->name('index');
+            Route::get('/findothergroups', [GroupController::class, 'findOtherGroups'])
+                ->name('findOtherGroups');
         });
     });
 
