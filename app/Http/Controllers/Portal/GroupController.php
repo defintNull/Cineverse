@@ -32,14 +32,20 @@ class GroupController extends Controller
             'search' => ['nullable', 'string']
         ]);
 
-        $search = ($request->has('search') && $request->search != null && $request->search != "") ? $request->search : "";
+        $search = "";
+        if($request->has('search') && $request->search != null && $request->search != "") {
+            $search = $request->search;
+        }
 
         $user = Auth::user();
 
-        $groups = Group::where("name", "like", $search."%")->get();
+        $groups = Group::where("name", "like", $search."%")
+                        ->whereNotIn('id', $user->groups->pluck('id'))
+                        ->get();
 
         return response()->json([
             'status' => 'OK',
+            'search' => $request->search,
             'groups' => $groups,
         ]);
     }

@@ -18,6 +18,7 @@ class Post extends Model
      * @var list<string>
      */
     protected $fillable = [
+        'title',
         'content',
         'movies',
         'group_id',

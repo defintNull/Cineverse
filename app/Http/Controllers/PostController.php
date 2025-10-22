@@ -7,6 +7,7 @@ use App\Models\Post;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -33,10 +34,7 @@ class PostController extends Controller
         if (!$group) {
             return response()->json(['error' => 'Group not found'], 404);
         }
-        // Verifica che l'utente sia autenticato
-        if (!Auth::check()) {
-            return response()->json(['error' => 'Unauthenticated'], 401);
-        }
+
         // Verifica che l'utente faccia parte del gruppo (membership)
         // Qui si assume che la relazione groups sia già caricabile in memoria
         // (es. tramite eager loading nel middleware) oppure venga richiesta ora.
@@ -47,6 +45,14 @@ class PostController extends Controller
             ->with('author:id,username,propic')
             ->orderBy('created_at', 'desc')
             ->get();
+
+        foreach ($posts as $post) {
+            $image_src = null;
+            if($post->author->propic != null && Storage::disk('local')->exists($post->author->propic)) {
+                $image_src = 'data:image/jpeg;base64,'.base64_encode(Storage::disk('local')->get($post->author->propic));
+            }
+            $post->author->propic = $image_src;
+        }
 
         return response()->json([
             'posts' => $posts,
