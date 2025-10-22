@@ -114,5 +114,7 @@ class DatabaseSeeder extends Seeder
         $secondGroup->users()->syncWithoutDetaching(
             User::inRandomOrder()->take(4)->pluck('id')->toArray()
         );
+
+        Post::factory(30)->create();
     }
 }
