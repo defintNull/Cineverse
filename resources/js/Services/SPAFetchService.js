@@ -60,6 +60,7 @@ export class SPAFetchService {
      * Retrieve the instance and set the XSRF-TOOKEN for the next fetch requests
      */
     static async getInstance() {
+        console.log("ciao");
         if (SPAFetchService.#instance == null) {
             let sap_fetch = new SPAFetchService();
             SPAFetchService.#instance = sap_fetch;
