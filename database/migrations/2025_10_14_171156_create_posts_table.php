@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('group_id');
             $table->foreignId('author_id');
+            $table->string('title');
             $table->string('content');
             // movies può essere vuoto; salviamo come JSON nullable
             $table->json('movies')->nullable();

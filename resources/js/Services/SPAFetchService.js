@@ -115,7 +115,7 @@ export class SPAFetchService {
             throw new TypeError('Payload must be a non-null object.');
         }
 
-        let uri = path + "?" + ((payload === null) ? "" : encodeURIComponent(payload));
+        let uri = path + "?" + ((Object.keys(payload).length === 0) ? "" : new URLSearchParams(payload).toString());
 
         return fetch(uri, this.#configGET).then(response => {
             return response;

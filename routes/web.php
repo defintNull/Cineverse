@@ -49,7 +49,7 @@ Route::middleware(AjaxMiddleware::class)->name('spa.')->prefix('spa')->group(fun
                 ->name('store');
         });
 
-        Route::name('group.')->prefix("group")->group(function() {
+        Route::name('groups.')->prefix("groups")->group(function() {
             Route::get('/index', [GroupController::class, 'index'])
                 ->name('index');
             Route::get('/findothergroups', [GroupController::class, 'findOtherGroups'])
