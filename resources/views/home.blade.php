@@ -31,9 +31,8 @@
                 </div>
                 <div id="navbar_separator" class="hidden w-px h-14 bg-gray-300"></div>
                 <div class="hidden flex flex-row gap-x-10 items-center justify-center text-center font-semibold">
-                    <p class="text-gray-900 dark:text-white border-gray-600 dark:border-gray-200 cursor-pointer">Watchlists</p>
-                    <p class="text-gray-900 dark:text-white border-gray-600 dark:border-gray-200 cursor-pointer">Posts</p>
-                    <p class="text-gray-900 dark:text-white border-gray-600 dark:border-gray-200 cursor-pointer">Groups</p>
+                    <p id="navbar_watchlists" class="text-gray-900 dark:text-white border-gray-600 dark:border-gray-200 cursor-pointer">Watchlists</p>
+                    <p id="navbar_groups" class="text-gray-900 dark:text-white border-gray-600 dark:border-gray-200 cursor-pointer">Groups</p>
                 </div>
             </div>
 
