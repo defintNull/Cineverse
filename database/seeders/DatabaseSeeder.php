@@ -49,7 +49,7 @@ class DatabaseSeeder extends Seeder
         User::factory()->create([
             'name' => 'Andrea',
             'surname' => 'Di Simone',
-            'email' => 'gerry.scotti@mediaset.it',
+            'email' => 'gerry.scotti2@mediaset.it',
             'username' => 'andrea.disimone',
             'password' => bcrypt('cadutalibera!'),
             'remember_token' => Str::random(10),
