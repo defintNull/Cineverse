@@ -46,6 +46,21 @@ class DatabaseSeeder extends Seeder
             'nationality' => 'Italy'
         ]);
 
+        User::factory()->create([
+            'name' => 'Andrea',
+            'surname' => 'Di Simone',
+            'email' => 'gerry.scotti@mediaset.it',
+            'username' => 'andrea.disimone',
+            'password' => bcrypt('cadutalibera!'),
+            'remember_token' => Str::random(10),
+            'role' => 'default',
+            'status' => 1,
+            'watchlistpriv' => 1,
+            'theme' => 0,
+            'preferredgenres' => ['Game Show', 'Reality'],
+            'nationality' => 'Italy'
+        ]);
+
         Watchlist::factory()->create([
             'name' => 'My Watchlist1',
             'movies' => [550, 120],

@@ -28,24 +28,31 @@ export class WatchlistView extends View {
 
     addEventListeners(refs, watchlistsWithMovies) {
         const main = document.getElementById("watchlist_main");
-        refs.items.forEach(({ element, data }) => {
-            element.addEventListener("click", () => {
+        const list = document.getElementById("watchlist_list2");//da fixare ci dovrebbe essere una watchlist sola
+        // Listener unico sul contenitore
+        list.addEventListener("click", (e) => {
+            // Verifico che il target sia un LI
+            const li = e.target.closest("li");
+            if (!li || !list.contains(li)) return;
+
+            // Recupero i dati dal dataset
+            const watchlistId = li.dataset.watchlistId;
+            if (!watchlistId) return;
+
             // Rimuovo eventuale griglia precedente
             document.getElementById("watchlist_grid")?.remove();
 
-            // Ricreo la struttura base della griglia
-            const grid = this.addWatchlistGrid(data);
-            main.appendChild(grid);
-
             // Trovo la watchlist corrispondente
-            const match = watchlistsWithMovies.find(w => w.watchlist.id === data.id);
+            const match = watchlistsWithMovies.find(w => w.watchlist.id == watchlistId);
             if (match) {
-                // Ora posso popolare i film
+                // Ricreo la struttura base della griglia
+                const grid = this.addWatchlistGrid(match.watchlist);
+                main.appendChild(grid);
+
+                // Popolo i film
                 this.renderMovies(match.movies, match.watchlist);
             }
-            });
         });
-
         //BOTTONE AGGIUNGI WATCHLIST
         const addButton = document.getElementById("add_watchlist_btn");
         if (addButton) {
@@ -54,6 +61,7 @@ export class WatchlistView extends View {
             const watchlistContainer = document.getElementById("watchlist_list2");
 
             // Creo un nuovo LI conforme agli altri
+            //HA SENSO CREARE UN OGGETTO WATCHLIST QUI?
             const newItem = document.createElement("li");
             newItem.classList.add(
                 "bg-gray-700",
