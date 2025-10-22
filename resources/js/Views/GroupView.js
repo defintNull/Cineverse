@@ -31,7 +31,9 @@ export class GroupView extends View {
     }
 
     render() {
+        // Setting page
         document.body.querySelector("main").classList.add("sticky", "top-0");
+        document.querySelector("footer").classList.add("hidden");
 
         let container = document.createElement("div");
         container.classList.add("grid", "grid-cols-9", "w-full", "h-svh", "max-h-svh", "dark:bg-gray-800");
@@ -130,10 +132,12 @@ export class GroupView extends View {
                     group_card.classList.remove("shadow-xl", "dark:bg-gray-700", "bg-indigo-600");
                     group_card.classList.add("border", "border-gray-400");
 
-                    let posts = await getPostsHandler(1);
+                    let posts = await getPostsHandler(group_card.querySelector("input").value);
 
                     // Setting Post Structure layout
-                    main.#setPostStructureLayout(true);
+                    if(!document.querySelector("div.header")) {
+                        main.#setPostStructureLayout(true);
+                    }
 
                     let scroll = document.getElementById("scroll");
                     scroll.innerHTML = "";
@@ -142,6 +146,7 @@ export class GroupView extends View {
                         post_element.querySelector("p.username").innerText = post.getAuthorUsername();
                         post_element.querySelector("p.title").innerText = post.getTitle();
                         post_element.querySelector("p.content").innerText = post.getContent();
+                        post_element.querySelector("input").value = post.getId();
                         let img = post.getAuthorPropicSrc();
                         if(img !== null) {
                             let propic = post_element.querySelector("div.author-avatar > img");
@@ -156,26 +161,45 @@ export class GroupView extends View {
         });
 
         document.querySelectorAll('div.inner-scroll').forEach(inner => {
-            let outer = document.documentElement;
+            const outer = document.documentElement;
+
             inner.addEventListener('wheel', (e) => {
-            const delta = e.deltaY;
+                const delta = e.deltaY;
 
-            // Controlla se outer può scrollare nella direzione di deltaY
-            const outerCanScrollUp = outer.scrollTop > 0;
-            const outerCanScrollDown = outer.scrollTop + outer.clientHeight < outer.scrollHeight;
+                const outerCanScrollUp = outer.scrollTop > 0;
+                const outerCanScrollDown = outer.scrollTop + outer.clientHeight < outer.scrollHeight;
 
-            if ((delta < 0 && outerCanScrollUp) || (delta > 0 && outerCanScrollDown)) {
-                // Previeni scroll interno, lascia scorrere solo outer
-                e.preventDefault();
-                outer.scrollBy({ top: delta });
-            }
-            // else lascia scrollare il div interno
+                const innerCanScrollUp = inner.scrollTop > 0;
+                const innerCanScrollDown = inner.scrollTop + inner.clientHeight < inner.scrollHeight;
+
+                if (delta > 0) {
+                    // Scroll down: prima outer, poi interno
+                    if (outerCanScrollDown) {
+                        e.preventDefault();
+                        outer.scrollBy({ top: delta });
+                    }
+                    // else lascia scrollare il div interno
+                } else if (delta < 0) {
+                    // Scroll up: prima interno, poi outer
+                    if (innerCanScrollUp) {
+                        // lascio scrollare il div interno (non prevengo)
+                        // esci da qui per non prevenire
+                        return;
+                    } else if (outerCanScrollUp) {
+                        // scroll outer se interno è già tutto in cima
+                        e.preventDefault();
+                        outer.scrollBy({ top: delta });
+                    }
+                    // else non faccio nulla (non scrolla)
+                }
             }, { passive: false });
         });
+
     }
 
     resetView() {
         document.body.querySelector("main").classList.remove("sticky", "top-0");
+        document.querySelector("footer").classList.remove("hidden");
         document.body.querySelector("main").innerHTML = "";
     }
 
@@ -183,11 +207,10 @@ export class GroupView extends View {
         let groups = await groupHandler();
         let group_card_container = document.getElementById("group_card_container");
         groups.forEach(group => {
-            for(let i=0; i<5; i++) {
-                let element = this.#groupCard.getComponentElement();
-                element.querySelector("p").innerText = group.getName();
-                group_card_container.append(element);
-            }
+            let element = this.#groupCard.getComponentElement();
+            element.querySelector("p").innerText = group.getName();
+            element.querySelector("input").value = group.getId();
+            group_card_container.append(element);
         });
     }
 
@@ -195,11 +218,10 @@ export class GroupView extends View {
         let groups = await groupHandler();
         let scroll = document.getElementById("scroll");
         groups.forEach(group => {
-            for(let i=0; i<5; i++) {
-                let element = this.#groupComponent.getComponentElement();
-                element.querySelector("p").innerText = group.getName();
-                scroll.append(element);
-            }
+            let element = this.#groupComponent.getComponentElement();
+            element.querySelector("p").innerText = group.getName();
+            element.querySelector("input").value = group.getId();
+            scroll.append(element);
         });
     }
 

@@ -6,6 +6,7 @@ export class GroupComponent extends Component {
                 <div class="absolute bottom-8 right-20 cursor-pointer flex flex-col items-center justify-center py-2 px-4 rounded-2xl hover:bg-gray-600">
                     <p class="text-xl text-gray-900 dark:text-white">Join</p>
                 </div>
+                <input hidden type="text" name="id", value="" />
             </div>`;
 
     getComponentElement() {

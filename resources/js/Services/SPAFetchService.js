@@ -111,7 +111,7 @@ export class SPAFetchService {
      * Make a fetch request using the get protocol
      */
     async GETFetch(path, payload) {
-        if (typeof payload !== 'object' && payload !== null) {
+        if (typeof payload !== 'object' || payload === null) {
             throw new TypeError('Payload must be a non-null object.');
         }
 
