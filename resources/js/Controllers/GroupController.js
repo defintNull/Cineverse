@@ -43,7 +43,10 @@ export class GroupController extends Controller {
         return groups;
     }
 
-    async #getOtherGroups(search = "") {
+    async #getOtherGroups(search = "", reset = false) {
+        if(reset) {
+            this.#groupsPage = 1;
+        }
         let res = await this.#spa_fetch.GETFetch('spa/groups/findothergroups', {"search": search, "page": this.#groupsPage});
         let json = await res.json();
         let groups = json.groups;
@@ -52,7 +55,10 @@ export class GroupController extends Controller {
         return groups;
     }
 
-    async #getGroupPosts(id) {
+    async #getGroupPosts(id, reset = false) {
+        if(reset) {
+            this.#postsPage = 1;
+        }
         let res = await this.#spa_fetch.GETFetch('spa/groups/' + id + '/posts', {"page": this.#postsPage});
         if(res.status == 200) {
             let json = await res.json();

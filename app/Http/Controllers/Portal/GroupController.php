@@ -7,6 +7,7 @@ use App\Models\Group;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class GroupController extends Controller
 {
@@ -43,10 +44,19 @@ class GroupController extends Controller
                         ->whereNotIn('id', $user->groups->pluck('id'))
                         ->paginate(15);
 
+        $groups = $groups->items();
+        foreach ($groups as $group) {
+            $image_src = null;
+            if($group->propic != null && Storage::disk('local')->exists($group->propic)) {
+                $image_src = 'data:image/jpeg;base64,'.base64_encode(Storage::disk('local')->get($group->propic));
+            }
+            $group->propic = $image_src;
+        }
+
         return response()->json([
             'status' => 'OK',
             'search' => $request->search,
-            'groups' => $groups->items(),
+            'groups' => $groups,
         ]);
     }
 

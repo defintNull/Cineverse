@@ -107,7 +107,9 @@ export class GroupView extends View {
         document.getElementById("searchbar").addEventListener("submit", async function(event) {
             event.preventDefault();
 
-            let groups = await searchHandler(this.querySelector("input").value);
+            document.getElementById("element_container").addEventListener("scroll", main.#scrollHandle);
+
+            let groups = await searchHandler(this.querySelector("input").value, true);
 
             let header = document.getElementById("element_container").querySelector("div.header");
             if(header) {
@@ -123,6 +125,7 @@ export class GroupView extends View {
             scroll.innerHTML = "";
             groups.forEach(group => {
                 let element = main.#groupComponent.getComponentElement();
+                element.querySelector("p").innerText = group.getName();
                 element.querySelector("input[name='id']").value = group.getId();
                 element.querySelector("input[name='description']").value = group.getDescription();
                 scroll.append(element);
@@ -132,6 +135,7 @@ export class GroupView extends View {
 
         document.getElementById("sidebar").addEventListener("click", async function(event) {
             const group_card = event.target.closest(".group-card");
+            document.getElementById("element_container").addEventListener("scroll", main.#scrollHandle);
             if(group_card && this.contains(group_card)) {
                 if(group_card.classList.contains("border")) {
                     group_card.classList.remove("border", "border-gray-400");
@@ -147,7 +151,7 @@ export class GroupView extends View {
                     group_card.classList.remove("shadow-xl", "dark:bg-gray-700", "bg-indigo-600");
                     group_card.classList.add("border", "border-gray-400");
 
-                    let posts = await getPostsHandler(group_card.querySelector("input").value);
+                    let posts = await getPostsHandler(group_card.querySelector("input").value, true);
 
                     // Setting Post Structure layout
                     if(!document.querySelector("div.header")) {
