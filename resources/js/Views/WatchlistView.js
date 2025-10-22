@@ -45,32 +45,112 @@ export class WatchlistView extends View {
             }
             });
         });
+
+        //BOTTONE AGGIUNGI WATCHLIST
+        const addButton = document.getElementById("add_watchlist_btn");
+        if (addButton) {
+            addButton.addEventListener("click", () => {
+            // Recupero la UL già esistente
+            const watchlistContainer = document.getElementById("watchlist_list2");
+
+            // Creo un nuovo LI conforme agli altri
+            const newItem = document.createElement("li");
+            newItem.classList.add(
+                "bg-gray-700",
+                "rounded",
+                "p-3",
+                "cursor-pointer",
+                "hover:bg-gray-600",
+                "transition"
+            );
+            newItem.innerText = "Nuova Watchlist";
+            newItem.dataset.watchlistId = Date.now();
+
+            // Inserisco come primo elemento della lista esistente
+            watchlistContainer.prepend(newItem);
+
+
+                console.log("Nuova watchlist aggiunta!");
+            });
+        }
+
+
     }
 
 
 
     //step 1)crea il layout di base chiamato da render e sincrono
     createWatchlistsLayout() {
-        // Root container con flex row
-        const container = document.createElement("div");
-        container.id = "watchlists_layout";
-        container.classList.add("flex", "flex-row", "min-h-screen", "bg-gray-900", "text-white");
+    // Root container con grid
+    const container = document.createElement("div");
+    container.id = "watchlists_layout";
+    container.classList.add(
+        "grid",
+        "grid-cols-8",
+        "min-h-screen",
+        "bg-gray-900",
+        "text-white",
+        "w-full"
+    );
 
-        // Sidebar (vuota, verrà popolata dopo)
-        const sidebar = document.createElement("aside");
-        sidebar.id = "watchlist_sidebar";
-        sidebar.classList.add("w-64", "bg-gray-800", "p-4", "overflow-y-auto");
-        container.appendChild(sidebar);
+    // Sidebar
+    const sidebar = document.createElement("aside");
+    sidebar.id = "watchlist_sidebar";
+    sidebar.classList.add(
+        "bg-gray-800",
+        "p-4",
+        "overflow-y-auto",
+        "col-span-2",
+        "flex",
+        "flex-col"
+    );
 
-        // Main content (vuoto, verrà popolato dopo)
-        const main = document.createElement("main");
-        main.id = "watchlist_main";
-        main.classList.add("flex-1", "p-6");
-        container.appendChild(main);
+    // Header della sidebar con titolo + bottone
+    const sidebarHeader = document.createElement("div");
+    sidebarHeader.classList.add("flex", "items-center", "justify-between", "mb-4");
 
-        // Append al DOM
-        document.body.querySelector("main").appendChild(container);
-    }
+    const sidebarTitle = document.createElement("h2");
+    sidebarTitle.classList.add("text-lg", "font-bold");
+    sidebarTitle.innerText = "Le tue watchlist";
+
+    const addButton = document.createElement("button");
+    addButton.id = "add_watchlist_btn";
+    addButton.innerText = "+";
+    addButton.classList.add(
+        "bg-blue-600",
+        "hover:bg-blue-700",
+        "text-white",
+        "font-bold",
+        "w-8",
+        "h-8",
+        "rounded-full",
+        "flex",
+        "items-center",
+        "justify-center",
+        "shadow"
+    );
+
+    sidebarHeader.appendChild(sidebarTitle);
+    sidebarHeader.appendChild(addButton);
+    sidebar.appendChild(sidebarHeader);
+
+    // Qui verranno aggiunte le watchlist
+    const watchlistContainer = document.createElement("ul");
+    watchlistContainer.id = "watchlist_list";
+    watchlistContainer.classList.add("space-y-2");
+    sidebar.appendChild(watchlistContainer);
+
+    container.appendChild(sidebar);
+
+    // Main content
+    const main = document.createElement("div");
+    main.id = "watchlist_main";
+    main.classList.add("flex", "col-start-3", "col-span-6", "flex-col", "p-6");
+    container.appendChild(main);
+
+    // Append al DOM
+    document.body.querySelector("main").appendChild(container);
+}
 
     async populateWatchlistsLayout(watchlistsfunc) {
         let watchlists = await watchlistsfunc();
@@ -82,12 +162,14 @@ export class WatchlistView extends View {
             return;
         }
 
+        /*
         const sidebarTitle = document.createElement("h2");
         sidebarTitle.classList.add("text-lg", "font-bold", "mb-4", "text-white");
         sidebarTitle.innerText = "Le tue watchlist";
         sidebar.appendChild(sidebarTitle);
-
+        */
         const list = document.createElement("ul");
+        list.id = "watchlist_list2";
         list.classList.add("space-y-2");
 
         // Creo gli <li> ma NON aggiungo ancora i listener
@@ -119,36 +201,76 @@ export class WatchlistView extends View {
 
 
 
-    addWatchlistGrid(watchlist) {
-        // Container griglia
-        const grid_container = document.createElement("div");
-        grid_container.id = "watchlist_grid";
-        grid_container.classList.add("flex-1", "p-6");
+addWatchlistGrid(watchlist) {
+    // Container griglia
+    const grid_container = document.createElement("div");
+    grid_container.id = "watchlist_grid";
+    grid_container.classList.add(
+        "flex",
+        "flex-col",
+        "p-6",
+        "min-h-[calc(100vh-4rem)]", // altezza minima stabile
+        "box-border"
+    );
 
-        // Titolo
-        const title = document.createElement("h1");
-        title.classList.add("text-2xl", "font-bold", "mb-6");
-        title.innerText = "Film della watchlist: " + watchlist.name;
-        grid_container.appendChild(title);
+    // Titolo
+    const title = document.createElement("h1");
+    title.classList.add("text-2xl", "font-bold", "mb-6");
+    title.innerText = "" + watchlist.name; //non serve inserire un "titolo watchlist" perchè c'è già il nome della watchlist
+    grid_container.appendChild(title);
 
-        // Griglia (vuota, verrà popolata dopo)
-        const grid = document.createElement("div");
-        grid.classList.add(
-            "grid",
-            "grid-cols-2",
-            "sm:grid-cols-3",
-            "md:grid-cols-4",
-            "lg:grid-cols-5",
-            "gap-6"
+    // Griglia (vuota, verrà popolata dopo)
+    const grid = document.createElement("div");
+    grid.classList.add(
+        "grid",
+        "grid-cols-2",
+        "sm:grid-cols-3",
+        "md:grid-cols-4",
+        "lg:grid-cols-5",
+        "gap-6",
+        "items-start",
+        "content-start"
+    );
+
+    // Se la watchlist è vuota → placeholder elegante
+    if (!watchlist.movies || watchlist.movies.length === 0) {
+        const placeholder = document.createElement("div");
+        placeholder.classList.add(
+            "col-span-full",          // occupa tutta la riga
+            "flex",
+            "flex-col",
+            "items-center",
+            "justify-center",
+            "text-gray-400",
+            "italic",
+            "p-12",
+            "border-2",
+            "border-dashed",
+            "border-gray-600",
+            "rounded-lg",
+            "h-[450px]"
         );
-        grid_container.appendChild(grid);
 
-        return grid_container; // ritorno il contenitore
+        const icon = document.createElement("span");
+        icon.innerText = "🎬"; // icona film
+        icon.classList.add("text-5xl", "mb-4");
+
+        const msg = document.createElement("p");
+        msg.innerText = "Nessun film in questa watchlist";
+        msg.classList.add("text-lg");
+
+        placeholder.appendChild(icon);
+        placeholder.appendChild(msg);
+        grid.appendChild(placeholder);
     }
+
+    grid_container.appendChild(grid);
+    return grid_container;
+}
 
     async renderMovies(movies) {
     this.addWatchlistGridElements(movies);
-}
+    }
 
     async addWatchlistGridElements(movies) {
         const grid = document.getElementById("watchlist_grid").querySelector("div");
@@ -174,7 +296,8 @@ export class WatchlistView extends View {
                 "cursor-pointer",
                 "hover:scale-105",
                 "transition",
-                "duration-200"
+                "duration-200",
+                "h-[250px]"
             );
 
             // Poster
