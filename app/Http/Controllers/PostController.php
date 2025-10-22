@@ -44,7 +44,9 @@ class PostController extends Controller
         $posts = Post::where('group_id', $group->id)
             ->with('author:id,username,propic')
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->paginate(20);
+
+        $posts = $posts->items();
 
         foreach ($posts as $post) {
             $image_src = null;

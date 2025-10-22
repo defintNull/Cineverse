@@ -13,7 +13,7 @@ class GroupController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request) : JsonResponse
+    public function index() : JsonResponse
     {
         $user = Auth::user();
 
@@ -41,12 +41,12 @@ class GroupController extends Controller
 
         $groups = Group::where("name", "like", $search."%")
                         ->whereNotIn('id', $user->groups->pluck('id'))
-                        ->get();
+                        ->paginate(15);
 
         return response()->json([
             'status' => 'OK',
             'search' => $request->search,
-            'groups' => $groups,
+            'groups' => $groups->items(),
         ]);
     }
 

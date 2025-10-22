@@ -4,6 +4,8 @@ import { DeleteButton } from "../Components/DeleteButton";
 import { GroupCard } from "../Components/GroupCard";
 import { GroupComponent } from "../Components/GroupComponent";
 import { HeaderComponent } from "../Components/HeaderComponent";
+import { Input } from "../Components/Input";
+import { PopUp } from "../Components/PopUp";
 import { PostComponent } from "../Components/PostComponent";
 import { Searchbar } from "../Components/Searchbar";
 import { View } from "./View";
@@ -17,6 +19,10 @@ export class GroupView extends View {
     #searchbarComponent;
     #headerComponent;
     #addButton;
+    #popup
+    #input
+
+    #scrollHandle;
 
     constructor() {
         super();
@@ -28,6 +34,8 @@ export class GroupView extends View {
         this.#searchbarComponent = new Searchbar();
         this.#headerComponent = new HeaderComponent();
         this.#addButton = new AddButton();
+        this.#popup = new PopUp();
+        this.#input = new Input();
     }
 
     render() {
@@ -87,8 +95,14 @@ export class GroupView extends View {
 
     }
 
-    addEventListeners(searchHandler, getPostsHandler) {
+    addEventListeners(searchHandler, getPostsHandler, joinGroupHandler) {
         let main = this;
+        this.#scrollHandle = this.#addGroupScrollHandler.bind(
+            this,
+            document.getElementById("element_container"),
+            searchHandler,
+            getPostsHandler
+        );
 
         document.getElementById("searchbar").addEventListener("submit", async function(event) {
             event.preventDefault();
@@ -109,7 +123,8 @@ export class GroupView extends View {
             scroll.innerHTML = "";
             groups.forEach(group => {
                 let element = main.#groupComponent.getComponentElement();
-                element.querySelector("p").innerText = group.getName();
+                element.querySelector("input[name='id']").value = group.getId();
+                element.querySelector("input[name='description']").value = group.getDescription();
                 scroll.append(element);
             });
 
@@ -136,7 +151,7 @@ export class GroupView extends View {
 
                     // Setting Post Structure layout
                     if(!document.querySelector("div.header")) {
-                        main.#setPostStructureLayout(true);
+                        main.#setPostStructureLayout(true, group_card.querySelector("input").value);
                     }
 
                     let scroll = document.getElementById("scroll");
@@ -195,6 +210,44 @@ export class GroupView extends View {
             }, { passive: false });
         });
 
+        document.getElementById("element_container").addEventListener("scroll", this.#scrollHandle);
+
+        document.getElementById("scroll").addEventListener("click", async function(event) {
+            const join_button = event.target.closest(".join");
+            if(join_button && this.contains(join_button)) {
+
+                let popup = main.#popup.getComponentElement();
+                popup.querySelector("p").innerText = "Join Group";
+
+                let container = popup.querySelector("div.container");
+                container.classList.add("items-center", "gap-y-4")
+                let title = document.createElement("p");
+                title.classList.add("text-xl", "dark:text-white", "text-gray-900");
+                title.innerText = join_button.parentElement.parentElement.querySelector("p").innerText;
+                container.appendChild(title);
+                let img = document.createElement("img");
+                container.appendChild(img);
+                let description = document.createElement("p");
+                description.classList.add("text-xl", "dark:text-white", "text-gray-900");
+                description.innerText = join_button.parentElement.parentElement.querySelector("input[name='description']").value;
+                container.appendChild(description);
+                let id_input = document.createElement("input");
+                id_input.hidden = true;
+                id_input.type = "text";
+                id_input.value = join_button.parentElement.parentElement.querySelector("input[name='id']").value;
+                container.appendChild(id_input);
+                let token = main.#input.getComponentElement();
+                token.querySelector("label").innerText = "Token";
+                container.appendChild(token);
+
+                document.body.querySelector("main").appendChild(popup);
+
+
+                popup.querySelector("button.default-button").addEventListener("click", main.#joinGroupHandler(joinGroupHandler, token.querySelector("input").value));
+                popup.querySelector("button.delete-button").addEventListener("click", () => {popup.remove();});
+
+            }
+        });
     }
 
     resetView() {
@@ -220,18 +273,20 @@ export class GroupView extends View {
         groups.forEach(group => {
             let element = this.#groupComponent.getComponentElement();
             element.querySelector("p").innerText = group.getName();
-            element.querySelector("input").value = group.getId();
+            element.querySelector("input[name='id']").value = group.getId();
+            element.querySelector("input[name='description']").value = group.getDescription();
             scroll.append(element);
         });
     }
 
-    #setPostStructureLayout(bool) {
+    #setPostStructureLayout(bool, id = null) {
         if(bool) {
             // Header
             let header = this.#headerComponent.getComponentElement();
             header.querySelector("button.red-button").innerText = "Exit";
             header.querySelector("p").innerText = "Group Title";
             header.querySelector("button.normal-button").innerText = "Get Token";
+            header.querySelector("input").value = id;
             document.getElementById("element_container").prepend(header);
 
             // Add button
@@ -245,5 +300,60 @@ export class GroupView extends View {
             document.getElementById("element_container").querySelector("div.header").remove();
             document.getElementById("add_post_button").remove();
         }
+    }
+
+    async #addGroupScrollHandler(container, groupHandler, postHandler) {
+        // Altezza totale del contenuto scrollabile
+        const scrollHeight = container.scrollHeight;
+        // Altezza visibile del div
+        const clientHeight = container.clientHeight;
+        // Quanto è stato scrollato in verticale
+        const scrollTop = container.scrollTop;
+
+        if (scrollTop + clientHeight >= scrollHeight - 100) {
+            container.removeEventListener("scroll", this.#scrollHandle);
+
+            let scroll = document.getElementById("scroll");
+            if(container.parentElement.querySelector("div.header")) {
+                let posts = await postHandler(container.parentElement.querySelector("div.header").querySelector("input").value);
+
+                posts.forEach(post => {
+                    let post_element = this.#postComponent.getComponentElement();
+                    post_element.querySelector("p.username").innerText = post.getAuthorUsername();
+                    post_element.querySelector("p.title").innerText = post.getTitle();
+                    post_element.querySelector("p.content").innerText = post.getContent();
+                    post_element.querySelector("input").value = post.getId();
+                    let img = post.getAuthorPropicSrc();
+                    if(img !== null) {
+                        let propic = post_element.querySelector("div.author-avatar > img");
+                        propic.src = img;
+                        post_element.querySelector("div.author-avatar > svg").classList.add("hidden");
+                        propic.classList.remove("hidden");
+                    }
+                    scroll.appendChild(post_element);
+                });
+
+                if(posts.length != 0) {
+                    container.addEventListener("scroll", this.#scrollHandle);
+                }
+            } else {
+                let groups = await groupHandler(document.getElementById("searchbar").querySelector("input").value);
+
+                groups.forEach(group => {
+                    let element = this.#groupComponent.getComponentElement();
+                    element.querySelector("input[name='id']").value = group.getId();
+                    element.querySelector("input[name='description']").value = group.getDescription();
+                    scroll.append(element);
+                });
+
+                if(groups.length != 0) {
+                    container.addEventListener("scroll", this.#scrollHandle);
+                }
+            }
+        }
+    }
+
+    async #joinGroupHandler(joinCallback, token = false) {
+        let res = await joinCallback(token);
     }
 }
