@@ -41,10 +41,10 @@ export class WatchlistController extends Controller {
             })
         );
 
-        console.log("watchlistsWithMovies:", watchlistsWithMovies);
+        //console.log("watchlistsWithMovies:", watchlistsWithMovies);
         this.#WatchlistView.render();
         const refs = await this.#WatchlistView.populateWatchlistsLayout(this.#loadwatchlists.bind(this));
-        console.log("refs", refs);
+        //console.log("refs", refs);
         //const refs2 = await this.#WatchlistView.renderMovies(moviez[0]); //questo va messo dinamico
         // Mostro di default la prima watchlist con i suoi film
         if (watchlistsWithMovies.length > 0) {
@@ -66,6 +66,19 @@ export class WatchlistController extends Controller {
         }
         return false;
     }*/
+
+    //gli devo passare l'oggeto nel payload della POSTFetch
+    async #createnewwatchlist(newwatchlist) {
+        let sap_fetch = await SPAFetchService.getInstance();
+        let res = await sap_fetch.POSTFetch('/spa/watchlist/store', newwatchlist);
+        let payload = await res.json();
+        //console.log(payload.watchlists);
+        return payload.watchlists;
+        //al carousel va passata una watchlist
+    }
+
+
+
 
     async #loadwatchlists() {
         let sap_fetch = await SPAFetchService.getInstance();

@@ -57,25 +57,26 @@ export class WatchlistView extends View {
         const addButton = document.getElementById("add_watchlist_btn");
         if (addButton) {
             addButton.addEventListener("click", () => {
-            // Recupero la UL già esistente
-            const watchlistContainer = document.getElementById("watchlist_list2");
+                // Recupero la UL già esistente
+                const watchlistContainer = document.getElementById("watchlist_list2");
 
-            // Creo un nuovo LI conforme agli altri
-            //HA SENSO CREARE UN OGGETTO WATCHLIST QUI?
-            const newItem = document.createElement("li");
-            newItem.classList.add(
-                "bg-gray-700",
-                "rounded",
-                "p-3",
-                "cursor-pointer",
-                "hover:bg-gray-600",
-                "transition"
-            );
-            newItem.innerText = "Nuova Watchlist";
-            newItem.dataset.watchlistId = Date.now();
+                // Creo un nuovo LI conforme agli altri
+                //HA SENSO CREARE UN OGGETTO WATCHLIST QUI?
+                //Ho la necessità di creare un oggetto watchlist per passarlo
+                const newItem = document.createElement("li");
+                newItem.classList.add(
+                    "bg-gray-700",
+                    "rounded",
+                    "p-3",
+                    "cursor-pointer",
+                    "hover:bg-gray-600",
+                    "transition"
+                );
+                newItem.innerText = "Nuova Watchlist";
+                newItem.dataset.watchlistId = Date.now();
 
-            // Inserisco come primo elemento della lista esistente
-            watchlistContainer.prepend(newItem);
+                // Inserisco come primo elemento della lista esistente
+                watchlistContainer.prepend(newItem);
 
 
                 console.log("Nuova watchlist aggiunta!");
