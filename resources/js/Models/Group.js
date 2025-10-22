@@ -19,4 +19,12 @@ export class Group extends Model {
     getDescription() {
         return this.#groupJson.description;
     }
+
+    getImageSrc() {
+        return this.#groupJson.propic;
+    }
+
+    getVisibility() {
+        return this.#groupJson.visibility;
+    }
 }

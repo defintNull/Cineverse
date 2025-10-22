@@ -8,6 +8,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class GroupController extends Controller
 {
@@ -18,9 +19,18 @@ class GroupController extends Controller
     {
         $user = Auth::user();
 
+        $groups = $user->groups;
+        foreach ($groups as $group) {
+            $image_src = null;
+            if($group->propic != null && Storage::disk('local')->exists($group->propic)) {
+                $image_src = 'data:image/jpeg;base64,'.base64_encode(Storage::disk('local')->get($group->propic));
+            }
+            $group->propic = $image_src;
+        }
+
         return response()->json([
             'status' => 'OK',
-            'groups' => $user->groups,
+            'groups' => $groups,
         ]);
     }
 
@@ -60,34 +70,40 @@ class GroupController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+    public function join(Request $request) {
+        $request->validate([
+            'id' => ['required', 'integer', Rule::exists('groups', 'id')],
+            'token' => ['nullable', 'string'],
+        ]);
+
+        $group = Group::where('id', $request->id)->get()[0];
+
+        if($group->visibility == 'private') {
+            if($request->has('token') && $request->token != null && $request->token != $group->token) {
+                return response()->json([
+                    'status' => 401,
+                    'error' => 'Wrong token',
+                ]);
+            } else {
+                return response()->json([
+                    'status' => 403,
+                    'error' => 'Token required',
+                ]);
+            }
+        }
+
+        $group->users()->syncWithoutDetaching([Auth::user()->id]);
+
+        return response()->json([
+            'status' => 200,
+            'group' => $group,
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
     {
         //
     }

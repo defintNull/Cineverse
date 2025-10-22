@@ -27,7 +27,8 @@ export class GroupController extends Controller {
         ]);
         this.#groupView.addEventListeners(
             this.#getOtherGroups.bind(this),
-            this.#getGroupPosts.bind(this)
+            this.#getGroupPosts.bind(this),
+            this.#joinGroup.bind(this),
         );
     }
 
@@ -68,5 +69,17 @@ export class GroupController extends Controller {
             return posts;
         }
         return [];
+    }
+
+    async #joinGroup(id, token = null) {
+        let res = await this.#spa_fetch.POSTFetch('spa/groups/join', {'id': id, 'token': token});
+        if(res.status == 200) {
+            let json = await res.json();
+            if(json.status == 200) {
+                return new Group(json.group);
+            }
+        }
+        // AGGIUNGERE LOGICA ERRORE
+        return null;
     }
 }

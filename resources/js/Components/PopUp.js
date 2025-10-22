@@ -2,7 +2,7 @@ import { Component } from "./Component";
 
 export class PopUp extends Component {
     #card = `<div class="w-full popup h-svh z-50 absolute flex flex-col items-center justify-center backdrop-blur-md">
-                <div class="flex flex-col w-1/2 py-8 px-16 h-1/2 rounded-xl shadow-lg relative bg-indigo-600 dark:bg-gray-700">
+                <div class="flex flex-col w-1/2 py-8 px-16 rounded-xl shadow-lg relative bg-indigo-600 dark:bg-gray-700">
                     <p class="text-2xl dark:text-white text-gray-900 w-full text-center font-semibold"></p>
                     <div class="flex container flex-col w-full grow"></div>
                     <div class="flex flex-col items-center justify-center w-full">

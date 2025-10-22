@@ -54,6 +54,8 @@ Route::middleware(AjaxMiddleware::class)->name('spa.')->prefix('spa')->group(fun
                 ->name('index');
             Route::get('/findothergroups', [GroupController::class, 'findOtherGroups'])
                 ->name('findOtherGroups');
+            Route::post('join', [GroupController::class, 'join'])
+                ->name('join');
         });
     });
 

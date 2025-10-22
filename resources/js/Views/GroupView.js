@@ -128,6 +128,7 @@ export class GroupView extends View {
                 element.querySelector("p").innerText = group.getName();
                 element.querySelector("input[name='id']").value = group.getId();
                 element.querySelector("input[name='description']").value = group.getDescription();
+                element.querySelector("input[name='visibility']").value = group.getVisibility();
                 scroll.append(element);
             });
 
@@ -216,38 +217,49 @@ export class GroupView extends View {
 
         document.getElementById("element_container").addEventListener("scroll", this.#scrollHandle);
 
+        // Group component event
         document.getElementById("scroll").addEventListener("click", async function(event) {
             const join_button = event.target.closest(".join");
             if(join_button && this.contains(join_button)) {
-
+                let parent = join_button.parentElement.parentElement.parentElement
                 let popup = main.#popup.getComponentElement();
                 popup.querySelector("p").innerText = "Join Group";
 
                 let container = popup.querySelector("div.container");
-                container.classList.add("items-center", "gap-y-4")
+                container.classList.add("items-center", "gap-y-4", "py-8")
                 let title = document.createElement("p");
-                title.classList.add("text-xl", "dark:text-white", "text-gray-900");
-                title.innerText = join_button.parentElement.parentElement.querySelector("p").innerText;
+                title.classList.add("text-2xl", "font-medium", "dark:text-white", "text-gray-900");
+                title.innerText = parent.querySelector("p").innerText;
                 container.appendChild(title);
                 let img = document.createElement("img");
+                img.classList.add("h-46");
+                img.src = parent.querySelector("img").src;
                 container.appendChild(img);
                 let description = document.createElement("p");
-                description.classList.add("text-xl", "dark:text-white", "text-gray-900");
-                description.innerText = join_button.parentElement.parentElement.querySelector("input[name='description']").value;
+                description.classList.add("text-lg", "italic", "dark:text-white", "text-gray-900");
+                description.innerText = parent.querySelector("input[name='description']").value;
                 container.appendChild(description);
                 let id_input = document.createElement("input");
                 id_input.hidden = true;
                 id_input.type = "text";
-                id_input.value = join_button.parentElement.parentElement.querySelector("input[name='id']").value;
+                id_input.value = parent.querySelector("input[name='id']").value;
                 container.appendChild(id_input);
-                let token = main.#input.getComponentElement();
-                token.querySelector("label").innerText = "Token";
-                container.appendChild(token);
+                if(parent.querySelector("input[name='visibility']").value == "private") {
+                    let token = main.#input.getComponentElement();
+                    token.name = "token_input";
+                    token.querySelector("label").innerText = "Token";
+                    container.appendChild(token);
+                }
 
                 document.body.querySelector("main").appendChild(popup);
 
-
-                popup.querySelector("button.default-button").addEventListener("click", main.#joinGroupHandler(joinGroupHandler, token.querySelector("input").value));
+                let token = document.getElementById("token_input");
+                if(token) {
+                    token = token.value;
+                } else {
+                    token = null;
+                }
+                popup.querySelector("button.default-button").addEventListener("click", main.#joinGroupHandler.bind(main, joinGroupHandler, id_input.value, token));
                 popup.querySelector("button.delete-button").addEventListener("click", () => {popup.remove();});
 
             }
@@ -267,6 +279,11 @@ export class GroupView extends View {
             let element = this.#groupCard.getComponentElement();
             element.querySelector("p").innerText = group.getName();
             element.querySelector("input").value = group.getId();
+            let img_src = group.getImageSrc();
+            if (img_src == null) {
+                element.querySelector("img").classList.add("hidden");
+            }
+            element.querySelector("img").src = group.getImageSrc();
             group_card_container.append(element);
         });
     }
@@ -279,6 +296,8 @@ export class GroupView extends View {
             element.querySelector("p").innerText = group.getName();
             element.querySelector("input[name='id']").value = group.getId();
             element.querySelector("input[name='description']").value = group.getDescription();
+            element.querySelector("input[name='visibility']").value = group.getVisibility();
+            element.querySelector("img").src = group.getImageSrc();
             scroll.append(element);
         });
     }
@@ -357,7 +376,20 @@ export class GroupView extends View {
         }
     }
 
-    async #joinGroupHandler(joinCallback, token = false) {
-        let res = await joinCallback(token);
+    async #joinGroupHandler(joinCallback, id, token = null) {
+        let group = await joinCallback(id, token);
+
+        // AGGIUNGERE LOGICA PER ERRORE
+
+        let group_card_container = document.getElementById("group_card_container");
+        let element = this.#groupCard.getComponentElement();
+        element.querySelector("p").innerText = group.getName();
+        element.querySelector("input").value = group.getId();
+        let img_src = group.getImageSrc();
+        if (img_src == null) {
+            element.querySelector("img").classList.add("hidden");
+        }
+        element.querySelector("img").src = group.getImageSrc();
+        group_card_container.append(element);
     }
 }
