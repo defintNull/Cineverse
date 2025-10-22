@@ -18,6 +18,7 @@ class App {
 
     start() {
         this.#navbar.render();
+        this.#navbar.renderAvatarImage();
         this.#navbar.addEventListeners();
 
         if(this.#storageService.getData("theme")) {

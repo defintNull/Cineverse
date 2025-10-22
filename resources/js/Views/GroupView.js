@@ -146,6 +146,7 @@ export class GroupView extends View {
                         post_element.querySelector("p.username").innerText = post.getAuthorUsername();
                         post_element.querySelector("p.title").innerText = post.getTitle();
                         post_element.querySelector("p.content").innerText = post.getContent();
+                        post_element.querySelector("input").value = post.getId();
                         let img = post.getAuthorPropicSrc();
                         if(img !== null) {
                             let propic = post_element.querySelector("div.author-avatar > img");
@@ -219,6 +220,7 @@ export class GroupView extends View {
         groups.forEach(group => {
             let element = this.#groupComponent.getComponentElement();
             element.querySelector("p").innerText = group.getName();
+            element.querySelector("input").value = group.getId();
             scroll.append(element);
         });
     }

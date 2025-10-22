@@ -8,6 +8,10 @@ export class Post extends Model {
         this.#postJson = postJson;
     }
 
+    getId() {
+        return this.#postJson.id;
+    }
+
     getAuthorUsername() {
         return this.#postJson.author.username;
     }

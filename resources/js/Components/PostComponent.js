@@ -28,6 +28,7 @@ export class PostComponent extends Component {
                     <div>
                     </div>
                 </div>
+                <input hidden type="text" name="id" value="" />
             </div>`;
 
     getComponentElement() {

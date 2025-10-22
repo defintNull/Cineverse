@@ -1,11 +1,13 @@
 import { Router } from "./router";
 import { AuthService } from "./Services/AuthService";
+import { StorageService } from "./Services/StorageService";
 
 export class Navbar {
     static #instance;
     #navbar;
     #authService;
     #router
+    #storageService;
 
     constructor() {
         if(Navbar.#instance) {
@@ -15,6 +17,7 @@ export class Navbar {
         this.#navbar = document.getElementById("navbar")
         this.#authService = AuthService.getInstance();
         this.#router = Router.getInstance();
+        this.#storageService = StorageService.getInstance();
     }
 
     /**
@@ -114,6 +117,14 @@ export class Navbar {
             img_element.src = img_src;
             img_element.alt = alt;
             img_element.classList.remove("hidden");
+        }
+    }
+
+    renderAvatarImage() {
+        let propic_src = this.#storageService.getData("propic_src");
+        let propic_alt = this.#storageService.getData("propic_alt");
+        if(propic_src !== null) {
+            this.setAvatarButtonImage(propic_src, propic_alt);
         }
     }
 }
