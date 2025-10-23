@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Str;
 
 class GroupController extends Controller
 {
@@ -70,7 +71,7 @@ class GroupController extends Controller
         ]);
     }
 
-    public function join(Request $request) {
+    public function join(Request $request) :JsonResponse {
         $request->validate([
             'id' => ['required', 'integer', Rule::exists('groups', 'id')],
             'token' => ['nullable', 'string'],
@@ -106,7 +107,7 @@ class GroupController extends Controller
         ]);
     }
 
-    public function quit(Request $request) {
+    public function quit(Request $request) : JsonResponse {
         $request->validate([
             'id' => ['required', 'integer', Rule::exists('groups', 'id')],
         ]);
@@ -131,9 +132,43 @@ class GroupController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request) : JsonResponse
     {
-        //
+        $request->validate([
+            'name' => ['required', 'string', 'max:64'],
+            'description' => ['required', 'string', 'max:1000'],
+            'visibility' => ['required', Rule::in(['public', 'private'])],
+            'group_foto' => ['image', 'mimes:jpeg,jpg'],
+        ]);
+
+        // Saving the profile foto picture
+        $group_foto_path = null;
+        if($request->has('group_foto')) {
+            $file = $request->file('group_foto');
+            $time = explode(" ", microtime());
+            $temp = explode(".", $time[0]);
+            $time = [$temp[1], $time[1]];
+            $group_foto_name = implode("_", $time)."_".$request->name.".jpg";
+            $group_foto_path = "ProfilePictureFoto/".$group_foto_name;
+            Storage::disk('local')->putFileAs("GroupPictureFoto/", $file, $group_foto_name);
+        }
+
+        //Creating token
+        $token = Str::random(10);
+
+        $group = Group::create([
+            'name' => $request->name,
+            'description' => $request->description,
+            'visibility' => $request->visibility,
+            'token' => $token,
+            'user_id' => Auth::user()->id,
+            'propic' => $group_foto_path,
+        ]);
+
+        return response()->json([
+            'status' => 200,
+            'group' => $group,
+        ]);
     }
 
     /**

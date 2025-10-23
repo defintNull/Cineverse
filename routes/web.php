@@ -58,6 +58,8 @@ Route::middleware(AjaxMiddleware::class)->name('spa.')->prefix('spa')->group(fun
                 ->name('join');
             Route::post('/quit', [GroupController::class, 'quit'])
                 ->name('quit');
+            Route::post('/store', [GroupController::class, 'store'])
+                ->name('store');
         });
     });
 
