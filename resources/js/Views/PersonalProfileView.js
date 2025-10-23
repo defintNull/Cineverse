@@ -4,6 +4,7 @@ import { Input } from "../Components/Input";
 import { InputError } from "../Components/InputError";
 import { View } from "./View";
 import { SPAFetchService } from "../Services/SPAFetchService";
+import { ImageInput } from "../Components/ImageInput";
 
 /**
  * View class that manages the profile editing page with thematic separation
@@ -13,6 +14,7 @@ export class ProfileView extends View {
     #input;
     #button;
     #input_error;
+    #imageInput;
 
     constructor() {
         super();
@@ -20,6 +22,7 @@ export class ProfileView extends View {
         this.#input = new Input();
         this.#button = new Button();
         this.#input_error = new InputError();
+        this.#imageInput = new ImageInput();
     }
 
     render() {
@@ -75,23 +78,28 @@ export class ProfileView extends View {
         `;
         form.appendChild(themeSelect);
 
-        // Generi preferiti
-        // let genreLabel = document.createElement("label");
-        // genreLabel.classList.add("text-sm", "font-medium", "text-gray-900", "dark:text-white");
-        // genreLabel.innerText = "Generi preferiti";
-        // form.appendChild(genreLabel);
+        // Profile picture
+        // Campo foto profilo usando ImageInput (components)
+        let imageElement = this.#imageInput.getComponentElement();
+        let imageLabel = imageElement.querySelector("label");
+        if (imageLabel) {
+            imageLabel.innerText = "Foto profilo";
+            imageLabel.setAttribute("for", "avatar_input");
+        }
+        let fileInput = imageElement.querySelector("input[type='file']") || imageElement.querySelector("input");
+        if (fileInput) {
+            fileInput.id = "avatar_input";
+            fileInput.name = "propic";
+            fileInput.accept = "image/*";
+            fileInput.classList.add("w-full");
+        }
+        imageElement.classList.add("w-full", "pt-2", "pb-2");
+        form.appendChild(imageElement);
 
-        // let genreContainer = document.createElement("div");
-        // genreContainer.classList.add("grid", "grid-cols-2", "gap-2");
-
-        // const genres = ["Azione", "Commedia", "Drammatico", "Fantascienza", "Horror", "Romantico"];
-        // genres.forEach(genre => {
-        //     let wrapper = document.createElement("label");
-        //     wrapper.classList.add("flex", "items-center");
-        //     wrapper.innerHTML = `<input type="checkbox" value="${genre.toLowerCase()}" name="genres" class="mr-2" /> ${genre}`;
-        //     genreContainer.appendChild(wrapper);
-        // });
-        // form.appendChild(genreContainer);
+        // aggiungo un campo errore specifico per l'avatar
+        let avatarError = (new InputError()).getComponentElement();
+        avatarError.classList.add("pt-2", "error-field");
+        form.appendChild(avatarError);
 
         // Error
         let error = this.#input_error.getComponentElement();

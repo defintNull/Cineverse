@@ -4,11 +4,15 @@ import { DeleteButton } from "../Components/DeleteButton";
 import { GroupCard } from "../Components/GroupCard";
 import { GroupComponent } from "../Components/GroupComponent";
 import { HeaderComponent } from "../Components/HeaderComponent";
+import { ImageInput } from "../Components/ImageInput";
 import { Input } from "../Components/Input";
 import { InputError } from "../Components/InputError";
 import { PopUp } from "../Components/PopUp";
 import { PostComponent } from "../Components/PostComponent";
 import { Searchbar } from "../Components/Searchbar";
+import { Select } from "../Components/Select";
+import { Textarea } from "../Components/Textarea";
+import { Group } from "../Models/Group";
 import { View } from "./View";
 
 export class GroupView extends View {
@@ -23,6 +27,9 @@ export class GroupView extends View {
     #popup
     #input
     #inputError;
+    #select;
+    #textarea;
+    #imageInput;
 
     #scrollHandle;
 
@@ -39,6 +46,9 @@ export class GroupView extends View {
         this.#popup = new PopUp();
         this.#input = new Input();
         this.#inputError = new InputError();
+        this.#select = new Select();
+        this.#textarea = new Textarea();
+        this.#imageInput = new ImageInput();
     }
 
     render() {
@@ -106,7 +116,7 @@ export class GroupView extends View {
 
     }
 
-    addEventListeners(searchHandler, getPostsHandler, joinGroupHandler, exitGroupHandler) {
+    addEventListeners(searchHandler, getPostsHandler, joinGroupHandler, exitGroupHandler, createGroupHandler) {
         let main = this;
         this.#scrollHandle = this.#addGroupScrollHandler.bind(
             this,
@@ -250,7 +260,7 @@ export class GroupView extends View {
 
         document.getElementById("element_container").addEventListener("scroll", this.#scrollHandle);
 
-        // Group component event
+        // Group component event join
         document.getElementById("scroll").addEventListener("click", async function(event) {
             const join_button = event.target.closest(".join");
             if(join_button && this.contains(join_button)) {
@@ -318,7 +328,6 @@ export class GroupView extends View {
 
                 document.body.querySelector("main").appendChild(popup);
 
-                console.log(parent);
                 let id = parent.querySelector("input[name='group_id']").value;
                 popup.querySelector("button.default-button").addEventListener("click", main.#exitGroupHandler.bind(this, exitGroupHandler, id, error_field));
                 popup.querySelector("button.delete-button").addEventListener("click", () => {popup.remove();});
@@ -332,12 +341,119 @@ export class GroupView extends View {
                 document.querySelector("div.header > div.container").classList.toggle("hidden");
             }
         });
+
+        document.getElementById("add_button").addEventListener("click", function(event) {
+            let popup = main.#popup.getComponentElement();
+            let container = popup.querySelector("div.container");
+
+            if(document.querySelector("div.header")) {
+                // Post Creation
+                popup.querySelector("p").innerText = "Create post";
+            } else {
+                // Group Creation
+                let form = document.createElement("form");
+                form.id = "create_group_form";
+                form.method = "POST";
+                form.classList.add("flex", "flex-col", "w-full", "py-6");
+
+                popup.querySelector("p").innerText = "Create group";
+                let name = main.#input.getComponentElement();
+                name.querySelector("label").setAttribute("for", "group_name_input");
+                name.querySelector("input").id = "group_name_input";
+                name.querySelector("input").name = "name";
+                name.querySelector("input").placeholder = "Insert title...";
+                name.querySelector("p").id = "group_name_input_error";
+                form.appendChild(name);
+                let description = main.#textarea.getComponentElement();
+                description.querySelector("label").setAttribute("for", "group_description_input");
+                description.querySelector("textarea").id = "group_description_input";
+                description.querySelector("textarea").name = "description";
+                description.querySelector("textarea").placeholder = "Insert description...";
+                description.querySelector("p").id = "group_description_input_error";
+                form.appendChild(description);
+                let visibility = main.#select.getComponentElement();
+                visibility.querySelector("label").setAttribute("for", "group_visibility_input");
+                visibility.querySelector("select").id = "group_visibility_input";
+                visibility.querySelector("select").name = "visibility";
+                visibility.querySelector("p").id = "group_visibility_input_error";
+                let option = document.createElement("option");
+                option.innerText = "Private"
+                option.selected = true;
+                option.value = "private";
+                visibility.querySelector("select").appendChild(option);
+                option = document.createElement("option");
+                option.innerText = "Public"
+                option.value = "public";
+                visibility.querySelector("select").appendChild(option);
+                form.appendChild(visibility);
+                let imageinput = main.#imageInput.getComponentElement();
+                imageinput.querySelector("label").setAttribute("for", "group_foto_input");
+                imageinput.querySelector("input").id = "group_foto_input";
+                imageinput.querySelector("input").name = "group_foto";
+                imageinput.querySelector("input").placeholder = "Inserti image";
+                imageinput.querySelectorAll("p")[1].id = "group_foto_input_error";
+                form.appendChild(imageinput);
+
+                let p = main.#inputError.getComponentElement();
+                p.id = "group_form_error";
+                p.classList.add("hidden");
+                p.innerText = "Something went wrong!";
+                form.appendChild(p);
+
+                container.appendChild(form);
+
+                form.addEventListener("submit", async function(event) {
+                    event.preventDefault();
+                    document.getElementById("group_form_error").classList.add("hidden");
+                    main.resetErrorFields();
+                    let res = await createGroupHandler(this);
+                    if(res instanceof Group) {
+                        let group = res;
+                        let group_card_container = document.getElementById("group_card_container");
+                        let element = main.#groupCard.getComponentElement();
+                        element.querySelector("p").innerText = group.getName();
+                        element.querySelector("input").value = group.getId();
+                        let img_src = group.getImageSrc();
+                        if (img_src == null) {
+                            element.querySelector("img").classList.add("hidden");
+                        }
+                        element.querySelector("img").src = group.getImageSrc();
+                        group_card_container.prepend(element);
+
+                        document.getElementById("popup").remove();
+                    } else if(res == 400) {
+                        document.getElementById("group_form_error").classList.remove("hidden");
+                    } else {
+                        Object.keys(res).forEach(el => {
+                            document.getElementById("group_" + el + "_input_error").innerHTML = res[el];
+                        });
+                    }
+                });
+
+
+            }
+
+            document.body.querySelector("main").appendChild(popup);
+
+            popup.querySelector("button.default-button").addEventListener("click", () => {popup.querySelector("form").dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))});
+            popup.querySelector("button.delete-button").addEventListener("click", () => {popup.remove();});
+        });
     }
 
     resetView() {
         document.body.querySelector("main").classList.remove("sticky", "top-0");
         document.querySelector("footer").classList.remove("hidden");
         document.body.querySelector("main").innerHTML = "";
+    }
+
+    /**
+     * Reset all the error fields of the form
+     */
+    resetErrorFields() {
+        // Resetting error fields
+        document.querySelectorAll('p.error-field').forEach(el => {
+            el.innerHTML = "";
+        });
     }
 
     async renderMyGroups(groupHandler) {

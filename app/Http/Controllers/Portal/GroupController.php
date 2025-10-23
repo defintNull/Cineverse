@@ -149,7 +149,7 @@ class GroupController extends Controller
             $temp = explode(".", $time[0]);
             $time = [$temp[1], $time[1]];
             $group_foto_name = implode("_", $time)."_".$request->name.".jpg";
-            $group_foto_path = "ProfilePictureFoto/".$group_foto_name;
+            $group_foto_path = "GroupPictureFoto/".$group_foto_name;
             Storage::disk('local')->putFileAs("GroupPictureFoto/", $file, $group_foto_name);
         }
 
@@ -164,6 +164,14 @@ class GroupController extends Controller
             'user_id' => Auth::user()->id,
             'propic' => $group_foto_path,
         ]);
+
+        $group->users()->attach(Auth::user()->id);
+
+        $image_src = null;
+        if($group->propic != null && Storage::disk('local')->exists($group->propic)) {
+            $image_src = 'data:image/jpeg;base64,'.base64_encode(Storage::disk('local')->get($group->propic));
+        }
+        $group->propic = $image_src;
 
         return response()->json([
             'status' => 200,
