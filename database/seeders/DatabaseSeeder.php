@@ -9,6 +9,7 @@ use App\Models\Watchlist;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 use App\Models\Post;
+use App\Models\Comment;
 
 class DatabaseSeeder extends Seeder
 {
@@ -55,12 +56,16 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
         User::factory(20)->create();
 
+
         User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+            'name' => 'Serafino',
+            'surname' => 'Cicerone',
+            'email' => 'serafino.cicerone@univaq.it',
+            'username' => 'serafino.cicerone',
+            'password' => bcrypt('frontend!'),
+            'preferredgenres' => ['Comedy', 'Horror', 'Action'],
+            'email_verified_at' => now(),
         ]);
-
-
 
 
 
@@ -143,6 +148,31 @@ class DatabaseSeeder extends Seeder
             });
         }
 
-        Post::factory(0)->create();
+        //crea commenti per i post; solo utenti iscritti al gruppo possono commentare
+        Post::all()->each(function ($post) {
+            if (!$post->group_id) {
+                return;
+            }
+
+            $group = Group::find($post->group_id);
+            if (!$group) {
+                return;
+            }
+
+            $memberIds = $group->users()->pluck('users.id')->toArray();
+            if (empty($memberIds)) {
+                return;
+            }
+
+            $commentsCount = rand(0, 6); // numero casuale di commenti per post
+            for ($i = 0; $i < $commentsCount; $i++) {
+                $authorId = $memberIds[array_rand($memberIds)];
+                Comment::factory()->create([
+                    'post_id' => $post->id,
+                    'user_id' => $authorId,
+                    'content' => 'Commento di prova ' . Str::random(8),
+                ]);
+            }
+        });
     }
 }

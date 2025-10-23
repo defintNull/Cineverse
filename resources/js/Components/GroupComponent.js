@@ -1,10 +1,10 @@
 import { Component } from "./Component";
 
 export class GroupComponent extends Component {
-    #card = `<div class="shadow-xl rounded-xl relative h-40 w-full bg-gray-700">
+    #card = `<div class="shadow-xl rounded-xl relative h-40 w-full bg-slate-50 dark:bg-gray-700">
                 <div class="w-full h-full z-20 absolute">
                     <div class="w-full h-full relative">
-                        <div class="flex flex-col items-start w-full py-4 pl-8 bg-gradient-to-t from-transparent to-gray-700 rounded-xl">
+                        <div class="flex flex-col items-start w-full py-4 pl-8 bg-gradient-to-t from-transparent dark:to-gray-700 to-gray-300 rounded-xl">
                             <p class="text-xl text-gray-900 dark:text-white"></p>
                         </div>
                         <div class="absolute join bottom-8 right-20 cursor-pointer flex flex-col items-center justify-center py-2 px-4 rounded-2xl hover:bg-gray-600">

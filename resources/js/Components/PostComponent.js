@@ -1,7 +1,7 @@
 import { Component } from "./Component";
 
 export class PostComponent extends Component {
-    #card = `<div class="flex post flex-col gap-y-4 shadow-xl rounded-xl min-h-60 w-full bg-gray-700 px-4 py-2">
+    #card = `<div class="flex post flex-col gap-y-4 shadow-xl rounded-xl min-h-60 w-full dark:bg-gray-700 bg-slate-50 px-4 py-2">
                 <div class="flex flex-row items-center justify-between">
                     <p class="text-md group-name text-gray-900 dark:text-white"></p>
                     <div class="flex flex-row gap-x-2 items-center justify-center">
