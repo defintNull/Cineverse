@@ -21,7 +21,7 @@ class GroupFactory extends Factory
             'description' => fake()->paragraph(),
             'user_id' => fake()->numberBetween(1, 10),
             'visibility' => fake()->randomElement(['public', 'private']),
-            'token' => fake()->randomNumber(32),
+            'token' => fake()->randomNumber(),
             'propic' => null,
         ];
     }
