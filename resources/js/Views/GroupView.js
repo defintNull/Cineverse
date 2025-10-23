@@ -13,6 +13,7 @@ import { Searchbar } from "../Components/Searchbar";
 import { Select } from "../Components/Select";
 import { Textarea } from "../Components/Textarea";
 import { Group } from "../Models/Group";
+import { Post } from "../Models/Post";
 import { View } from "./View";
 
 export class GroupView extends View {
@@ -116,7 +117,7 @@ export class GroupView extends View {
 
     }
 
-    addEventListeners(searchHandler, getPostsHandler, joinGroupHandler, exitGroupHandler, createGroupHandler) {
+    addEventListeners(searchHandler, getPostsHandler, joinGroupHandler, exitGroupHandler, createGroupHandler, createPostHandler) {
         let main = this;
         this.#scrollHandle = this.#addGroupScrollHandler.bind(
             this,
@@ -346,15 +347,74 @@ export class GroupView extends View {
             let popup = main.#popup.getComponentElement();
             let container = popup.querySelector("div.container");
 
+            let form = document.createElement("form");
+            form.method = "POST";
+            form.classList.add("flex", "flex-col", "w-full", "py-6");
+
             if(document.querySelector("div.header")) {
                 // Post Creation
+                form.id = "create_post_form";
+
                 popup.querySelector("p").innerText = "Create post";
+                let name = main.#input.getComponentElement();
+                name.querySelector("label").setAttribute("for", "post_title_input");
+                name.querySelector("input").id = "post_title_input";
+                name.querySelector("input").name = "title";
+                name.querySelector("input").placeholder = "Insert title...";
+                name.querySelector("p").id = "post_title_input_error";
+                form.appendChild(name);
+                let description = main.#textarea.getComponentElement();
+                description.querySelector("label").setAttribute("for", "post_content_input");
+                description.querySelector("textarea").id = "post_content_input";
+                description.querySelector("textarea").name = "content";
+                description.querySelector("textarea").placeholder = "Insert content...";
+                description.querySelector("p").id = "post_content_input_error";
+                form.appendChild(description);
+
+                let p = main.#inputError.getComponentElement();
+                p.id = "post_form_error";
+                p.classList.add("hidden");
+                p.innerText = "Something went wrong!";
+                form.appendChild(p);
+
+                form.addEventListener("submit", async function(event) {
+                    event.preventDefault();
+                    document.getElementById("post_form_error").classList.add("hidden");
+                    main.resetErrorFields();
+                    let res = await createPostHandler(this, document.querySelector("div.header").querySelector("input[name='group_id']").value);
+                    if(res instanceof Post) {
+                        let post = res;
+                        let post_element = main.#postComponent.getComponentElement();
+                        post_element.querySelector("p.username").innerText = post.getAuthorUsername();
+                        post_element.querySelector("p.title").innerText = post.getTitle();
+                        post_element.querySelector("p.content").innerText = post.getContent();
+                        post_element.querySelector("input").value = post.getId();
+                        let img = post.getAuthorPropicSrc();
+                        if(img !== null) {
+                            let propic = post_element.querySelector("div.author-avatar > img");
+                            propic.src = img;
+                            post_element.querySelector("div.author-avatar > svg").classList.add("hidden");
+                            propic.classList.remove("hidden");
+                        }
+                        document.getElementById("scroll").prepend(post_element);
+                        document.getElementById("element_container").scrollTo({
+                            top: 0,
+                            behavior: 'smooth'
+                        });
+
+                        document.getElementById("popup").remove();
+                    } else if(res == 400) {
+                        document.getElementById("post_form_error").classList.remove("hidden");
+                    } else {
+                        Object.keys(res).forEach(el => {
+                            document.getElementById("post_" + el + "_input_error").innerHTML = res[el];
+                        });
+                    }
+                });
+
             } else {
                 // Group Creation
-                let form = document.createElement("form");
                 form.id = "create_group_form";
-                form.method = "POST";
-                form.classList.add("flex", "flex-col", "w-full", "py-6");
 
                 popup.querySelector("p").innerText = "Create group";
                 let name = main.#input.getComponentElement();
@@ -400,8 +460,6 @@ export class GroupView extends View {
                 p.innerText = "Something went wrong!";
                 form.appendChild(p);
 
-                container.appendChild(form);
-
                 form.addEventListener("submit", async function(event) {
                     event.preventDefault();
                     document.getElementById("group_form_error").classList.add("hidden");
@@ -429,10 +487,9 @@ export class GroupView extends View {
                         });
                     }
                 });
-
-
             }
 
+            container.appendChild(form);
             document.body.querySelector("main").appendChild(popup);
 
             popup.querySelector("button.default-button").addEventListener("click", () => {popup.querySelector("form").dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))});

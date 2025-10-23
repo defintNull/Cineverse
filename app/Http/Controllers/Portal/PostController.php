@@ -72,17 +72,10 @@ class PostController extends Controller
         // il gruppo è già passato come route-model binding ($group).
         $validated = $request->validate([
             'content' => 'required|string|max:255',
+            'title' => 'required|string|max:128',
             'movies' => 'nullable|array',
             'movies.*' => 'integer',
         ]);
-
-        // Prepara i dati del post. Salviamo l'autore corrente e l'array di movies
-        // direttamente nel campo JSON (il modello Post ha il cast a array).
-        // Prendiamo l'utente autenticato e verifichiamo membership
-        $user = Auth::user();
-        if (!$user) {
-            return response()->json(['error' => 'Unauthenticated'], 401);
-        }
 
         // Controllo di membership: se l'utente non appartiene al gruppo non può postare
         if (!Auth::user()->groups->contains($group->id)) {
@@ -91,14 +84,23 @@ class PostController extends Controller
 
         $post = Post::create([
             'content' => $validated['content'],
+            'title' => $validated['title'],
             'group_id' => $group->id,
-            'author_id' => $user->id,
+            'author_id' => Auth::user()->id,
             'movies' => $validated['movies'] ?? [],
         ]);
 
+        $post->load('author:id,username,propic');
+
+        $image_src = null;
+        if ($post->author->propic && Storage::disk('local')->exists($post->author->propic)) {
+            $image_src = 'data:image/jpeg;base64,' . base64_encode(Storage::disk('local')->get($post->author->propic));
+        }
+        $post->author->propic = $image_src;
+
         return response()->json([
             'post' => $post,
-        ], 201);
+        ], 200);
     }
 
     /**
