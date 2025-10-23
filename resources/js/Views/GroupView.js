@@ -98,7 +98,7 @@ export class GroupView extends View {
 
     }
 
-    addEventListeners(searchHandler, getPostsHandler, joinGroupHandler) {
+    addEventListeners(searchHandler, getPostsHandler, joinGroupHandler, exitGroupHandler) {
         let main = this;
         this.#scrollHandle = this.#addGroupScrollHandler.bind(
             this,
@@ -259,12 +259,6 @@ export class GroupView extends View {
                 description.classList.add("text-lg", "italic", "dark:text-white", "text-gray-900");
                 description.innerText = parent.querySelector("input[name='description']").value;
                 container.appendChild(description);
-                let id_input = document.createElement("input");
-                id_input.hidden = true;
-                id_input.type = "text";
-                id_input.name = "group_id";
-                id_input.value = parent.querySelector("input[name='id']").value;
-                container.appendChild(id_input);
                 if(parent.querySelector("input[name='visibility']").value == "private") {
                     let token = main.#input.getComponentElement();
                     token.querySelector("input").name = "token_input";
@@ -281,10 +275,39 @@ export class GroupView extends View {
 
 
                 let token = document.querySelector("input[name='token_input']");
+                let group_id = parent.querySelector("input[name='id']").value;
 
-                popup.querySelector("button.default-button").addEventListener("click", main.#joinGroupHandler.bind(main, joinGroupHandler, parent, id_input.value, token));
+                popup.querySelector("button.default-button").addEventListener("click", main.#joinGroupHandler.bind(main, joinGroupHandler, parent, group_id, token));
                 popup.querySelector("button.delete-button").addEventListener("click", () => {popup.remove();});
 
+            }
+        });
+
+        // Exit component event
+        document.getElementById("element_container").addEventListener("click", async function(event) {
+            const exit_button = event.target.closest(".red-button");
+            if(exit_button && this.contains(exit_button)) {
+                let parent = exit_button.parentElement;
+                let popup = main.#popup.getComponentElement();
+                popup.querySelector("p").innerText = "Exit Group";
+
+                let container = popup.querySelector("div.container");
+                container.classList.add("items-center", "gap-y-4", "py-8")
+                let title = document.createElement("p");
+                title.classList.add("text-2xl", "font-medium", "dark:text-white", "text-gray-900");
+                title.innerText = "Are you sure you want to exit this group?";
+                container.appendChild(title);
+                let error_field = main.#inputError.getComponentElement();
+                error_field.id = "error_field";
+                error_field.innerText = "Someting went wrong!";
+                error_field.classList.add("hidden");
+                container.appendChild(error_field);
+
+                document.body.querySelector("main").appendChild(popup);
+
+                let id = parent.querySelector("input[name='group_id']").value;
+                popup.querySelector("button.default-button").addEventListener("click", main.#exitGroupHandler.bind(this, exitGroupHandler, id, error_field));
+                popup.querySelector("button.delete-button").addEventListener("click", () => {popup.remove();});
             }
         });
     }
@@ -332,7 +355,12 @@ export class GroupView extends View {
             header.querySelector("button.red-button").innerText = "Exit";
             header.querySelector("p").innerText = "Group Title";
             header.querySelector("button.normal-button").innerText = "Get Token";
-            header.querySelector("input").value = id;
+            let group_id = document.createElement("input");
+            group_id.hidden = true;
+            group_id.type = "text";
+            group_id.name = "group_id";
+            group_id.value = id;
+            header.appendChild(group_id);
             document.getElementById("element_container").prepend(header);
 
             // Add button
@@ -431,6 +459,20 @@ export class GroupView extends View {
             parent.remove();
 
             document.getElementById("popup").remove();
+        }
+    }
+
+    async #exitGroupHandler(exitCallback, id, error_field) {
+        error_field.classList.add("hidden");
+        let res = await exitCallback(id);
+        if(res == 200) {
+            document.getElementById("searchbar").requestSubmit();
+            Array.from(document.querySelectorAll("div.group-card")).find(
+                div => div.querySelector("input[name='id']")?.value === id
+            ).remove();
+            document.getElementById("popup").remove();
+        } else {
+            error_field.classList.remove("hidden");
         }
     }
 }

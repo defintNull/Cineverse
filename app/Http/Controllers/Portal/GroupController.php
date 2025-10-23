@@ -106,6 +106,28 @@ class GroupController extends Controller
         ]);
     }
 
+    public function quit(Request $request) {
+        $request->validate([
+            'id' => ['required', 'integer', Rule::exists('groups', 'id')],
+        ]);
+
+        $group = Group::where('id', $request->id)->get()[0];
+
+        if($group->users()->where('user_id', Auth::user()->id)->exists()) {
+            $group->users()->detach(Auth::user()->id);
+            if(count($group->users) == 0) {
+                $this->destroy($group);
+            }
+            return response()->json([
+                'status' => 200,
+            ]);
+        }
+
+        return response()->json([
+            'error' => 'Unauthorize',
+        ], 401);
+    }
+
     /**
      * Store a newly created resource in storage.
      */
@@ -125,8 +147,8 @@ class GroupController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    private function destroy(Group $group)
     {
-        //
+        $group->delete();
     }
 }
