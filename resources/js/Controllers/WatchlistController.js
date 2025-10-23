@@ -21,6 +21,7 @@ export class WatchlistController extends Controller {
         // di test
         this.#movieDB = MovieDBService.getInstance();
         this.#latestMoviePage = 1;
+
     }
     /**
      * Method invoked by the router that build the page and set the event listeners
@@ -32,7 +33,7 @@ export class WatchlistController extends Controller {
     //3)Popolare la griglia con i film effettivi
     async start() {
         let watchlists = await this.#loadwatchlists();
-        console.log("Watchlists caricate:", watchlists);
+        //console.log("Watchlists caricate:", watchlists);
 
         let watchlistsWithContent = await Promise.all(
             watchlists.map(async w => {
@@ -43,7 +44,7 @@ export class WatchlistController extends Controller {
                 return { watchlist: w, items };
             })
         );
-        console.log("Watchlists con contenuto caricate:", watchlistsWithContent);
+        //console.log("Watchlists con contenuto caricate:", watchlistsWithContent);
 
 
 
@@ -60,9 +61,10 @@ export class WatchlistController extends Controller {
         //console.log("refs", refs);
         //const refs2 = await this.#WatchlistView.renderMovies(moviez[0]); //questo va messo dinamico
         // Mostro di default la prima watchlist con i suoi film
+        console.log("watchlistsWithContent before renderitems:", watchlistsWithContent.length);
         if (watchlistsWithContent.length > 0) {
-        await this.#WatchlistView.renderMovies(
-            watchlistsWithContent[0].movies,
+        await this.#WatchlistView.renderItems(
+            watchlistsWithContent[0].items,
             watchlistsWithContent[0].watchlist
         );
         }
@@ -71,7 +73,9 @@ export class WatchlistController extends Controller {
         this.#WatchlistView.addEventListeners(
             refs,
             watchlistsWithContent,
-            this.#createnewwatchlist.bind(this)
+            this.#createnewwatchlist.bind(this),
+            this.#movieClickHandler.bind(this),
+            this.#serieClickHandler.bind(this),
         );
 
     }
@@ -134,7 +138,7 @@ export class WatchlistController extends Controller {
     const results = await Promise.all(
         responses.map(r => (r ? r.json() : null))
     );
-    console.log("Array di contenuti:", results);
+    //console.log("Array di contenuti:", results);
     return results.filter(Boolean); // rimuovo eventuali null
 
         /* let res = await Promise.all(
@@ -153,5 +157,21 @@ export class WatchlistController extends Controller {
         this.#WatchlistView.removeDocumentEventListeners();
     }
 
+
+    #movieClickHandler(id) {
+        let status = {
+            'type': 'movie',
+            'id': id
+        }
+        this.#router.setNextPath(status, "/detail");
+    }
+
+    #serieClickHandler(id) {
+        let status = {
+            'type': 'serie',
+            'id': id
+        }
+        this.#router.setNextPath(status, "/detail");
+    }
 
 }
