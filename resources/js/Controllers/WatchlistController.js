@@ -76,24 +76,26 @@ export class WatchlistController extends Controller {
             this.#createnewwatchlist.bind(this),
             this.#movieClickHandler.bind(this),
             this.#serieClickHandler.bind(this),
+            this.#updatewatchlist.bind(this),
         );
 
     }
-
-    /*
-    async #getLatestMovies() {
-        let res = await this.#movieDB.getLatestMovies(this.#latestMoviePage);
-        if(res.status == 200) {
-            this.#latestMoviePage += 1;
-            return res.json();
-        }
-        return false;
-    }*/
 
     //gli devo passare l'oggeto nel payload della POSTFetch
     async #createnewwatchlist(newwatchlist) {
         let sap_fetch = await SPAFetchService.getInstance();
         let res = await sap_fetch.POSTFetch('/spa/watchlist/store', newwatchlist);
+        let payload = await res.json();
+        //console.log(payload.watchlists);
+        return payload.watchlists;
+        //al carousel va passata una watchlist
+    }
+
+        //gli devo passare l'oggeto nel payload della POSTFetch
+    async #updatewatchlist(renamingwatchlist) {
+        let sap_fetch = await SPAFetchService.getInstance();
+        console.log("Renaming watchlist nel controller:", renamingwatchlist);
+        let res = await sap_fetch.POSTFetch('/spa/watchlist/update', renamingwatchlist);
         let payload = await res.json();
         //console.log(payload.watchlists);
         return payload.watchlists;
