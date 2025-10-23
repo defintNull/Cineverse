@@ -27,4 +27,8 @@ export class Group extends Model {
     getVisibility() {
         return this.#groupJson.visibility;
     }
+
+    getToken() {
+        return this.#groupJson.token;
+    }
 }

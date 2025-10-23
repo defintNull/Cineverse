@@ -87,7 +87,7 @@ export class GroupController extends Controller {
     }
 
     async #exitGroup(id) {
-        let res = await this.#spa_fetch.POSTFetch('spa/groups/join', {'id': id});
+        let res = await this.#spa_fetch.POSTFetch('spa/groups/quit', {'id': id});
         return res.status;
     }
 }
