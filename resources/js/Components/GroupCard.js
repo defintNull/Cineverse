@@ -1,10 +1,10 @@
 import { Component } from "./Component";
 
 export class GroupCard extends Component {
-    #card = `<div class="group-card rounded-xl shadow-xl w-full flex flex-row items-center justify-center gap-x-6 px-6 cursor-pointer bg-indigo-600 dark:bg-gray-700 h-20">
-                <p class="text-xl text-gray-900 dark:text-white"></p>
+    #card = `<div class="group-card rounded-xl shadow-xl w-full flex flex-row items-center justify-center gap-x-6 pl-6 cursor-pointer bg-indigo-600 dark:bg-gray-700 h-20">
+                <p class="text-xl grow text-gray-900 dark:text-white"></p>
                 <input hidden type="text" name="id" value="" />
-                <img class="h-15 w-auto" src="" alt="" />
+                <img class="h-full rounded-r-xl max-w-1/2 w-auto object-cover" src="" alt="" />
             </div>`;
 
     getComponentElement() {

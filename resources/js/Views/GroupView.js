@@ -5,6 +5,7 @@ import { GroupCard } from "../Components/GroupCard";
 import { GroupComponent } from "../Components/GroupComponent";
 import { HeaderComponent } from "../Components/HeaderComponent";
 import { Input } from "../Components/Input";
+import { InputError } from "../Components/InputError";
 import { PopUp } from "../Components/PopUp";
 import { PostComponent } from "../Components/PostComponent";
 import { Searchbar } from "../Components/Searchbar";
@@ -21,6 +22,7 @@ export class GroupView extends View {
     #addButton;
     #popup
     #input
+    #inputError;
 
     #scrollHandle;
 
@@ -36,6 +38,7 @@ export class GroupView extends View {
         this.#addButton = new AddButton();
         this.#popup = new PopUp();
         this.#input = new Input();
+        this.#inputError = new InputError();
     }
 
     render() {
@@ -84,7 +87,7 @@ export class GroupView extends View {
         // Scroll container
         let scroll = document.createElement("div");
         scroll.id = "scroll";
-        scroll.classList.add("flex", "flex-col", "items-center", "w-1/2", "pt-6", "gap-y-6");
+        scroll.classList.add("flex", "flex-col", "items-center", "grow", "w-1/2", "pt-6", "gap-y-6");
 
         element_container.appendChild(scroll);
 
@@ -161,21 +164,38 @@ export class GroupView extends View {
 
                     let scroll = document.getElementById("scroll");
                     scroll.innerHTML = "";
-                    posts.forEach(post => {
-                        let post_element = main.#postComponent.getComponentElement();
-                        post_element.querySelector("p.username").innerText = post.getAuthorUsername();
-                        post_element.querySelector("p.title").innerText = post.getTitle();
-                        post_element.querySelector("p.content").innerText = post.getContent();
-                        post_element.querySelector("input").value = post.getId();
-                        let img = post.getAuthorPropicSrc();
-                        if(img !== null) {
-                            let propic = post_element.querySelector("div.author-avatar > img");
-                            propic.src = img;
-                            post_element.querySelector("div.author-avatar > svg").classList.add("hidden");
-                            propic.classList.remove("hidden");
-                        }
-                        scroll.appendChild(post_element);
-                    });
+                    if(posts.length != 0) {
+                        posts.forEach(post => {
+                            let post_element = main.#postComponent.getComponentElement();
+                            post_element.querySelector("p.username").innerText = post.getAuthorUsername();
+                            post_element.querySelector("p.title").innerText = post.getTitle();
+                            post_element.querySelector("p.content").innerText = post.getContent();
+                            post_element.querySelector("input").value = post.getId();
+                            let img = post.getAuthorPropicSrc();
+                            if(img !== null) {
+                                let propic = post_element.querySelector("div.author-avatar > img");
+                                propic.src = img;
+                                post_element.querySelector("div.author-avatar > svg").classList.add("hidden");
+                                propic.classList.remove("hidden");
+                            }
+                            scroll.appendChild(post_element);
+                        });
+                    } else {
+                        let placehoder = document.createElement("div");
+                        placehoder.classList.add("flex", "flex-col", "items-center", "justify-center", "w-full", "grow");
+                        let cont = document.createElement("div");
+                        cont.classList.add("w-full", "grow", "flex", "flex-col", "items-center", "justify-center");
+                        let p = document.createElement("p");
+                        p.classList.add("text-2xl", "font-semibold", "dark:text-white", "text-gray-900");
+                        p.innerText = "Ops! No post present";
+                        cont.appendChild(p);
+                        p = document.createElement("p");
+                        p.classList.add("text-lg", "font-semibold", "dark:text-white", "text-gray-900");
+                        p.innerText = "Be the first to post someting!";
+                        cont.appendChild(p);
+                        placehoder.appendChild(cont);
+                        scroll.appendChild(placehoder);
+                    }
                 }
             }
         });
@@ -242,24 +262,27 @@ export class GroupView extends View {
                 let id_input = document.createElement("input");
                 id_input.hidden = true;
                 id_input.type = "text";
+                id_input.name = "group_id";
                 id_input.value = parent.querySelector("input[name='id']").value;
                 container.appendChild(id_input);
                 if(parent.querySelector("input[name='visibility']").value == "private") {
                     let token = main.#input.getComponentElement();
-                    token.name = "token_input";
+                    token.querySelector("input").name = "token_input";
                     token.querySelector("label").innerText = "Token";
                     container.appendChild(token);
                 }
+                let error_field = main.#inputError.getComponentElement();
+                error_field.id = "token_error";
+                error_field.innerText = "";
+                error_field.classList.add("hidden");
+                container.appendChild(error_field);
 
                 document.body.querySelector("main").appendChild(popup);
 
-                let token = document.getElementById("token_input");
-                if(token) {
-                    token = token.value;
-                } else {
-                    token = null;
-                }
-                popup.querySelector("button.default-button").addEventListener("click", main.#joinGroupHandler.bind(main, joinGroupHandler, id_input.value, token));
+
+                let token = document.querySelector("input[name='token_input']");
+
+                popup.querySelector("button.default-button").addEventListener("click", main.#joinGroupHandler.bind(main, joinGroupHandler, parent, id_input.value, token));
                 popup.querySelector("button.delete-button").addEventListener("click", () => {popup.remove();});
 
             }
@@ -376,20 +399,38 @@ export class GroupView extends View {
         }
     }
 
-    async #joinGroupHandler(joinCallback, id, token = null) {
+    async #joinGroupHandler(joinCallback, parent, id, token = null) {
+        let error_field = document.getElementById("token_error");
+        error_field.classList.add("hidden");
+        error_field.innerText = "";
+
+        if(token !== null)  {
+            token = token.value;
+        }
+
         let group = await joinCallback(id, token);
 
-        // AGGIUNGERE LOGICA PER ERRORE
+        if(group == 401) {
+            error_field.innerText = "Invalid token!";
+            error_field.classList.remove("hidden");
+        } else if(group == 400) {
+            error_field.innerText = "Someting whent wrong!";
+            error_field.classList.remove("hidden");
+        } else {
+            let group_card_container = document.getElementById("group_card_container");
+            let element = this.#groupCard.getComponentElement();
+            element.querySelector("p").innerText = group.getName();
+            element.querySelector("input").value = group.getId();
+            let img_src = group.getImageSrc();
+            if (img_src == null) {
+                element.querySelector("img").classList.add("hidden");
+            }
+            element.querySelector("img").src = group.getImageSrc();
+            group_card_container.append(element);
 
-        let group_card_container = document.getElementById("group_card_container");
-        let element = this.#groupCard.getComponentElement();
-        element.querySelector("p").innerText = group.getName();
-        element.querySelector("input").value = group.getId();
-        let img_src = group.getImageSrc();
-        if (img_src == null) {
-            element.querySelector("img").classList.add("hidden");
+            parent.remove();
+
+            document.getElementById("popup").remove();
         }
-        element.querySelector("img").src = group.getImageSrc();
-        group_card_container.append(element);
     }
 }

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->String('name');
             $table->String('description');
             $table->enum('visibility', ['public', 'private']);
+            $table->string('token');
             $table->string('propic')->nullable();
             $table->timestamps();
         });

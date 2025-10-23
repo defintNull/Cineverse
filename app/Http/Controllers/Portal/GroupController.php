@@ -79,20 +79,26 @@ class GroupController extends Controller
         $group = Group::where('id', $request->id)->get()[0];
 
         if($group->visibility == 'private') {
-            if($request->has('token') && $request->token != null && $request->token != $group->token) {
-                return response()->json([
-                    'status' => 401,
-                    'error' => 'Wrong token',
-                ]);
-            } else {
+            if(!$request->has('token') || $request->token == null) {
                 return response()->json([
                     'status' => 403,
                     'error' => 'Token required',
+                ]);
+            } elseif($request->token != $group->token) {
+                return response()->json([
+                    'status' => 401,
+                    'error' => 'Wrong token',
                 ]);
             }
         }
 
         $group->users()->syncWithoutDetaching([Auth::user()->id]);
+
+        $image_src = null;
+        if($group->propic != null && Storage::disk('local')->exists($group->propic)) {
+            $image_src = 'data:image/jpeg;base64,'.base64_encode(Storage::disk('local')->get($group->propic));
+        }
+        $group->propic = $image_src;
 
         return response()->json([
             'status' => 200,
