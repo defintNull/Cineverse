@@ -110,6 +110,7 @@ export class GroupView extends View {
         document.getElementById("searchbar").addEventListener("submit", async function(event) {
             event.preventDefault();
 
+            // Infinite scroll event
             document.getElementById("element_container").addEventListener("scroll", main.#scrollHandle);
 
             let groups = await searchHandler(this.querySelector("input").value, true);
@@ -139,8 +140,12 @@ export class GroupView extends View {
 
         document.getElementById("sidebar").addEventListener("click", async function(event) {
             const group_card = event.target.closest(".group-card");
+
+            // Infinite scroll event
             document.getElementById("element_container").addEventListener("scroll", main.#scrollHandle);
+
             if(group_card && this.contains(group_card)) {
+                console.log(group_card.querySelector("input").value);
                 if(group_card.classList.contains("border")) {
                     group_card.classList.remove("border", "border-gray-400");
                     group_card.classList.add("shadow-xl", "dark:bg-gray-700", "bg-indigo-600");
@@ -158,9 +163,10 @@ export class GroupView extends View {
                     let posts = await getPostsHandler(group_card.querySelector("input").value, true);
 
                     // Setting Post Structure layout
-                    if(!document.querySelector("div.header")) {
-                        main.#setPostStructureLayout(true, group_card.querySelector("input").value);
+                    if(document.querySelector("div.header")) {
+                        main.#setPostStructureLayout(false);
                     }
+                    main.#setPostStructureLayout(true, group_card.querySelector("input").value);
 
                     let scroll = document.getElementById("scroll");
                     scroll.innerHTML = "";
@@ -360,7 +366,7 @@ export class GroupView extends View {
             group_id.type = "text";
             group_id.name = "group_id";
             group_id.value = id;
-            header.appendChild(group_id);
+            header.querySelector("div.container").appendChild(group_id);
             document.getElementById("element_container").prepend(header);
 
             // Add button
