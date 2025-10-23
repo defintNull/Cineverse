@@ -77,9 +77,11 @@ export class GroupController extends Controller {
             let json = await res.json();
             if(json.status == 200) {
                 return new Group(json.group);
+            } else if(json.status == 401) {
+                return 401
             }
         }
-        // AGGIUNGERE LOGICA ERRORE
-        return null;
+
+        return 400;
     }
 }

@@ -20,6 +20,7 @@ class Group extends Model
         'name',
         'description',
         'visibility',
+        'token',
         'user_id',
         'propic',
     ];
