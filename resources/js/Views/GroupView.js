@@ -18,8 +18,6 @@ import { View } from "./View";
 
 export class GroupView extends View {
     #groupCard;
-    #button;
-    #deleteButton;
     #groupComponent;
     #postComponent;
     #searchbarComponent;
@@ -37,8 +35,6 @@ export class GroupView extends View {
     constructor() {
         super();
         this.#groupCard = new GroupCard();
-        this.#button = new Button();
-        this.#deleteButton = new DeleteButton();
         this.#groupComponent = new GroupComponent();
         this.#postComponent = new PostComponent();
         this.#searchbarComponent = new Searchbar();
@@ -58,15 +54,15 @@ export class GroupView extends View {
         document.querySelector("footer").classList.add("hidden");
 
         let container = document.createElement("div");
-        container.classList.add("grid", "grid-cols-9", "w-full", "h-svh", "max-h-svh", "dark:bg-gray-800");
+        container.classList.add("grid", "grid-cols-9", "w-full", "h-svh", "max-h-svh", "dark:bg-gray-800", "bg-gray-100");
 
         // Sidebar
         let sidebar = document.createElement("div");
         sidebar.id = "sidebar";
-        sidebar.classList.add("inner-scroll", "flex", "flex-col", "gap-y-4", "pb-12", "items-center", "col-span-2", "overflow-y-auto", "border-r-2", "border-gray-500", "px-8", "mt-6", "scrollbar", "scrollbar-thumb-gray-400", "scrollbar-track-gray-400", "dark:scrollbar-thumb-gray-500", "dark:scrollbar-track-gray-800");
+        sidebar.classList.add("inner-scroll", "flex", "flex-col", "gap-y-4", "pb-12", "pt-6", "items-center", "col-span-2", "overflow-y-auto", "border-r-2", "border-gray-300", "dark:border-gray-500", "scrollbar", "scrollbar-thumb-gray-400", "scrollbar-track-gray-100", "dark:scrollbar-thumb-gray-500", "dark:scrollbar-track-gray-800");
 
         let search_container = document.createElement("div");
-        search_container.classList.add("flex", "flex-col", "items-center", "w-full", "pt-6", "pb-2", "border-b", "border-gray-400", "sticky", "top-0", "dark:bg-gray-800", "bg-indigo-600");
+        search_container.classList.add("flex", "flex-col", "items-center", "w-full", "px-8", "pt-6", "sticky", "top-0", "dark:bg-gray-800", "bg-gray-100");
 
         let title = document.createElement("p");
         title.classList.add("text-2xl", "text-gray-900", "dark:text-white", "pb-4", "font-semibold");
@@ -76,14 +72,14 @@ export class GroupView extends View {
         let searchbar = this.#searchbarComponent.getComponentElement();
         searchbar.querySelector("button").remove();
         searchbar.id = "searchbar";
-        searchbar.classList.add("pb-4", "w-full");
+        searchbar.classList.add("pb-4", "w-full", "border-b", "border-gray-400");
         search_container.appendChild(searchbar);
 
         sidebar.appendChild(search_container);
 
         let group_card_container = document.createElement("div");
         group_card_container.id = "group_card_container"
-        group_card_container.classList.add("flex", "flex-col", "w-full", "items-center", "gap-y-5");
+        group_card_container.classList.add("flex", "flex-col", "w-full", "px-8", "items-center", "gap-y-5");
         sidebar.appendChild(group_card_container);
 
 
@@ -93,7 +89,7 @@ export class GroupView extends View {
         // Element Container
         let element_container = document.createElement("div");
         element_container.id = "element_container";
-        element_container.classList.add("inner-scroll", "flex", "flex-col", "col-span-7", "relative", "items-center", "px-12", "pb-12", "mt-6", "overflow-y-auto", "scrollbar", "scrollbar-thumb-gray-400", "scrollbar-track-gray-400", "dark:scrollbar-thumb-gray-500", "dark:scrollbar-track-gray-800");
+        element_container.classList.add("inner-scroll", "flex", "flex-col", "col-span-7", "relative", "items-center", "px-12", "pb-12", "pt-6", "overflow-y-auto", "scrollbar", "scrollbar-thumb-gray-400", "scrollbar-track-gray-100", "dark:scrollbar-thumb-gray-500", "dark:scrollbar-track-gray-800");
 
         // Scroll container
         let scroll = document.createElement("div");
@@ -102,9 +98,11 @@ export class GroupView extends View {
 
         // Add button
         let add_button = this.#addButton.getComponentElement();
+        add_button.classList.remove("text-blue-500");
+        add_button.classList.add("text-gray-900", "dark:text-white");
         let cont = document.createElement("div");
         cont.id = "add_button";
-        cont.classList.add("flex", "flex-col", "items-center", "cursor-pointer", "justify-center", "fixed", "bottom-10", "right-20", "rounded-4xl", "h-16", "w-16", "shadow-xl", "dark:bg-gray-700", "bg-indigo-600");
+        cont.classList.add("flex", "flex-col", "items-center", "cursor-pointer", "justify-center", "fixed", "bottom-10", "right-20", "rounded-4xl", "h-16", "w-16", "shadow-xl", "dark:bg-gray-700", "bg-slate-50");
         cont.appendChild(add_button);
         element_container.appendChild(cont);
 
