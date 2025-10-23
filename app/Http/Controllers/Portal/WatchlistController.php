@@ -36,7 +36,7 @@ class WatchlistController extends Controller
 
         $watchlist = Watchlist::create([
             'name'    => $request->name,
-            'movies'  => $request->movies ?? [], // se non arriva, array vuoto
+            'content'  => $request->content ?? [], // se non arriva, array vuoto
             'user_id' => $user->id,
         ]);
 
@@ -50,23 +50,23 @@ class WatchlistController extends Controller
      */
 
     //DA VEDERE DOPO perchè lo userò con il rename della watchlist
-    /*
-    public function update(Request $request) : JsonResponse
+
+    public function update(Request $request, $watchlist) : JsonResponse
     {
         try {
             // Recuperiamo la watchlist dal model (puoi usare direttamente $w)
-            $watchlist = Watchlist::findOrFail($w->id);
+            $watchlistrenaming = Watchlist::findOrFail($watchlist->id);
 
             // Validazione dei campi effettivamente presenti nella tabella
             $validatedData = $request->validate([
                 'name'   => 'required|string|max:255',
-                'movies' => 'required|array', // ci aspettiamo un array di film
+                'content' => 'required|array', // ci aspettiamo un array di content
             ]);
 
             // Aggiorniamo i campi
             $watchlist->update([
                 'name'   => $validatedData['name'],
-                'movies' => json_encode($validatedData['movies']), // salviamo come JSON
+                'content' => json_encode($validatedData['content']), // salviamo come JSON
             ]);
 
             return response()->json([
@@ -80,7 +80,7 @@ class WatchlistController extends Controller
         }
     }
 
-    */
+
 
     //Si aggiunge un film alla lista
     public function addMovie(Request $request) : JsonResponse
