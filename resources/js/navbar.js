@@ -127,7 +127,7 @@ export class Navbar {
     renderAvatarImage() {
         let propic_src = this.#storageService.getData("propic_src");
         let propic_alt = this.#storageService.getData("propic_alt");
-        if(propic_src !== null) {
+        if(propic_src !== null && propic_src !== "null") {
             this.setAvatarButtonImage(propic_src, propic_alt);
         }
     }

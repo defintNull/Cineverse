@@ -89,6 +89,14 @@ export class GroupView extends View {
         scroll.id = "scroll";
         scroll.classList.add("flex", "flex-col", "items-center", "grow", "w-1/2", "pt-6", "gap-y-6");
 
+        // Add button
+        let add_button = this.#addButton.getComponentElement();
+        let cont = document.createElement("div");
+        cont.id = "add_button";
+        cont.classList.add("flex", "flex-col", "items-center", "cursor-pointer", "justify-center", "fixed", "bottom-10", "right-20", "rounded-4xl", "h-16", "w-16", "shadow-xl", "dark:bg-gray-700", "bg-indigo-600");
+        cont.appendChild(add_button);
+        element_container.appendChild(cont);
+
         element_container.appendChild(scroll);
 
 
@@ -98,7 +106,7 @@ export class GroupView extends View {
 
     }
 
-    addEventListeners(searchHandler, getPostsHandler, joinGroupHandler) {
+    addEventListeners(searchHandler, getPostsHandler, joinGroupHandler, exitGroupHandler) {
         let main = this;
         this.#scrollHandle = this.#addGroupScrollHandler.bind(
             this,
@@ -110,6 +118,7 @@ export class GroupView extends View {
         document.getElementById("searchbar").addEventListener("submit", async function(event) {
             event.preventDefault();
 
+            // Infinite scroll event
             document.getElementById("element_container").addEventListener("scroll", main.#scrollHandle);
 
             let groups = await searchHandler(this.querySelector("input").value, true);
@@ -139,7 +148,10 @@ export class GroupView extends View {
 
         document.getElementById("sidebar").addEventListener("click", async function(event) {
             const group_card = event.target.closest(".group-card");
+
+            // Infinite scroll event
             document.getElementById("element_container").addEventListener("scroll", main.#scrollHandle);
+
             if(group_card && this.contains(group_card)) {
                 if(group_card.classList.contains("border")) {
                     group_card.classList.remove("border", "border-gray-400");
@@ -158,9 +170,10 @@ export class GroupView extends View {
                     let posts = await getPostsHandler(group_card.querySelector("input").value, true);
 
                     // Setting Post Structure layout
-                    if(!document.querySelector("div.header")) {
-                        main.#setPostStructureLayout(true, group_card.querySelector("input").value);
+                    if(document.querySelector("div.header")) {
+                        main.#setPostStructureLayout(false);
                     }
+                    main.#setPostStructureLayout(true, group_card.querySelector("input[name='id']").value, group_card.querySelector("input[name='description']").value, group_card.querySelector("input[name='token']").value);
 
                     let scroll = document.getElementById("scroll");
                     scroll.innerHTML = "";
@@ -259,12 +272,6 @@ export class GroupView extends View {
                 description.classList.add("text-lg", "italic", "dark:text-white", "text-gray-900");
                 description.innerText = parent.querySelector("input[name='description']").value;
                 container.appendChild(description);
-                let id_input = document.createElement("input");
-                id_input.hidden = true;
-                id_input.type = "text";
-                id_input.name = "group_id";
-                id_input.value = parent.querySelector("input[name='id']").value;
-                container.appendChild(id_input);
                 if(parent.querySelector("input[name='visibility']").value == "private") {
                     let token = main.#input.getComponentElement();
                     token.querySelector("input").name = "token_input";
@@ -281,10 +288,48 @@ export class GroupView extends View {
 
 
                 let token = document.querySelector("input[name='token_input']");
+                let group_id = parent.querySelector("input[name='id']").value;
 
-                popup.querySelector("button.default-button").addEventListener("click", main.#joinGroupHandler.bind(main, joinGroupHandler, parent, id_input.value, token));
+                popup.querySelector("button.default-button").addEventListener("click", main.#joinGroupHandler.bind(main, joinGroupHandler, parent, group_id, token));
                 popup.querySelector("button.delete-button").addEventListener("click", () => {popup.remove();});
 
+            }
+        });
+
+        // Exit component event
+        document.getElementById("element_container").addEventListener("click", async function(event) {
+            const exit_button = event.target.closest(".header > div > button.red-button");
+            if(exit_button && this.contains(exit_button)) {
+                let parent = exit_button.parentElement.parentElement;
+                let popup = main.#popup.getComponentElement();
+                popup.querySelector("p").innerText = "Exit Group";
+
+                let container = popup.querySelector("div.container");
+                container.classList.add("items-center", "gap-y-4", "py-8")
+                let title = document.createElement("p");
+                title.classList.add("text-2xl", "font-medium", "dark:text-white", "text-gray-900");
+                title.innerText = "Are you sure you want to exit this group?";
+                container.appendChild(title);
+                let error_field = main.#inputError.getComponentElement();
+                error_field.id = "error_field";
+                error_field.innerText = "Someting went wrong!";
+                error_field.classList.add("hidden");
+                container.appendChild(error_field);
+
+                document.body.querySelector("main").appendChild(popup);
+
+                console.log(parent);
+                let id = parent.querySelector("input[name='group_id']").value;
+                popup.querySelector("button.default-button").addEventListener("click", main.#exitGroupHandler.bind(this, exitGroupHandler, id, error_field));
+                popup.querySelector("button.delete-button").addEventListener("click", () => {popup.remove();});
+            }
+        });
+
+        // Info button event
+        document.getElementById("element_container").addEventListener("click", async function(event) {
+            const info_button = event.target.closest(".header > div > button.normal-button");
+            if(info_button && this.contains(info_button)) {
+                document.querySelector("div.header > div.container").classList.toggle("hidden");
             }
         });
     }
@@ -301,11 +346,14 @@ export class GroupView extends View {
         groups.forEach(group => {
             let element = this.#groupCard.getComponentElement();
             element.querySelector("p").innerText = group.getName();
-            element.querySelector("input").value = group.getId();
             let img_src = group.getImageSrc();
             if (img_src == null) {
                 element.querySelector("img").classList.add("hidden");
             }
+            let container = element.querySelector("div.container");
+            container.querySelector("input[name='id']").value = group.getId();
+            container.querySelector("input[name='description']").value = group.getDescription();
+            container.querySelector("input[name='token']").value = group.getToken();
             element.querySelector("img").src = group.getImageSrc();
             group_card_container.append(element);
         });
@@ -325,26 +373,35 @@ export class GroupView extends View {
         });
     }
 
-    #setPostStructureLayout(bool, id = null) {
+    #setPostStructureLayout(bool, id = null, description, token) {
         if(bool) {
             // Header
             let header = this.#headerComponent.getComponentElement();
             header.querySelector("button.red-button").innerText = "Exit";
             header.querySelector("p").innerText = "Group Title";
-            header.querySelector("button.normal-button").innerText = "Get Token";
-            header.querySelector("input").value = id;
+            header.querySelector("button.normal-button").innerText = "Info";
+            let group_id = document.createElement("input");
+            group_id.hidden = true;
+            group_id.type = "text";
+            group_id.name = "group_id";
+            group_id.value = id;
+            header.appendChild(group_id);
+            let des_element = header.querySelector("div.container").firstElementChild.cloneNode(true);
+            header.querySelector("div.container").firstElementChild.remove();
+            let descrip = des_element.cloneNode(true);
+            descrip.querySelector("p").innerText = "Description:";
+            descrip.querySelectorAll("p")[1].innerText = description;
+            header.querySelector("div.container").appendChild(descrip);
+            descrip = des_element.cloneNode(true);
+            descrip.querySelector("p").innerText = "Token:";
+            descrip.querySelectorAll("p")[1].innerText = token;
+            header.querySelector("div.container").appendChild(descrip);
+
+
             document.getElementById("element_container").prepend(header);
 
-            // Add button
-            let add_button = this.#addButton.getComponentElement();
-            let add_post = document.createElement("div");
-            add_post.id = "add_post_button";
-            add_post.classList.add("flex", "flex-col", "items-center", "cursor-pointer", "justify-center", "fixed", "bottom-10", "right-20", "rounded-4xl", "h-16", "w-16", "shadow-xl", "dark:bg-gray-700", "bg-indigo-600");
-            add_post.appendChild(add_button);
-            document.getElementById("element_container").appendChild(add_post);
         } else {
             document.getElementById("element_container").querySelector("div.header").remove();
-            document.getElementById("add_post_button").remove();
         }
     }
 
@@ -431,6 +488,20 @@ export class GroupView extends View {
             parent.remove();
 
             document.getElementById("popup").remove();
+        }
+    }
+
+    async #exitGroupHandler(exitCallback, id, error_field) {
+        error_field.classList.add("hidden");
+        let res = await exitCallback(id);
+        if(res == 200) {
+            document.getElementById("searchbar").requestSubmit();
+            Array.from(document.querySelectorAll("div.group-card")).find(
+                div => div.querySelector("input[name='id']")?.value === id
+            ).remove();
+            document.getElementById("popup").remove();
+        } else {
+            error_field.classList.remove("hidden");
         }
     }
 }
