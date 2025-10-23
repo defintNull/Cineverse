@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Authentication\Profile;
 use App\Http\Controllers\Portal\GroupController;
-use App\Http\Controllers\PostController;
+use App\Http\Controllers\Portal\PostController;
 
 /**
  * Main route of the spa
@@ -80,8 +80,6 @@ Route::middleware(AjaxMiddleware::class)->name('spa.')->prefix('spa')->group(fun
         Route::apiResource('groups.posts', PostController::class);
     });
 });
-
-Route::resource('groups.posts', PostController::class); //tmp per debug
 
 /**
  * Collection route for the spa that redirect all the unwanted route to the main route
