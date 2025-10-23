@@ -50,6 +50,7 @@ export class WatchlistView extends View {
             const match = watchlistsWithContent.find(w => w.watchlist.id == watchlistId);
             if (match) {
                 // Ricreo la struttura base della griglia
+                // La ricostruisco
                 const grid = this.addWatchlistGrid(match.watchlist);
                 main.appendChild(grid);
 
@@ -124,7 +125,7 @@ export class WatchlistView extends View {
     }
 
     removeDocumentEventListeners() {
-        //document.removeEventListener("click", this.#clickHandle);
+        document.removeEventListener("click", this.#clickHandle);
     }
 
 
@@ -161,7 +162,7 @@ export class WatchlistView extends View {
 
     const sidebarTitle = document.createElement("h2");
     sidebarTitle.classList.add("text-lg", "font-bold");
-    sidebarTitle.innerText = "Le tue watchlist";
+    sidebarTitle.innerText = "Your watchlists";
 
     const addButton = document.createElement("button");
     addButton.id = "add_watchlist_btn";
@@ -252,74 +253,59 @@ export class WatchlistView extends View {
 
 
 
+//Questa genera la struttura a destra, prima di lanciare renderItems
+addWatchlistGrid(watchlist) {
+    // Container principale
+    const grid_container = document.createElement("div");
+    grid_container.id = "watchlist_grid";
+    grid_container.className = "flex flex-col p-6 min-h-[calc(100vh-4rem)] box-border";
 
-    addWatchlistGrid(watchlist) {
-        // Container griglia
-        const grid_container = document.createElement("div");
-        grid_container.id = "watchlist_grid";
-        grid_container.classList.add(
-            "flex",
-            "flex-col",
-            "p-6",
-            "min-h-[calc(100vh-4rem)]", // altezza minima stabile
-            "box-border"
-        );
+    // --- HEADER ben visibile ---
+    // Creo l'header
+const header = document.createElement("header");
+header.className = "flex items-center gap-4";
 
-        // Titolo
-        const title = document.createElement("h1");
-        title.classList.add("text-2xl", "font-bold", "mb-6");
-        title.innerText = "" + watchlist.name; //non serve inserire un "titolo watchlist" perchè c'è già il nome della watchlist
-        grid_container.appendChild(title);
+// Titolo
+const title = document.createElement("h1");
+title.className = "text-2xl sm:text-3xl font-bold text-gray-900 text-white";
+title.innerText = "" + watchlist.name; // qui puoi sostituire con watchlist.name o altro
 
-        // Griglia (vuota, verrà popolata dopo)
-        const grid = document.createElement("div");
-        grid.classList.add(
-            "grid",
-            "grid-cols-2",
-            "sm:grid-cols-3",
-            "md:grid-cols-4",
-            "lg:grid-cols-5",
-            "gap-6",
-            "items-start",
-            "content-start"
-        );
+// Bottone
+const button = document.createElement("button");
+button.type = "button";
+button.className = `
+  inline-flex items-center px-4 py-2 border border-transparent
+  text-sm font-medium rounded-md shadow-sm
+  bg-indigo-600 text-white hover:bg-indigo-700
+  focus:outline-none focus:ring-2 focus:ring-indigo-500
+`;
+button.innerText = "Azione";
 
-        // Se la watchlist è vuota → placeholder elegante
+// Assemblo
+header.appendChild(title);
+header.appendChild(button);
 
-        if (!watchlist.movies || watchlist.movies.length === 0) {
-            const placeholder = document.createElement("div");
-            placeholder.classList.add(
-                "col-span-full",          // occupa tutta la riga
-                "flex",
-                "flex-col",
-                "items-center",
-                "justify-center",
-                "text-gray-400",
-                "italic",
-                "p-12",
-                "border-2",
-                "border-dashed",
-                "border-gray-600",
-                "rounded-lg",
-                "h-[450px]"
-            );
+// Ora puoi appenderlo dove serve, ad esempio:
+grid_container.appendChild(header);
 
-            const icon = document.createElement("span");
-            icon.innerText = "🎬"; // icona film
-            icon.classList.add("text-5xl", "mb-4");
+    // --- GRID ---
+    const grid = document.createElement("div");
+    grid.className = "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 items-start content-start";
 
-            const msg = document.createElement("p");
-            msg.innerText = "Nessun film in questa watchlist";
-            msg.classList.add("text-lg");
-
-            placeholder.appendChild(icon);
-            placeholder.appendChild(msg);
-            grid.appendChild(placeholder);
-        }
-
-        grid_container.appendChild(grid);
-        return grid_container;
+    // Placeholder se vuota
+    if (!watchlist.content || watchlist.content.length === 0) {
+        const placeholder = document.createElement("div");
+        placeholder.className = "col-span-full flex flex-col items-center justify-center text-gray-400 italic p-12 border-2 border-dashed border-gray-600 rounded-lg h-[300px]";
+        placeholder.innerHTML = `
+            <span class="text-5xl mb-4">🎬</span>
+            <p class="text-lg">Nessun contenuto in questa watchlist</p>
+        `;
+        grid.appendChild(placeholder);
     }
+
+    grid_container.appendChild(grid);
+    return grid_container;
+}
 
     async renderItems(items) {
     this.addWatchlistGridElements(items);

@@ -65,7 +65,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'My Watchlist1',
             'content' => [
             [ 'type' => 'Movie', 'id' => 550 ],
-            [ 'type' => 'Serie', 'id' => 108 ],
+            [ 'type' => 'Serie', 'id' => 76479 ],
             ],
             'user_id' => 12,
         ]);
@@ -73,8 +73,8 @@ class DatabaseSeeder extends Seeder
         Watchlist::factory()->create([
             'name' => 'My Watchlist2',
             'content' => [
-            [ 'type' => 'Movie', 'id' => 550 ],
-            [ 'type' => 'Serie', 'id' => 107 ],
+            [ 'type' => 'Movie', 'id' => 872585 ],
+            [ 'type' => 'Serie', 'id' => 1396 ],
             ],
             'user_id' => 12,
         ]);
@@ -88,7 +88,9 @@ class DatabaseSeeder extends Seeder
             'content' => 'Hello World!',
             'group_id' => 1,
             'author_id' => 12,
-            'movies' => [ 550, 120],
+            'movies' => [ 550, 120], //come sono gestite le serie?
+            //bisognerebbe cambiare il modello e le migrazioni, basta copiare
+            //le watchlist
         ]);
 
         Post::factory()->create([
