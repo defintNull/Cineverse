@@ -21,15 +21,6 @@ class DatabaseSeeder extends Seeder
         //php artisan migrate:fresh --seed
         //droppa tutto,remigra e riesegue i seeder
 
-        // User::factory(10)->create();
-        User::factory(20)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
-
-
 
         User::factory()->create([
             'name' => 'Gerry',
@@ -61,13 +52,25 @@ class DatabaseSeeder extends Seeder
             'nationality' => 'Italy'
         ]);
 
+        // User::factory(10)->create();
+        User::factory(20)->create();
+
+        User::factory()->create([
+            'name' => 'Test User',
+            'email' => 'test@example.com',
+        ]);
+
+
+
+
+
         Watchlist::factory()->create([
             'name' => 'My Watchlist1',
             'content' => [
                 ['type' => 'Movie', 'id' => 550],
                 ['type' => 'Serie', 'id' => 76479],
             ],
-            'user_id' => 12,
+            'user_id' => 1,
         ]);
 
         Watchlist::factory()->create([
@@ -76,7 +79,7 @@ class DatabaseSeeder extends Seeder
                 ['type' => 'Movie', 'id' => 872585],
                 ['type' => 'Serie', 'id' => 1396],
             ],
-            'user_id' => 12,
+            'user_id' => 1,
         ]);
 
         Group::factory()->create([
