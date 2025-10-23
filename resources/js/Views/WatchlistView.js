@@ -81,6 +81,8 @@ export class WatchlistView extends View {
         if (addButton) {
             addButton.addEventListener("click", async function() {
                 // Recupero la UL già esistente
+
+
                 const watchlistContainer = document.getElementById("watchlist_list2");
                 //Ho la necessità di creare un oggetto watchlist per passarlo
                 let newWatchlist = {
@@ -104,6 +106,7 @@ export class WatchlistView extends View {
                     "transition"
                 );
                 newItem.innerText = "New Watchlist";
+                newItem.id = `watchlist-${watchlistdb.id}`;
                 newItem.dataset.watchlistId = watchlistdb.id;
                 //newItem.dataset.watchlistId = Date.now();
 
@@ -156,36 +159,37 @@ export class WatchlistView extends View {
                 //const input = card.querySelector("input");
                 //posso usare il dataset del bottone
                 //METTO IL RESTO DEL CODICE
-                const watchlist_title = document.getElementById("watchlist_title");
+                let id = button.dataset.watchlistId;
+                //Visto che ora gli Id sono parametrici posso prendermi tutti gli elementi associati che voglio
+                const watchlist_title = document.getElementById("title-" + id);
 
-                let input = "Renamed Watchlist";
-                const id = button.dataset.watchlistId;
-                const items = document.querySelectorAll("#watchlist_list2 li");
-                const searchText = watchlist_title.innerHTML; //
+                let input = "Renamed Watchlist";  //                   DA CAMBIARE
+                //const id = button.dataset.watchlistId;
+                console.log("id dal dataset del bottone", id);
+                //TROPPO A CASO questa query
+                //const items = document.querySelectorAll("#watchlist_list2 li");
 
-                const found = Array.from(items).find(li => li.textContent.trim() === searchText);
+                const li = document.getElementById(`watchlist-${id}`);
 
-                if (found) {
-                //console.log("Trovato:", found);
-                //found.style.color = "red"; // esempio: evidenzio
-                found.innerHTML = input;
-                }
+                li.innerHTML = input;
+                //non mi serve cercare così
 
-                //console.log("Watchlist attuali:", watchlistsWithContent[1].watchlist.id);
-                //const ids = watchlistsWithContent.map(item => item.watchlist.id);
-                //console.log(ids); // [0, 1, ...]
-
+                //da vedere come fixare al volo qua
                 const wl = watchlistsWithContent.find(
                             item => String(item.watchlist.id) === String(id)
                             ) || null;
-                wl.watchlist.name = input;//RENAME NELLA STRUTTURA DATI, MA VA COMUNQUE
+                console.log("search",watchlistsWithContent[id]);
+                wl.watchlist.name = input;
+                //RENAME NELLA STRUTTURA DATI, MA VA COMUNQUE
                 //RIRENDERIZZATA LA WATCHLIST LIST Oppure si cambia il campo specifico
                 //PROBABILMENTE è L'opzione MIGLIORE
                 //ALLA creazione dell'elemento della watchlist si mette nel dataset anche l'id
                 //console.log("Watchlist trovata per rename:", wl);
 
                 //const newName = prompt("Nuovo nome della watchlist:", "wl.name");
-                    if (input && input.trim() !== "") {
+
+
+/*                     if (input && input.trim() !== "") {
                         // aggiorno l’oggetto in memoria
                         wl.name = input.trim();
 
@@ -196,7 +200,7 @@ export class WatchlistView extends View {
                         watchlist_title.innerHTML = input;
                         // salvo sul DB
                         //saveWatchlist(wl);
-                    }
+                    } */
 
 
                 //INPUT HARDCODATO per ora
@@ -345,6 +349,7 @@ export class WatchlistView extends View {
                 "transition"
             );
             li.innerText = w.name;
+            li.id = `watchlist-${w.id}`;
             li.dataset.watchlistId = w.id; // salvo un riferimento utile
             list.appendChild(li);
             return { element: li, data: w };
@@ -386,13 +391,13 @@ export class WatchlistView extends View {
 
         // Titolo
         const title = document.createElement("h1");
-        title.id = "watchlist_title";
+        title.id = `title-${watchlist.id}`;
         title.className = "text-2xl sm:text-3xl font-bold text-gray-900 text-white";
         title.innerText = "" + watchlist.name; // qui puoi sostituire con watchlist.name o altro
 
         // Bottone
         const renameButton = document.createElement("button");
-        renameButton.id = "rename_watchlist_btn";
+        renameButton.id =  `rename-${watchlist.id}`;
         renameButton.dataset.watchlistId = watchlist.id;
 
         renameButton.type = "button";

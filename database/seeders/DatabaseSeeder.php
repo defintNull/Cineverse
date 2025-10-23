@@ -87,6 +87,60 @@ class DatabaseSeeder extends Seeder
             'user_id' => 1,
         ]);
 
+        Watchlist::factory()->create([
+            'name' => 'My Watchlist3',
+            'content' => [
+                ['type' => 'Movie', 'id' => 872585],
+                ['type' => 'Serie', 'id' => 1396],
+            ],
+            'user_id' => 1,
+        ]);
+
+        Watchlist::factory()->create([
+            'name' => 'My Watchlist4',
+            'content' => [
+                ['type' => 'Movie', 'id' => 872585],
+                ['type' => 'Serie', 'id' => 1396],
+            ],
+            'user_id' => 1,
+        ]);
+
+        Watchlist::factory()->create([
+            'name' => 'My Watchlist5',
+            'content' => [
+                ['type' => 'Movie', 'id' => 872585],
+                ['type' => 'Serie', 'id' => 1396],
+            ],
+            'user_id' => 1,
+        ]);
+
+        Watchlist::factory()->create([
+            'name' => 'My Watchlist6',
+            'content' => [
+                ['type' => 'Movie', 'id' => 872585],
+                ['type' => 'Serie', 'id' => 1396],
+            ],
+            'user_id' => 1,
+        ]);
+
+        Watchlist::factory()->create([
+            'name' => 'My Watchlist7',
+            'content' => [
+                ['type' => 'Movie', 'id' => 872585],
+                ['type' => 'Serie', 'id' => 1396],
+            ],
+            'user_id' => 1,
+        ]);
+
+        Watchlist::factory()->create([
+            'name' => 'My Watchlist8',
+            'content' => [
+                ['type' => 'Movie', 'id' => 872585],
+                ['type' => 'Serie', 'id' => 1396],
+            ],
+            'user_id' => 1,
+        ]);
+
         Group::factory()->create([
             'name' => 'Cinephiles United',
             'description' => 'A group for movie enthusiasts to share reviews and recommendations.',
