@@ -30,6 +30,7 @@ export class GroupController extends Controller {
             this.#getGroupPosts.bind(this),
             this.#joinGroup.bind(this),
             this.#exitGroup.bind(this),
+            this.#createGroup.bind(this),
         );
     }
 
@@ -89,5 +90,19 @@ export class GroupController extends Controller {
     async #exitGroup(id) {
         let res = await this.#spa_fetch.POSTFetch('spa/groups/quit', {'id': id});
         return res.status;
+    }
+
+    async #createGroup(form) {
+        let formData = new FormData(form);
+        let res = await this.#spa_fetch.POSTFetchForm('spa/groups/store', formData);
+        let json = await res.json();
+
+        if(res.status == 200) {
+            return new Group(json.group);
+        } else if(res.status == 422) {
+            return json.errors;
+        } else {
+            return 400;
+        }
     }
 }
