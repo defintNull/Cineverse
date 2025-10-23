@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
         //droppa tutto,remigra e riesegue i seeder
 
         // User::factory(10)->create();
-        User::factory(10)->create();
+        User::factory(20)->create();
 
         User::factory()->create([
             'name' => 'Test User',
@@ -64,8 +64,8 @@ class DatabaseSeeder extends Seeder
         Watchlist::factory()->create([
             'name' => 'My Watchlist1',
             'content' => [
-            [ 'type' => 'Movie', 'id' => 550 ],
-            [ 'type' => 'Serie', 'id' => 76479 ],
+                ['type' => 'Movie', 'id' => 550],
+                ['type' => 'Serie', 'id' => 76479],
             ],
             'user_id' => 12,
         ]);
@@ -73,8 +73,8 @@ class DatabaseSeeder extends Seeder
         Watchlist::factory()->create([
             'name' => 'My Watchlist2',
             'content' => [
-            [ 'type' => 'Movie', 'id' => 872585 ],
-            [ 'type' => 'Serie', 'id' => 1396 ],
+                ['type' => 'Movie', 'id' => 872585],
+                ['type' => 'Serie', 'id' => 1396],
             ],
             'user_id' => 12,
         ]);
@@ -84,11 +84,14 @@ class DatabaseSeeder extends Seeder
             'description' => 'A group for movie enthusiasts to share reviews and recommendations.',
         ]);
 
+        Group::factory(50)->create();
+
+
         Post::factory()->create([
             'content' => 'Hello World!',
             'group_id' => 1,
             'author_id' => 12,
-            'movies' => [ 550, 120], //come sono gestite le serie?
+            'movies' => [550, 120], //come sono gestite le serie?
             //bisognerebbe cambiare il modello e le migrazioni, basta copiare
             //le watchlist
         ]);
@@ -100,16 +103,18 @@ class DatabaseSeeder extends Seeder
             'movies' => null,
         ]);
 
+        Post::factory(150)->create();
+
         // assegnazione membri ai gruppi
         $group = Group::first();
 
         if ($group) {
             $specificUserIds = [1, 12]; // utenti creati esplicitamente sopra
             $randomUserIds = User::whereNotIn('id', $specificUserIds)
-                                 ->inRandomOrder()
-                                 ->take(3)
-                                 ->pluck('id')
-                                 ->toArray();
+                ->inRandomOrder()
+                ->take(3)
+                ->pluck('id')
+                ->toArray();
 
             $group->users()->syncWithoutDetaching(array_merge($specificUserIds, $randomUserIds));
         }
@@ -124,6 +129,17 @@ class DatabaseSeeder extends Seeder
             User::inRandomOrder()->take(4)->pluck('id')->toArray()
         );
 
-        Post::factory(30)->create();
+        // assegna circa 5 gruppi esistenti a ogni utente (non crearne di nuovi)
+        $totalGroups = Group::count();
+        if ($totalGroups > 0) {
+            User::all()->each(function ($user) use ($totalGroups) {
+            $num = rand(4, 6); // circa 5 gruppi
+            $num = min($num, $totalGroups);
+            $groupIds = Group::inRandomOrder()->take($num)->pluck('id')->toArray();
+            $user->groups()->syncWithoutDetaching($groupIds);
+            });
+        }
+
+        Post::factory(0)->create();
     }
 }

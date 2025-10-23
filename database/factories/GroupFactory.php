@@ -19,10 +19,10 @@ class GroupFactory extends Factory
         return [
             'name' => fake()->company(),
             'description' => fake()->paragraph(),
-            'user_id' => fake()->numberBetween(1, 10),
             'visibility' => fake()->randomElement(['public', 'private']),
             'token' => fake()->randomNumber(),
             'propic' => null,
+            'user_id' => fake()->numberBetween(1, 20),
         ];
     }
 }

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id');
             $table->String('name');
-            $table->String('description');
+            $table->Text('description');
             $table->enum('visibility', ['public', 'private']);
             $table->string('token');
             $table->string('propic')->nullable();
