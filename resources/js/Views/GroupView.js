@@ -89,12 +89,12 @@ export class GroupView extends View {
         // Element Container
         let element_container = document.createElement("div");
         element_container.id = "element_container";
-        element_container.classList.add("inner-scroll", "flex", "flex-col", "col-span-7", "relative", "items-center", "px-12", "pb-12", "pt-6", "overflow-y-auto", "scrollbar", "scrollbar-thumb-gray-400", "scrollbar-track-gray-100", "dark:scrollbar-thumb-gray-500", "dark:scrollbar-track-gray-800");
+        element_container.classList.add("inner-scroll", "flex", "flex-col", "col-span-7", "relative", "items-center", "px-12", "pb-12", "overflow-y-auto", "scrollbar", "scrollbar-thumb-gray-400", "scrollbar-track-gray-100", "dark:scrollbar-thumb-gray-500", "dark:scrollbar-track-gray-800");
 
         // Scroll container
         let scroll = document.createElement("div");
         scroll.id = "scroll";
-        scroll.classList.add("flex", "flex-col", "items-center", "grow", "w-1/2", "pt-6", "gap-y-6");
+        scroll.classList.add("flex", "flex-col", "items-center", "grow", "w-1/2", "pt-12", "gap-y-6");
 
         // Add button
         let add_button = this.#addButton.getComponentElement();
@@ -139,7 +139,7 @@ export class GroupView extends View {
 
             document.getElementById("sidebar").querySelectorAll("div.group-card").forEach(el => {
                 el.classList.remove("border", "border-gray-400");
-                el.classList.add("shadow-xl", "dark:bg-gray-700", "bg-indigo-600");
+                el.classList.add("shadow-xl", "dark:bg-gray-700", "bg-slate-50");
             });
 
             let scroll = document.getElementById("scroll");
@@ -162,18 +162,20 @@ export class GroupView extends View {
             document.getElementById("element_container").addEventListener("scroll", main.#scrollHandle);
 
             if(group_card && this.contains(group_card)) {
+                document.getElementById("element_container").scrollTo({top: 0,behavior: 'smooth'});
+
                 if(group_card.classList.contains("border")) {
                     group_card.classList.remove("border", "border-gray-400");
-                    group_card.classList.add("shadow-xl", "dark:bg-gray-700", "bg-indigo-600");
+                    group_card.classList.add("shadow-xl", "dark:bg-gray-700", "bg-slate-50");
 
                     document.getElementById("searchbar").requestSubmit();
                 } else {
                     this.querySelectorAll("div.group-card").forEach(el => {
                         el.classList.remove("border", "border-gray-400");
-                        el.classList.add("shadow-xl", "dark:bg-gray-700", "bg-indigo-600");
+                        el.classList.add("shadow-xl", "dark:bg-gray-700", "bg-slate-50");
                     });
 
-                    group_card.classList.remove("shadow-xl", "dark:bg-gray-700", "bg-indigo-600");
+                    group_card.classList.remove("shadow-xl", "dark:bg-gray-700", "bg-slate-50");
                     group_card.classList.add("border", "border-gray-400");
 
                     let posts = await getPostsHandler(group_card.querySelector("input").value, true);

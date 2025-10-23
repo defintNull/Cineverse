@@ -1,7 +1,7 @@
 import { Component } from "./Component";
 
 export class HeaderComponent extends Component {
-    #header = `<div class="w-full header z-30 sticky top-0 dark:bg-gray-800 bg-gray-100 flex flex-col items-center justify-center border-b-1 border-gray-400 py-4">
+    #header = `<div class="w-full header z-30 sticky top-0 dark:bg-gray-800 bg-gray-100 flex flex-col items-center justify-center border-b-1 pt-8 border-gray-400 pb-4">
                     <div class="flex flex-row items-center justify-between w-full">
                         <button type="button" class="red-button focus:outline-none text-white cursor-pointer bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"></button>
                         <p class="text-2xl text-gray-900 dark:text-white font-semibold"></p>
