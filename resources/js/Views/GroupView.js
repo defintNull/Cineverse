@@ -358,11 +358,14 @@ export class GroupView extends View {
 
                 let comment_section = document.createElement("div");
                 comment_section.id = "comment_section";
-                comment_section.classList.add("absolute", "bottom-0", "right-0", "w-[77.7777%]", "h-svh", "overflow-y-auto", "z-60", "bg-gray-100", "dark:bg-gray-800", "scrollbar", "scrollbar-thumb-gray-400", "scrollbar-track-gray-100", "dark:scrollbar-thumb-gray-500", "dark:scrollbar-track-gray-800");
+                comment_section.classList.add("absolute", "bottom-0", "right-0", "w-[77.7777%]", "h-svh", "z-60", "bg-gray-100", "dark:bg-gray-800");
 
+
+                // Comment container
                 let container = document.createElement("div");
-                container.classList.add("flex", "flex-col", "relative", "w-full", "items-center", "py-12", "px-20", "gap-y-6");
+                container.classList.add("flex", "flex-col", "relative", "w-full", "h-full", "items-center", "pt-12", "gap-y-6");
 
+                // Exit Button
                 let exit_button = main.#exitButton.getComponentElement();
                 exit_button.id = "exit_comment";
                 container.appendChild(exit_button);
@@ -370,6 +373,7 @@ export class GroupView extends View {
                 // Exit comments event
                 exit_button.addEventListener("click", function(event) {
                     document.getElementById("comment_section").remove();
+                    document.getElementById("element_container").style.overflow = '';
                 });
 
                 let title = document.createElement("p");
@@ -378,7 +382,7 @@ export class GroupView extends View {
                 container.appendChild(title);
                 let comment_container = document.createElement("div");
                 comment_container.id = "comment_container";
-                comment_container.classList.add("flex", "flex-col", "w-full", "gap-y-6");
+                comment_container.classList.add("flex", "flex-col", "w-full", "px-20", "pb-4", "gap-y-6", "overflow-y-auto", "scrollbar", "scrollbar-thumb-gray-400", "scrollbar-track-gray-100", "dark:scrollbar-thumb-gray-500", "dark:scrollbar-track-gray-800");
 
                 let comments = await getCommentsHandler(parent.querySelector("input[name='id']").value, true);
                 comments.forEach(comment => {
@@ -397,20 +401,23 @@ export class GroupView extends View {
                 });
                 container.appendChild(comment_container);
 
-                comment_section.appendChild(container);
-
-                document.getElementById("element_container").style.overflow = 'hidden';
-                document.body.querySelector("main").appendChild(comment_section);
 
                 // Setting scroll handler
                 main.#commentScrollHandle = main.#commentScrollHandler.bind(
                     main,
-                    comment_section,
+                    comment_container,
                     parent.querySelector("input[name='id']").value,
                     getCommentsHandler
                 )
 
-                comment_section.addEventListener("scroll", main.#commentScrollHandle);
+                comment_container.addEventListener("scroll", main.#commentScrollHandle);
+
+                // Make post field
+
+
+                comment_section.appendChild(container);
+                document.getElementById("element_container").style.overflow = 'hidden';
+                document.body.querySelector("main").appendChild(comment_section);
             }
         });
 
