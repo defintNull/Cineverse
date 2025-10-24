@@ -62,16 +62,20 @@ export class Router {
         }
 
         let route = this.routes[path];
-        if(route[1] == "auth") {
-            if(!this.#authService.checkAuth()) {
-                this.overridePath({}, "/");
-                return;
+        if(route !== undefined) {
+            if(route[1] == "auth") {
+                if(!this.#authService.checkAuth()) {
+                    this.overridePath({}, "/");
+                    return;
+                }
             }
-        }
-        let controller = route[0];
-        if(controller) {
-            this.#currentController = new controller();
-            this.#currentController.start();
+            let controller = route[0];
+            if(controller) {
+                this.#currentController = new controller();
+                this.#currentController.start();
+            }
+        } else {
+            window.location.href = "/404";
         }
     }
 

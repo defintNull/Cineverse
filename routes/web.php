@@ -85,6 +85,11 @@ Route::middleware(AjaxMiddleware::class)->name('spa.')->prefix('spa')->group(fun
     });
 });
 
+// 404 route
+Route::get('404', function() {
+    return view('404');
+});
+
 /**
  * Collection route for the spa that redirect all the unwanted route to the main route
  */
