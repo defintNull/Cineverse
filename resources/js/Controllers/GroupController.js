@@ -36,6 +36,7 @@ export class GroupController extends Controller {
             this.#createGroup.bind(this),
             this.#createPost.bind(this),
             this.#getComments.bind(this),
+            this.#saveComment.bind(this),
         );
     }
 
@@ -138,5 +139,16 @@ export class GroupController extends Controller {
             return comments;
         }
         return [];
+    }
+
+    async #saveComment(id, form) {
+        let res = await this.#spa_fetch.POSTFetchForm('spa/posts/' + id + '/comments', new FormData(form));
+        if(res.status == 200) {
+            let json = await res.json()
+            let comment = new Comment(json.comment);
+            return comment;
+        } else {
+            return 400;
+        }
     }
 }

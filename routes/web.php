@@ -64,11 +64,12 @@ Route::middleware(AjaxMiddleware::class)->name('spa.')->prefix('spa')->group(fun
         });
 
         Route::middleware('auth:sanctum')->group(function(){
-            Route::apiResource('posts.comments', CommentController::class);
+            Route::get('posts/{id}/comments', [CommentController::class, 'index'])
+                ->name('comments.index');
+            Route::post('posts/{id}/comments', [CommentController::class, 'store'])
+                ->name('comments.store');
         });
-    });
 
-    Route::middleware('auth:sanctum')->group(function () {
         Route::name('profile.')->prefix('profileinfo')->group(function () {
             Route::get('/index', [Profile::class, 'index'])
                 ->name('index');
@@ -79,9 +80,7 @@ Route::middleware(AjaxMiddleware::class)->name('spa.')->prefix('spa')->group(fun
             Route::post('/update', [Profile::class, 'update'])
                 ->name('update');
         });
-    });
 
-    Route::middleware('auth:sanctum')->group(function(){
         Route::apiResource('groups.posts', PostController::class);
     });
 });

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Portal;
 
 use App\Http\Controllers\Controller;
+use App\Models\Comment;
 use App\Models\Post;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -47,8 +48,35 @@ class CommentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store($id, Request $request)
     {
-        //
+        $request->validate([
+            'comment' => ['required', 'string', 'max:1000'],
+        ]);
+
+        $post = Post::where("id", $id)->get();
+        if($post->count() != 0 && $post[0]->group->users->contains(Auth::user()->id)) {
+            $comment = Comment::create([
+                'content' => $request->comment,
+                'user_id' => Auth::user()->id,
+                'post_id' => $id,
+            ]);
+
+            $comment->load('user:id,username,propic');
+
+            $image_src = null;
+            if($comment->user->propic != null && Storage::disk('local')->exists($comment->user->propic)) {
+                $image_src = 'data:image/jpeg;base64,'.base64_encode(Storage::disk('local')->get($comment->user->propic));
+            }
+            $comment->user->propic = $image_src;
+
+            return response()->json([
+                'status' => 200,
+                'comment' => $comment,
+            ]);
+        }
+        return response()->json([
+            'status' => 400,
+        ], 400);
     }
 }

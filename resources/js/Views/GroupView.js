@@ -1,6 +1,7 @@
 import { AddButton } from "../Components/AddButton";
 import { Button } from "../Components/Button";
 import { CommentComponent } from "../Components/CommentComponent";
+import { CommentForm } from "../Components/CommentForm";
 import { DeleteButton } from "../Components/DeleteButton";
 import { ExitButton } from "../Components/exitButton";
 import { GroupCard } from "../Components/GroupCard";
@@ -14,6 +15,7 @@ import { PostComponent } from "../Components/PostComponent";
 import { Searchbar } from "../Components/Searchbar";
 import { Select } from "../Components/Select";
 import { Textarea } from "../Components/Textarea";
+import { Comment } from "../Models/Comment";
 import { Group } from "../Models/Group";
 import { Post } from "../Models/Post";
 import { View } from "./View";
@@ -33,6 +35,7 @@ export class GroupView extends View {
     #imageInput;
     #commentComponent;
     #exitButton;
+    #commentForm;
 
     #scrollHandle;
     #commentScrollHandle;
@@ -53,6 +56,7 @@ export class GroupView extends View {
         this.#imageInput = new ImageInput();
         this.#commentComponent = new CommentComponent();
         this.#exitButton = new ExitButton();
+        this.#commentForm = new CommentForm();
     }
 
     render() {
@@ -122,7 +126,7 @@ export class GroupView extends View {
 
     }
 
-    addEventListeners(searchHandler, getPostsHandler, joinGroupHandler, exitGroupHandler, createGroupHandler, createPostHandler, getCommentsHandler) {
+    addEventListeners(searchHandler, getPostsHandler, joinGroupHandler, exitGroupHandler, createGroupHandler, createPostHandler, getCommentsHandler, saveCommentHandler) {
         let main = this;
         this.#scrollHandle = this.#addGroupScrollHandler.bind(
             this,
@@ -363,7 +367,7 @@ export class GroupView extends View {
 
                 // Comment container
                 let container = document.createElement("div");
-                container.classList.add("flex", "flex-col", "relative", "w-full", "h-full", "items-center", "pt-12", "gap-y-6");
+                container.classList.add("flex", "flex-col", "relative", "w-full", "h-full", "items-center", "pt-12");
 
                 // Exit Button
                 let exit_button = main.#exitButton.getComponentElement();
@@ -382,7 +386,7 @@ export class GroupView extends View {
                 container.appendChild(title);
                 let comment_container = document.createElement("div");
                 comment_container.id = "comment_container";
-                comment_container.classList.add("flex", "flex-col", "w-full", "px-20", "pb-4", "gap-y-6", "overflow-y-auto", "scrollbar", "scrollbar-thumb-gray-400", "scrollbar-track-gray-100", "dark:scrollbar-thumb-gray-500", "dark:scrollbar-track-gray-800");
+                comment_container.classList.add("flex", "flex-col", "w-full", "px-20", "pt-6", "pb-4", "gap-y-6", "overflow-y-auto", "scrollbar", "scrollbar-thumb-gray-400", "scrollbar-track-gray-100", "dark:scrollbar-thumb-gray-500", "dark:scrollbar-track-gray-800");
 
                 let comments = await getCommentsHandler(parent.querySelector("input[name='id']").value, true);
                 comments.forEach(comment => {
@@ -413,7 +417,55 @@ export class GroupView extends View {
                 comment_container.addEventListener("scroll", main.#commentScrollHandle);
 
                 // Make post field
+                let make_comment = document.createElement("div");
+                make_comment.classList.add("flex", "flex-col", "items-center", "w-full", "h-60", "pt-2", "dark:bg-gray-800", "bg-gray-100");
+                let comment_form = main.#commentForm.getComponentElement();
+                comment_form.id = "comment_form";
+                comment_form.querySelector("label").setAttribute("for", "comment_input");
+                comment_form.querySelector("label").innerText = "Comment:";
+                comment_form.querySelector("textarea").id = "comment_input";
+                comment_form.querySelector("textarea").name = "comment";
+                comment_form.querySelector("textarea").placeholder = "Comment someting...";
+                make_comment.appendChild(comment_form);
+                container.appendChild(make_comment);
 
+                // Submit comment event
+                comment_form.addEventListener("submit", async function(event) {
+                    event.preventDefault();
+
+                    if(this.querySelector("textarea").value == "") {
+                        return;
+                    }
+
+                    this.querySelector("textarea").nextElementSibling.innerText = "";
+
+                    let comment = await saveCommentHandler(parent.querySelector("input[name='id']").value, this);
+                    if(comment instanceof Comment) {
+                        let comment_element = main.#commentComponent.getComponentElement();
+                        comment_element.querySelector("p.username").innerText = comment.getUserUsername();
+                        comment_element.querySelector("p.content").innerText = comment.getContent();
+                        let img = comment.getUserPropicSrc();
+                        if(img !== null) {
+                            let propic = comment_element.querySelector("img");
+                            propic.src = img;
+                            comment_element.querySelector("svg").classList.add("hidden");
+                            propic.classList.remove("hidden");
+                        }
+
+                        document.getElementById("comment_container").prepend(comment_element);
+                        document.getElementById("comment_container").scrollTo({
+                            top: 0,
+                            behavior: 'smooth'
+                        });
+                    } else {
+                        this.querySelector("textarea").nextElementSibling.innerText = "Something whent wrong! Max comment dimension 1000"
+                    }
+
+                    this.querySelector("textarea").value = "";
+                });
+                comment_form.querySelector("button.send").addEventListener("click", function(event) {
+                    document.getElementById("comment_form").click();
+                });
 
                 comment_section.appendChild(container);
                 document.getElementById("element_container").style.overflow = 'hidden';
