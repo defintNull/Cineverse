@@ -283,7 +283,7 @@ export class WatchlistView extends View {
                 // Setting header
                 let header = document.getElementById("watchlist_header");
                 header.querySelector("input[name='watchlist_id']").value = watchlist_card.dataset.watchlistId;
-                header.querySelector("input[name='rename_watchlist']").add("hidden");
+                header.querySelector("input[name='rename_watchlist']").classList.add("hidden");
                 document.getElementById("watchlist_title").classList.remove("hidden");
                 document.getElementById("watchlist_title").innerText = watchlist_card.innerText;
                 header.querySelector("input[name='rename_watchlist']").value = watchlist_card.innerText;
