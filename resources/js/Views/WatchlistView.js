@@ -96,7 +96,7 @@ export class WatchlistView extends View {
         // Creo l'header
         const header = document.createElement("header");
         header.id = "watchlist_header";
-        header.className = "flex items-center justify-between gap-4";
+        header.className = "flex items-center justify-between gap-4 hidden";
 
         let dati = document.createElement("form");
         dati.id = "rename_form";
@@ -288,6 +288,7 @@ export class WatchlistView extends View {
                 document.getElementById("watchlist_title").innerText = watchlist_card.innerText;
                 header.querySelector("input[name='rename_watchlist']").value = watchlist_card.innerText;
                 header.querySelector("button").classList.remove("hidden");
+                header.classList.remove("hidden");
 
                 if(!content || content.length === 0) {
                     const emptyMsg = document.createElement("p");
