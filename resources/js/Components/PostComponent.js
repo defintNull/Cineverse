@@ -16,7 +16,7 @@ export class PostComponent extends Component {
                 <p class="text-lg content text-gray-900 grow dark:text-white"></p>
                 <div class="flex flex-row items-center justify-between border-t-1 border-gray-400 pb-1 pt-2">
                     <div class="rounded-4xl like cursor-pointer p-1.5 hover:bg-gray-600">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="like-icon dark:text-white" viewBox="0 0 24 24">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="like-icon hidden dark:text-white" viewBox="0 0 24 24">
                             <path d="M2 21h4V9H2v12zM22 10.5c0-.83-.67-1.5-1.5-1.5H14l1-4.65.02-.23a1 1 0 0 0-.29-.7L13.17 2 7.59 7.59A1.98 1.98 0 0 0 7 9v10a2 2 0 0 0 2 2h8.5a2.5 2.5 0 0 0 2.45-2l1.07-6a1.5 1.5 0 0 0-.02-.5z"></path>
                         </svg>
                     </div>

@@ -381,7 +381,7 @@ export class GroupView extends View {
                 });
 
                 let title = document.createElement("p");
-                title.classList.add("text-2xl", "font-semibold", "text-gray-900", "text-white");
+                title.classList.add("text-2xl", "font-semibold", "text-gray-900", "dark:text-white");
                 title.innerText = "Comment section";
                 container.appendChild(title);
                 let comment_container = document.createElement("div");
