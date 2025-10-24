@@ -1,6 +1,7 @@
 import { Comment } from "../Models/Comment";
 import { Group } from "../Models/Group";
 import { Post } from "../Models/Post";
+import { Navbar } from "../navbar";
 import { SPAFetchService } from "../Services/SPAFetchService";
 import { GroupView } from "../Views/GroupView";
 import { Controller } from "./Controller";
@@ -22,6 +23,8 @@ export class GroupController extends Controller {
     }
 
     async start() {
+        (new Navbar()).changeSelectedNavbarLink("groups");
+
         this.#groupView.render();
         this.#spa_fetch = await SPAFetchService.getInstance();
         Promise.all([

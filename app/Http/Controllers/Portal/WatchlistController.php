@@ -79,29 +79,34 @@ class WatchlistController extends Controller
 
 
     //Si aggiunge un film alla lista
-    public function addMovie(Request $request) : JsonResponse
+    public function addElement(Request $request) : JsonResponse
     {
-        //print(var_dump($request->watchlist));
-        //exit();
         $request->validate([
-            'watchlist'   => ['required','integer',Rule::exists('Watchlists','id')],
-            'movie' => ['required','integer'],
+            'watchlist' => ['required','integer',Rule::exists('Watchlists','id')],
+            'type' => ['required', Rule::in(['Movie', 'Serie'])],
+            'element_id' => ['required','integer'],
         ]);
-        $watchlist = Watchlist::where('id',$request->watchlist)->get()[0];
-        //echo($watchlist);
-        //exit();
-        /*
-        $watchlist = Watchlist::create([
-            "name"=>"bla bla ",
 
-        ])*/
-        $movies = $watchlist->movies;
-        $movies[] = $request->movie;
-        $watchlist->movies = $movies;
-        $watchlist->save();
+        $watchlist = Watchlist::where('id', $request->watchlist)->get()[0];
+        if($watchlist->user->id == Auth::user()->id) {
+            $content = $watchlist->content ?? [];
+            $content[] = [
+                'type' => $request->type,
+                'id' => $request->element_id,
+            ];
+            $watchlist->content = $content;
+            $watchlist->save();
+
+            return response()->json([
+                'status' => 200,
+            ]);
+        }
+
         return response()->json([
-            'status'=>'200'
-        ]);
+            'status' => 401,
+            'error' => 'Unauthorized',
+        ], 401);
+
     }
 
     /**

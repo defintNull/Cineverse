@@ -4,7 +4,7 @@ import { Movie } from "../Models/Movie";
 import { Serie } from "../Models/Serie";
 import { MovieDBService } from "../Services/MovieDBService";
 import { View } from "./View";
-import Watchlist from "../Models/Watchlist.js";
+import Watchlist from "../Models/Watchlistbis.js";
 
 
 export class WatchlistView extends View {

@@ -6,7 +6,7 @@ import { Movie } from "../Models/Movie";
 import { Serie } from "../Models/Serie";
 import { WatchlistView } from "../Views/WatchlistView";
 import { SPAFetchService } from "../Services/SPAFetchService";
-import Watchlist from "../Models/Watchlist";
+import Watchlist from "../Models/Watchlistbis";
 
 export class WatchlistController extends Controller {
     #WatchlistView;

@@ -1,21 +1,26 @@
 import { AddButton } from "../Components/AddButton";
 import { NavigatorElement } from "../Components/NavigatorElement";
+import { WatchlistCard } from "../Components/WatchlistCard";
 import { Movie } from "../Models/Movie";
 import { Serie } from "../Models/Serie";
+import { AuthService } from "../Services/AuthService";
 import { MovieDBService } from "../Services/MovieDBService";
 import { View } from "./View";
 
 export class DetailView extends View {
     #element;
-    #bgImage;
     #navigator;
     #addButton;
     #clickhandler;
+    #authService;
+    #watchlistCard;
 
     constructor() {
         super();
         this.#navigator = new NavigatorElement();
         this.#addButton = new AddButton();
+        this.#authService = AuthService.getInstance();
+        this.#watchlistCard = new WatchlistCard();
     }
 
     render(element) {
@@ -30,7 +35,8 @@ export class DetailView extends View {
         document.body.querySelector("main").appendChild(container);
     }
 
-    addEventListeners(suggested_click_callback) {
+    addEventListeners(element, suggested_click_callback, getWatchlistCallback, addWatchlistElementCallback) {
+        let main = this;
         document.getElementById("detail_button").addEventListener("click", function() {
             document.getElementById("preview_button").classList.remove("border-b-2");
             this.classList.add("border-b-2");
@@ -96,6 +102,69 @@ export class DetailView extends View {
              * Adding click event for series
              */
             document.addEventListener("click", this.#clickhandler);
+        }
+
+        if(main.#authService.checkAuth()) {
+            // Populate watchlist list
+            (async () => {
+                let watchlists = await getWatchlistCallback();
+                if(watchlists == 400) {
+                    let error_div = document.createElement("div");
+                    error_div.classList.add("flex", "flex-col", "items-center", "justify-center", "w-full", "h-full");
+                    let error = document.createElement("p");
+                    error.classList.add("text-xl", "text-white", "text-center", "font-semibold");
+                    error.innerHTML = "Something <br> went wrong!";
+                    error_div.appendChild(error);
+                    document.getElementById("watchlist_container").appendChild(error_div);
+                } else {
+                    watchlists.forEach(watchlist => {
+                        let watchlist_card = main.#watchlistCard.getComponentElement();
+                        watchlist_card.querySelector("p.name").innerText = watchlist.getName();
+                        watchlist_card.querySelector("input[name='watchlist_id']").value = watchlist.getId();
+
+                        let type = element instanceof Movie ? "Movie" : "Serie";
+                        if(!watchlist.checkElement(type, element.getId())) {
+                            watchlist_card.querySelector("div.check").classList.add("hidden");
+                            watchlist_card.classList.add("cursor-pointer");
+                        } else {
+                            watchlist_card.classList.remove("bg-gray-600");
+                            watchlist_card.classList.add("bg-gray-700", "border", "border-gray-500");
+                        }
+
+                        document.getElementById("watchlist_container").appendChild(watchlist_card);
+                    });
+                }
+            })();
+
+            document.getElementById("add_to_whatchlist_button").addEventListener("click", function(event) {
+                document.getElementById("watchlist_container").classList.toggle("hidden");
+            });
+
+
+            // Add button color events
+            document.getElementById("watchlist_container").addEventListener("mouseover", function(event) {
+                this.parentElement.classList.remove("hover:bg-gray-600");
+            });
+            document.getElementById("watchlist_container").addEventListener("mouseout", function(event) {
+                this.parentElement.classList.add("hover:bg-gray-600");
+            });
+            document.getElementById("watchlist_container").addEventListener("click", function(event) {
+                event.stopPropagation();
+            });
+
+            // Add element to watchlist
+            document.getElementById("watchlist_container").addEventListener("click", async function(event) {
+                const watchlist_card = event.target.closest("div.watchlist-card");
+                if(watchlist_card && this.contains(watchlist_card) && watchlist_card.querySelector("div.check.hidden")) {
+                    let type = element instanceof Movie ? "Movie" : "Serie";
+                    let res = await addWatchlistElementCallback(watchlist_card.querySelector("input[name='watchlist_id']").value ,type, element.getId());
+                    if(res == 200) {
+                        watchlist_card.classList.remove("bg-gray-600");
+                        watchlist_card.classList.add("bg-gray-700", "border", "border-gray-500");
+                        watchlist_card.querySelector("div.check").classList.remove("hidden");
+                    }
+                }
+            });
         }
     }
 
@@ -202,14 +271,22 @@ export class DetailView extends View {
         score.innerText = this.#element.getScore();
         score_container.appendChild(score);
 
-        let add_to_whatchlist = document.createElement("div");
-        add_to_whatchlist.classList.add("rounded-4xl", "flex", "flex-col", "items-center", "justify-center", "h-10", "w-10", "bg-gray-700");
-        let add_button = this.#addButton.getComponentElement();
-        add_button.classList.add("text-white");
-        add_to_whatchlist.appendChild(add_button);
-
         buttons.appendChild(score_container);
-        buttons.appendChild(add_to_whatchlist);
+
+        if(this.#authService.checkAuth()) {
+            let add_to_whatchlist = document.createElement("div");
+            add_to_whatchlist.id = "add_to_whatchlist_button";
+            add_to_whatchlist.classList.add("rounded-4xl", "flex", "flex-col", "relative", "items-center", "justify-center", "cursor-pointer", "h-10", "w-10", "bg-gray-700", "hover:bg-gray-600");
+            let add_button = this.#addButton.getComponentElement();
+            add_button.classList.add("text-white");
+            add_to_whatchlist.appendChild(add_button);
+
+            let watchlist_container = document.createElement("div");
+            watchlist_container.id = "watchlist_container";
+            watchlist_container.classList.add("hidden", "absolute", "bottom-0", "left-0", "transform", "translate-x-12", "translate-y-36", "cursor-default", "rounded-xl", "flex", "flex-col", "items-center", "w-60", "max-h-60", "h-60", "px-2", "py-3", "gap-y-2", "bg-gray-700", "overflow-y-auto", "scrollbar", "scrollbar-thumb-gray-500", "scrollbar-track-gray-700");
+            add_to_whatchlist.appendChild(watchlist_container);
+            buttons.appendChild(add_to_whatchlist);
+        }
 
         // Trama
         let trama = document.createElement("p");
