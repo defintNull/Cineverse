@@ -227,8 +227,8 @@ export class WatchlistView extends View {
             }
 
             let remove_element_button = this.#remove_button.getComponentElement();
-            remove_element_button.classList.remove("top-8", "left-8");
-            remove_element_button.classList.add("top-2", "right-2", "remove-button", "hidden");
+            remove_element_button.classList.remove("top-8", "left-8", "dark:hover:bg-gray-700", "hover:bg-gray-200");
+            remove_element_button.classList.add("top-2", "right-2", "remove-button", "hidden", "hover:bg-gray-500");
             card.appendChild(remove_element_button);
 
             // ID nascosto
