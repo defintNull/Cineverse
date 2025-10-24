@@ -100,10 +100,16 @@ class User extends Authenticatable
         return $this->hasMany(Like::class);
     }
 
+    /**
+     * Retrieve the posts of the user
+     */
     public function posts() : HasMany {
         return $this->hasMany(Post::class);
     }
 
+    /**
+     * Retrieve the comments of the user
+     */
     public function comments() : HasMany {
         return $this->hasMany(Comment::class);
     }

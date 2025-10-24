@@ -15,6 +15,9 @@ export class MovieDBService {
         body: null
     }
 
+    /**
+     * Constructor
+     */
     constructor() {
         if(MovieDBService.#instance != null) {
             return MovieDBService.#instance;
@@ -41,6 +44,9 @@ export class MovieDBService {
         return fetch(this.#url + "/" + query, this.#config);
     }
 
+    /**
+     * Retrieve an image from TMDB api
+     */
     static getImageSrc(res, img) {
         return "https://image.tmdb.org/t/p/" + res + "/" + img;
     }

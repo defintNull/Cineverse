@@ -18,6 +18,9 @@ import { Group } from "../Models/Group";
 import { Post } from "../Models/Post";
 import { View } from "./View";
 
+/**
+ * Class that manage the view of the group page
+ */
 export class GroupView extends View {
     #groupCard;
     #groupComponent;
@@ -38,6 +41,9 @@ export class GroupView extends View {
     #scrollHandle;
     #commentScrollHandle;
 
+    /**
+     * Controller
+     */
     constructor() {
         super();
         this.#groupCard = new GroupCard();
@@ -57,6 +63,9 @@ export class GroupView extends View {
         this.#commentForm = new CommentForm();
     }
 
+    /**
+     * Method invoked to generate the structure of the page
+     */
     render() {
         // Setting page
         document.body.querySelector("main").classList.add("sticky", "top-0");
@@ -124,6 +133,9 @@ export class GroupView extends View {
 
     }
 
+    /**
+     * Method to manage the event listeners of the page
+     */
     addEventListeners(searchHandler, getPostsHandler, joinGroupHandler, exitGroupHandler, createGroupHandler, createPostHandler, getCommentsHandler, saveCommentHandler) {
         let main = this;
         this.#scrollHandle = this.#addGroupScrollHandler.bind(
@@ -133,6 +145,9 @@ export class GroupView extends View {
             getPostsHandler
         );
 
+        /**
+         * Search event
+         */
         document.getElementById("searchbar").addEventListener("submit", async function(event) {
             event.preventDefault();
 
@@ -164,6 +179,9 @@ export class GroupView extends View {
 
         });
 
+        /**
+         * Click in a group event
+         */
         document.getElementById("sidebar").addEventListener("click", async function(event) {
             const group_card = event.target.closest(".group-card");
 
@@ -233,6 +251,9 @@ export class GroupView extends View {
             }
         });
 
+        /**
+         * Scroll event to manage multiple scroll of element
+         */
         document.querySelectorAll('div.inner-scroll').forEach(inner => {
             const outer = document.documentElement;
 
@@ -268,6 +289,9 @@ export class GroupView extends View {
             }, { passive: false });
         });
 
+        /**
+         * Scroll event of the main section
+         */
         document.getElementById("element_container").addEventListener("scroll", this.#scrollHandle);
 
         // Group component event join
@@ -490,6 +514,9 @@ export class GroupView extends View {
             }
         });
 
+        /**
+         * Add comment button event
+         */
         document.getElementById("add_button").addEventListener("click", function(event) {
             let popup = main.#popup.getComponentElement();
             let container = popup.querySelector("div.container");
@@ -644,6 +671,9 @@ export class GroupView extends View {
         });
     }
 
+    /**
+     * Method to reset the view
+     */
     resetView() {
         document.body.querySelector("main").classList.remove("sticky", "top-0");
         document.querySelector("footer").classList.remove("hidden");
@@ -660,6 +690,9 @@ export class GroupView extends View {
         });
     }
 
+    /**
+     * Render my groups element
+     */
     async renderMyGroups(groupHandler) {
         let groups = await groupHandler();
         let group_card_container = document.getElementById("group_card_container");
@@ -680,6 +713,9 @@ export class GroupView extends View {
         });
     }
 
+    /**
+     * Render other groups elements
+     */
     async renderGroups(groupHandler) {
         let groups = await groupHandler();
         let scroll = document.getElementById("scroll");
@@ -694,6 +730,9 @@ export class GroupView extends View {
         });
     }
 
+    /**
+     * Set structure for the post section
+     */
     #setPostStructureLayout(bool, id = null, description, visibility, token) {
         if(bool) {
             // Header
@@ -730,6 +769,9 @@ export class GroupView extends View {
         }
     }
 
+    /**
+     * Manage the scroll of the page
+     */
     async #addGroupScrollHandler(container, groupHandler, postHandler) {
         // Altezza totale del contenuto scrollabile
         const scrollHeight = container.scrollHeight;
@@ -781,6 +823,9 @@ export class GroupView extends View {
         }
     }
 
+    /**
+     * Manage the join event
+     */
     async #joinGroupHandler(joinCallback, parent, id, token = null) {
         let error_field = document.getElementById("token_error");
         error_field.classList.add("hidden");
@@ -821,6 +866,9 @@ export class GroupView extends View {
         }
     }
 
+    /**
+     * Manage the exit event
+     */
     async #exitGroupHandler(exitCallback, id, error_field) {
         error_field.classList.add("hidden");
         let res = await exitCallback(id);
@@ -835,6 +883,9 @@ export class GroupView extends View {
         }
     }
 
+    /**
+     * Manage the scroll of the comment section
+     */
     async #commentScrollHandler(container, id, commentHandler) {
         // Altezza totale del contenuto scrollabile
         const scrollHeight = container.scrollHeight;

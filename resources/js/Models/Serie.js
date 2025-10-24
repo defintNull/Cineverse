@@ -1,5 +1,8 @@
 import { MovieSerieInterface } from "./MovieSerieInterface";
 
+/**
+ * Serie Model
+ */
 export class Serie extends MovieSerieInterface {
     #serieJson
 

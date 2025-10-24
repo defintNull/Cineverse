@@ -11,14 +11,15 @@ import { View } from "./View";
 export class HomeView extends View {
     #searchbar
     #arrowRight
-    #arrowLeft
     #clickHandle
 
+    /**
+     * Constructor
+     */
     constructor() {
         super();
         this.#searchbar = new Searchbar();
         this.#arrowRight = new ArrowRight();
-        this.#arrowLeft = new ArrowLeft();
     }
 
     /**
@@ -80,6 +81,14 @@ export class HomeView extends View {
 
     }
 
+    clearView() {
+        document.body.querySelector("main").innerHTML = "";
+        this.#removeDocumentEventListeners();
+    }
+
+    /**
+     * Method to manage the event listeners of the page
+     */
     addEventListeners(
         latest_movies,
         pop_movies,
@@ -255,15 +264,24 @@ export class HomeView extends View {
         document.addEventListener("click", this.#clickHandle);
     }
 
-    removeDocumentEventListeners() {
+    /**
+     * Remove the document event listeners
+     */
+    #removeDocumentEventListeners() {
         document.removeEventListener("click", this.#clickHandle);
     }
 
+    /**
+     * Add the bg image of the page
+     */
     addBGImage(src) {
         let img = document.getElementById("bg_image");
         img.src = src;
     }
 
+    /**
+     * Add latest movies carousell
+     */
     addLatestMoviesCarousel() {
         // Latest Movies
         let container = document.getElementById("carousel_container");
@@ -299,6 +317,9 @@ export class HomeView extends View {
         document.body.querySelector("main").appendChild(container);
     }
 
+    /**
+     * Populate the latest movies carousel
+     */
     addLatestMoviesCarouselElements(movies) {
         let carousel = document.getElementById("latest_movies_carousel").querySelector("div");;
         // Creating carousell elements
@@ -317,6 +338,9 @@ export class HomeView extends View {
         });
     }
 
+    /**
+     * Add popular movies carousell
+     */
     addPopularMoviesCarousel() {
         // Popular Movies
         let container = document.getElementById("carousel_container");
@@ -352,6 +376,9 @@ export class HomeView extends View {
         document.body.querySelector("main").appendChild(container);
     }
 
+    /**
+     * Populate the popular movies carousel
+     */
     addPopularMoviesCarouselElements(movies) {
         let carousel = document.getElementById("popular_movies_carousel").querySelector("div");
 
@@ -371,6 +398,9 @@ export class HomeView extends View {
         });
     }
 
+    /**
+     * Add on air series carousell
+     */
     addOnAirSeriesCarousel() {
         // On Air Series
         let container = document.getElementById("carousel_container");
@@ -406,6 +436,9 @@ export class HomeView extends View {
         document.body.querySelector("main").appendChild(container);
     }
 
+    /**
+     * Populate the on air serie carousell
+     */
     adOdnAirSeriesCarouselElements(series) {
         let carousel = document.getElementById("on_air_series_carousel").querySelector("div");
 
@@ -425,6 +458,9 @@ export class HomeView extends View {
         });
     }
 
+    /**
+     * Add popular series carousell
+     */
     addPopularSeriesCarousel(series) {
         // Popular Series
         let container = document.getElementById("carousel_container");
@@ -460,6 +496,9 @@ export class HomeView extends View {
         document.body.querySelector("main").appendChild(container);
     }
 
+    /**
+     * Populate the popular serie carousell
+     */
     addPopularSeriesCarouselElements(series) {
         let carousel = document.getElementById("popular_series_carousel").querySelector("div");
 

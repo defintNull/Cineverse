@@ -4,11 +4,17 @@ import { Navbar } from './navbar';
 import { Router } from './router';
 import { StorageService } from './Services/StorageService';
 
+/**
+ * Access point of the app
+ */
 class App {
     #router;
     #navbar;
     #storageService;
 
+    /**
+     * Constructor
+     */
     constructor() {
         // Getting router Instance
         this.#router = Router.getInstance();
@@ -16,6 +22,9 @@ class App {
         this.#storageService = StorageService.getInstance();
     }
 
+    /**
+     * Starting method of the app
+     */
     start() {
         this.#navbar.render();
         this.#navbar.renderAvatarImage();

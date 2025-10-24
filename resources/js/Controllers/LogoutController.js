@@ -4,12 +4,18 @@ import { AuthService } from "../Services/AuthService";
 import { StorageService } from "../Services/StorageService";
 import { Controller } from "./Controller";
 
+/**
+ * Class that manage the logic for the logout
+ */
 export class LogoutController extends Controller {
     #authService;
     #storageService;
     #router;
     #navbar;
 
+    /**
+     * Constructor
+     */
     constructor() {
         super();
         this.#authService = AuthService.getInstance();
@@ -18,6 +24,9 @@ export class LogoutController extends Controller {
         this.#navbar = Navbar.getInstance()
     }
 
+    /**
+     * Method invoked by the router to manage the logout
+     */
     start() {
         this.#authService.setAuth(false);
         this.#storageService.clearStorage();

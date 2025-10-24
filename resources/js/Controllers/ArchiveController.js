@@ -7,7 +7,9 @@ import { MovieDBService } from "../Services/MovieDBService";
 import { ArchiveView } from "../Views/ArchiveView";
 import { Controller } from "./Controller";
 
-
+/**
+ * Class controller that manage the archive section page
+ */
 export class ArchiveController extends Controller {
     #archiveView;
     #movieDB;
@@ -15,6 +17,9 @@ export class ArchiveController extends Controller {
     #totalSearchPage;
     #router
 
+    /**
+     * Constructor
+     */
     constructor() {
         super();
         this.#archiveView = new ArchiveView();
@@ -24,6 +29,9 @@ export class ArchiveController extends Controller {
         this.#totalSearchPage = 2;
     }
 
+    /**
+     * Start method invoked by the router that initialize the page
+     */
     async start() {
         (new Navbar()).changeSelectedNavbarLink("archive");
 
@@ -37,11 +45,16 @@ export class ArchiveController extends Controller {
         );
     }
 
+    /**
+     * Destroy method invoked by the router when changing route
+     */
     destroy() {
-        document.body.querySelector("main").innerHTML = "";
-        this.#archiveView.removeEventListeners();
+        this.#archiveView.resetView();
     }
 
+    /**
+     * Return language list from the TMDB api
+     */
     async #languageListHandler() {
         let res = await this.#movieDB.getLanguages();
         let languages = (await res.json()).map(el => {
@@ -51,12 +64,18 @@ export class ArchiveController extends Controller {
         return languages;
     }
 
+    /**
+     * Return list of the supported genres from TMDB api
+     */
     async #genreListHandler(selector) {
         let res = await this.#movieDB.getGenres(selector);
         let genres = (await res.json()).genres;
         return genres;
     }
 
+    /**
+     * Manage the advanced search to TMDB api
+     */
     async #advanceSearchHandle(json) {
         if(this.#totalSearchPage <= this.#searchPage) {
             return false;
@@ -92,6 +111,9 @@ export class ArchiveController extends Controller {
         }
     }
 
+    /**
+     * Handler used to navigate to the detail page of a movie
+     */
     #movieClickHandler(id) {
         let status = {
             'type': 'movie',
@@ -100,6 +122,9 @@ export class ArchiveController extends Controller {
         this.#router.setNextPath(status, "/detail");
     }
 
+    /**
+     * Handler used to navigate to the detail page of a serie
+     */
     #serieClickHandler(id) {
         let status = {
             'type': 'serie',

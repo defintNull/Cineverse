@@ -8,6 +8,9 @@ import { Watchlist } from "../Models/Watchlist";
 import { Serie } from "../Models/Serie";
 import { Movie } from "../Models/Movie";
 
+/**
+ * Class that manage the watchlist page logic
+ */
 export class WatchlistController extends Controller {
     #WatchlistView;
     #router;
@@ -16,6 +19,9 @@ export class WatchlistController extends Controller {
 
     #latestMoviePage;
 
+    /**
+     * Constructor
+     */
     constructor() {
         super();
         this.#WatchlistView = new WatchlistView();
@@ -25,6 +31,7 @@ export class WatchlistController extends Controller {
         this.#latestMoviePage = 1;
 
     }
+
     /**
      * Method invoked by the router that build the page and set the event listeners
      */
@@ -51,10 +58,16 @@ export class WatchlistController extends Controller {
 
     }
 
+    /**
+     * Clear the page when changing route
+     */
     destroy() {
         this.#WatchlistView.clearView();
     }
 
+    /**
+     * Load the watchlist of the user
+     */
     async #loadwatchlists() {
         let res = await this.#spa_fetch.GETFetch('/spa/watchlist/index', {});
         let payload = await res.json();
@@ -62,9 +75,9 @@ export class WatchlistController extends Controller {
         return watchlists;
     }
 
-    //IMP per trasformare un array di interi di id dei film in un array di film effettivi
-    //questo metodo viene chiamato per ogni watchlist e va generalizzato per film e serie
-    //async GetEachContent(contentArray)
+    /**
+     * Retrieve movies and series from the TMDB api
+     */
     async #getEachContent(contentArray) {
 
         // Primo giro: faccio le fetch in parallelo
@@ -91,6 +104,9 @@ export class WatchlistController extends Controller {
         });
     }
 
+    /**
+     * Create a watchlist
+     */
     async #createnewwatchlist() {
         let res = await this.#spa_fetch.POSTFetch('/spa/watchlist/store', {});
         let payload = await res.json();
@@ -98,6 +114,9 @@ export class WatchlistController extends Controller {
         return new Watchlist(payload.watchlist);
     }
 
+    /**
+     * Handler to manage the click on movie card to reach the detail page
+     */
     #movieClickHandler(id) {
         let status = {
             'type': 'movie',
@@ -106,6 +125,9 @@ export class WatchlistController extends Controller {
         this.#router.setNextPath(status, "/detail");
     }
 
+    /**
+     * Handler to manage the click on serie card to reach the detail page
+     */
     #serieClickHandler(id) {
         let status = {
             'type': 'serie',
@@ -114,7 +136,9 @@ export class WatchlistController extends Controller {
         this.#router.setNextPath(status, "/detail");
     }
 
-    //gli devo passare l'oggeto nel payload della POSTFetch
+    /**
+     * Update username of a watchlist
+     */
     async #updatewatchlist(watchlist_id, name) {
         let res = await this.#spa_fetch.POSTFetch('/spa/watchlist/update', {'watchlist_id': watchlist_id, 'name': name});
         if(res.status == 200) {
@@ -126,6 +150,9 @@ export class WatchlistController extends Controller {
         }
     }
 
+    /**
+     * Delete a watchlist
+     */
     async #deleteWatchlist(watchlist_id) {
         let res = await this.#spa_fetch.POSTFetch('/spa/watchlist/destroy', {'watchlist_id': watchlist_id});
         if(res.status == 200) {
@@ -135,6 +162,9 @@ export class WatchlistController extends Controller {
         }
     }
 
+    /**
+     * Remove an element form a watchlist
+     */
     async #removeFromWatchlist(watchlist_id, type, element_id) {
         let res = await this.#spa_fetch.POSTFetch('/spa/watchlist/remove', {
             'watchlist_id': watchlist_id,

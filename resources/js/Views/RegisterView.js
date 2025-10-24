@@ -15,6 +15,9 @@ export class RegisterView extends View {
     #input_error;
     #imageInput;
 
+    /**
+     * Constructor
+     */
     constructor() {
         super();
         this.#card = new Card();

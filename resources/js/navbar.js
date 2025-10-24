@@ -2,6 +2,9 @@ import { Router } from "./router";
 import { AuthService } from "./Services/AuthService";
 import { StorageService } from "./Services/StorageService";
 
+/**
+ * Class that manage the behaviour of the navbar
+ */
 export class Navbar {
     static #instance;
     #navbar;
@@ -9,6 +12,9 @@ export class Navbar {
     #router
     #storageService;
 
+    /**
+     * Constructor
+     */
     constructor() {
         if(Navbar.#instance) {
             return Navbar.#instance;
@@ -31,10 +37,16 @@ export class Navbar {
         return Navbar.#instance;
     }
 
+    /**
+     * Render the navbar
+     */
     render() {
         this.#enableAuthnavbar(this.#authService.checkAuth());
     }
 
+    /**
+     * Change selected status of the navbar
+     */
     changeSelectedNavbarLink(id) {
         let selected = this.#navbar.querySelector("p.border-b-2")
         if(selected) {
@@ -47,6 +59,9 @@ export class Navbar {
         button.classList.add("border-b-2");
     }
 
+    /**
+     * Add event listeners for the navbar
+     */
     addEventListeners() {
         // Logo click event
         document.getElementById("home").addEventListener("click", () => {
@@ -92,6 +107,9 @@ export class Navbar {
         });
     }
 
+    /**
+     * Enable navbar for auth user
+     */
     #enableAuthnavbar(bool) {
         if(bool) {
             this.#navbar.querySelector("div").querySelectorAll("div").forEach(el => {
@@ -110,6 +128,9 @@ export class Navbar {
         }
     }
 
+    /**
+     * Set the avatar image for the auth user
+     */
     setAvatarButtonImage(img_src, alt) {
         let avatar_button = document.getElementById("avatarButton")
         if(img_src === null) {
@@ -124,6 +145,9 @@ export class Navbar {
         }
     }
 
+    /**
+     * Reload the avatar propic
+     */
     renderAvatarImage() {
         let propic_src = this.#storageService.getData("propic_src");
         let propic_alt = this.#storageService.getData("propic_alt");

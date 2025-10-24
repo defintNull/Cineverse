@@ -7,6 +7,9 @@ import { Serie } from "../Models/Serie";
 import { SPAFetchService } from "../Services/SPAFetchService";
 import { Watchlist } from "../Models/Watchlist";
 
+/**
+ * Class that manage the detail page logic
+ */
 export class DetailController extends Controller {
     #state;
     #router;
@@ -16,6 +19,9 @@ export class DetailController extends Controller {
 
     #spa_fectch;
 
+    /**
+     * Constructor
+     */
     constructor() {
         super();
         this.#router = Router.getInstance();
@@ -24,6 +30,9 @@ export class DetailController extends Controller {
         this.#detailView = new DetailView();
     }
 
+    /**
+     * Function that manage the starting of the logic of the detail page
+     */
     async start() {
         this.#spa_fectch = await SPAFetchService.getInstance();
         if (this.#state !== null && 'type' in this.#state && this.#state.type == "movie") {
@@ -68,11 +77,16 @@ export class DetailController extends Controller {
         }
     }
 
+    /**
+     * Function invoked when the route is changed
+     */
     destroy() {
-        document.body.querySelector("main").innerHTML = "";
-        this.#detailView.removeDocumentEvents();
+        this.#detailView.clearView();
     }
 
+    /**
+     * Function that return the similar movies for suggestion
+     */
     async #getSimilarMovies(id) {
         let response = await this.#movieDB.getSimilarMovies(id);
         if (response.status == 200) {
@@ -84,6 +98,9 @@ export class DetailController extends Controller {
         return false;
     }
 
+    /**
+     * Function that return the similar serie for suggestion
+     */
     async #getSimilarSeries(id) {
         let response = await this.#movieDB.getSimilarSeries(id);
         if (response.status == 200) {
@@ -95,6 +112,9 @@ export class DetailController extends Controller {
         return false;
     }
 
+    /**
+     * Function to manage the click for detail page to the movie suggested
+     */
     #movieClickHandler(id) {
         let status = {
             'type': 'movie',
@@ -103,6 +123,9 @@ export class DetailController extends Controller {
         this.#router.setNextPath(status, "/detail");
     }
 
+    /**
+     * Function to manage the click for detail page to the serie suggested
+     */
     #serieClickHandler(id) {
         let status = {
             'type': 'serie',
@@ -111,6 +134,9 @@ export class DetailController extends Controller {
         this.#router.setNextPath(status, "/detail");
     }
 
+    /**
+     * Function to retrivie the watchlist of the user
+     */
     async #getWatchlistsHandler() {
         let res = await this.#spa_fectch.GETFetch('spa/watchlist/index', {});
         if(res.status == 200) {
@@ -122,6 +148,9 @@ export class DetailController extends Controller {
         }
     }
 
+    /**
+     * Function to add an element to a watchlist
+     */
     async #addElementToWatchlist(watchlist, type, id) {
         let res = await this.#spa_fectch.POSTFetch('spa/watchlist/addelement', {
             'watchlist': watchlist,

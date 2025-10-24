@@ -7,6 +7,9 @@ import { Movie } from "../Models/Movie";
 import { MovieDBService } from "../Services/MovieDBService";
 import { View } from "./View";
 
+/**
+ * View class that manage the archive page
+ */
 export class ArchiveView extends View {
     #searchbar;
     #select;
@@ -19,6 +22,9 @@ export class ArchiveView extends View {
     #documentClickHandlerPointer;
     #cardClickHandlerPointer;
 
+    /**
+     * Constructor
+     */
     constructor() {
         super();
         this.#select = new Select();
@@ -28,6 +34,9 @@ export class ArchiveView extends View {
         this.#searchbar = new Searchbar();
     }
 
+    /**
+     * Render page invoked to set the page structure
+     */
     async render(searchHandler, state) {
         // Main container
         let container = document.createElement("div");
@@ -121,6 +130,9 @@ export class ArchiveView extends View {
         this.addSearchElements(searchHandler);
     }
 
+    /**
+     * Add the event listeners to the page
+     */
     addEventListeners(searchHandler, movie_click_callback, serie_click_callback) {
         let main = this;
         this.#scrollHandlerPointer = this.#scrollHandler.bind(this, searchHandler);
@@ -186,6 +198,9 @@ export class ArchiveView extends View {
             dropdown.classList.remove("hidden");
         });
 
+        /**
+         * Genre events
+         */
         document.getElementById("genre_input").addEventListener("mousedown", function(event) {
             event.preventDefault();
         });
@@ -236,16 +251,33 @@ export class ArchiveView extends View {
 
     }
 
-    removeEventListeners() {
+    /**
+     * Reset the view
+     */
+    resetView() {
+        document.body.querySelector("main").innerHTML = "";
+        this.#removeEventListeners();
+    }
+
+    /**
+     * Remove the document event listeners set
+     */
+    #removeEventListeners() {
         window.removeEventListener("scroll", this.#scrollHandlerPointer);
         document.removeEventListener("click", this.#documentClickHandlerPointer);
         document.removeEventListener("click", this.#cardClickHandlerPointer)
     }
 
+    /**
+     * Set the available language
+     */
     async setLanguageList(languageHandler) {
         this.#language_list = await languageHandler();
     }
 
+    /**
+     * Set the avaible genres
+     */
     async setGenresList(genreHandler) {
         this.#genre_list = await genreHandler(true);
 
@@ -262,6 +294,9 @@ export class ArchiveView extends View {
         });
     }
 
+    /**
+     * Add the elements returned from the advanced search
+     */
     async addSearchElements(searchHandler) {
         let search = document.getElementById("search_form").querySelector("input[type='search']").value;
         let type = document.getElementById("ser_mov_select").value;
@@ -308,6 +343,9 @@ export class ArchiveView extends View {
         });
     }
 
+    /**
+     * Function that manage the scroll of the results
+     */
     async #scrollHandler(searchHandler) {
         const scrollTop = window.scrollY;
         const windowHeight = window.innerHeight;
@@ -321,6 +359,9 @@ export class ArchiveView extends View {
         }
     }
 
+    /**
+     *
+     */
     #documentClickHandler(event) {
         if (!event.target.closest("#language_input") && !event.target.closest("#autocomplete-list")) {
             document.getElementById("autocomplete-list").innerHTML = "";
@@ -332,6 +373,9 @@ export class ArchiveView extends View {
         }
     }
 
+    /**
+     * Function handler that manage the click event for the detail page
+     */
     #cardClickHandler(movie_click_callback, serie_click_callback, event) {
         const card = event.target.closest(".movie-card, .serie-card");
 

@@ -16,6 +16,9 @@ export class ProfileView extends View {
     #input_error;
     #imageInput;
 
+    /**
+     * Constructor
+     */
     constructor() {
         super();
         this.#card = new Card();
@@ -25,6 +28,9 @@ export class ProfileView extends View {
         this.#imageInput = new ImageInput();
     }
 
+    /**
+     * Method to render the page structure
+     */
     render() {
         let card = this.#card.getComponentElement();
         card.classList.add("flex", "flex-col", "items-center", "py-12", "w-1/2", "my-12");
@@ -120,6 +126,9 @@ export class ProfileView extends View {
         document.body.querySelector("main").appendChild(card);
     }
 
+    /**
+     * Add the title for the section
+     */
     #addSectionTitle(container, titleText) {
         let title = document.createElement("h3");
         title.classList.add("text-xl", "font-semibold", "text-gray-800", "border-b", "pb-2", "mb-4");
@@ -127,6 +136,9 @@ export class ProfileView extends View {
         container.appendChild(title);
     }
 
+    /**
+     * Populate the input field with the user data
+     */
     #appendInput(container, id, labelText, placeholderText, type = "text") {
         let element = this.#input.getComponentElement();
         let label = element.querySelector("label");
@@ -140,6 +152,9 @@ export class ProfileView extends View {
         container.appendChild(element);
     }
 
+    /**
+     * Get labels
+     */
     #getLabel(id) {
         const labels = {
             username: "Username",
@@ -152,16 +167,25 @@ export class ProfileView extends View {
         return labels[id] || id;
     }
 
+    /**
+     * Get placeholder
+     */
     #getPlaceholder(id) {
         return this.#getLabel(id) + "...";
     }
 
+    /**
+     * Get tipe
+     */
     #getType(id) {
         if (id === "email") return "email";
         if (id === "password") return "password";
         return "text";
     }
 
+    /**
+     * Reset input error fields
+     */
     resetErrorFields() {
         document.querySelectorAll('p.error-field').forEach(el => el.innerHTML = "");
         const error = document.getElementById("form_error");
@@ -169,12 +193,18 @@ export class ProfileView extends View {
         error.innerHTML = "Ops! Qualcosa è andato storto!";
     }
 
+    /**
+     * Reset the global error field
+     */
     globalErrorField(error) {
         const errorEl = document.getElementById("form_error");
         errorEl.innerHTML = error;
         errorEl.classList.remove("hidden");
     }
 
+    /**
+     * Populate a given error field
+     */
     inputErrorField(id, error) {
         let field = document.getElementById(id);
         if (field != null) {
@@ -183,10 +213,16 @@ export class ProfileView extends View {
         }
     }
 
+    /**
+     * Reset the view
+     */
     resetView() {
         document.body.querySelector("main").innerHTML = "";
     }
 
+    /**
+     * Method to manage the event listeners
+     */
     async addEventListeners(handler) {
         document.getElementById("profile_form").addEventListener("submit", handler);
         // attach username availability check when user finishes typing

@@ -7,6 +7,9 @@ import { AuthService } from "../Services/AuthService";
 import { MovieDBService } from "../Services/MovieDBService";
 import { View } from "./View";
 
+/**
+ * Class that manage the view of the detail page
+ */
 export class DetailView extends View {
     #element;
     #navigator;
@@ -15,6 +18,9 @@ export class DetailView extends View {
     #authService;
     #watchlistCard;
 
+    /**
+     * Constructor
+     */
     constructor() {
         super();
         this.#navigator = new NavigatorElement();
@@ -23,6 +29,9 @@ export class DetailView extends View {
         this.#watchlistCard = new WatchlistCard();
     }
 
+    /**
+     * Render method to initialize the page structure
+     */
     render(element) {
         this.#element = element;
 
@@ -35,6 +44,9 @@ export class DetailView extends View {
         document.body.querySelector("main").appendChild(container);
     }
 
+    /**
+     * Method to manage the event of the page
+     */
     addEventListeners(element, suggested_click_callback, getWatchlistCallback, addWatchlistElementCallback) {
         let main = this;
         document.getElementById("detail_button").addEventListener("click", function() {
@@ -168,10 +180,24 @@ export class DetailView extends View {
         }
     }
 
-    removeDocumentEvents() {
+    /**
+     * Clear the view of the page
+     */
+    clearView() {
+        document.body.querySelector("main").innerHTML = "";
+        this.#removeDocumentEvents();
+    }
+
+    /**
+     * Remove the document event listener linked
+     */
+    #removeDocumentEvents() {
         document.removeEventListener("click", this.#clickhandler);
     }
 
+    /**
+     * Render the data for the preview of the element
+     */
     #getPreviewElement() {
         // container
         let container = document.createElement("div");
@@ -314,6 +340,9 @@ export class DetailView extends View {
         return container;
     }
 
+    /**
+     * Render the data for the detail of the element
+     */
     #getDetailElement() {
         // Detail Element
         let container = document.createElement("div");
@@ -474,6 +503,9 @@ export class DetailView extends View {
         return container
     }
 
+    /**
+     * Add the carousel for suggested elements
+     */
     addSuggestedCarousel() {
         // Carousel
         let carousel_container = document.createElement("div");
@@ -496,6 +528,9 @@ export class DetailView extends View {
         document.body.querySelector("main").appendChild(carousel_container);
     }
 
+    /**
+     * Populate the carousel with suggested elements
+     */
     addSuggestedCarouselElements(elements) {
         let carousel = document.getElementById("suggested_carousel").querySelector("div");
         // Creating carousell elements

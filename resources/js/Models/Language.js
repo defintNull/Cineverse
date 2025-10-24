@@ -1,5 +1,8 @@
 import { Model } from "./Model";
 
+/**
+ * Language Model
+ */
 export class Language extends Model {
     #language
 

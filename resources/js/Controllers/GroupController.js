@@ -6,6 +6,9 @@ import { SPAFetchService } from "../Services/SPAFetchService";
 import { GroupView } from "../Views/GroupView";
 import { Controller } from "./Controller";
 
+/**
+ * Class that manage the logic for the Group page
+ */
 export class GroupController extends Controller {
     #groupView;
     #spa_fetch;
@@ -14,6 +17,9 @@ export class GroupController extends Controller {
     #postsPage;
     #commentPage;
 
+    /**
+     * Constructor
+     */
     constructor() {
         super();
         this.#groupView = new GroupView();
@@ -22,6 +28,9 @@ export class GroupController extends Controller {
         this.#commentPage = 1;
     }
 
+    /**
+     * Start method to initialize the page invoked by the router
+     */
     async start() {
         (new Navbar()).changeSelectedNavbarLink("groups");
 
@@ -43,10 +52,16 @@ export class GroupController extends Controller {
         );
     }
 
+    /**
+     * Method to clear the page when route changing
+     */
     destroy() {
         this.#groupView.resetView();
     }
 
+    /**
+     * Handler that get all the group of a user
+     */
     async #getMyGroups() {
         let res = await this.#spa_fetch.GETFetch('spa/groups/index', {});
         let json = await res.json();
@@ -55,6 +70,9 @@ export class GroupController extends Controller {
         return groups;
     }
 
+    /**
+     * Handler that retrieve the group not of the user using pagination
+     */
     async #getOtherGroups(search = "", reset = false) {
         if(reset) {
             this.#groupsPage = 1;
@@ -67,6 +85,9 @@ export class GroupController extends Controller {
         return groups;
     }
 
+    /**
+     * Handler that retrieve the posts of a group with pagination
+     */
     async #getGroupPosts(id, reset = false) {
         if(reset) {
             this.#postsPage = 1;
@@ -82,6 +103,9 @@ export class GroupController extends Controller {
         return [];
     }
 
+    /**
+     * Join a group
+     */
     async #joinGroup(id, token = null) {
         let res = await this.#spa_fetch.POSTFetch('spa/groups/join', {'id': id, 'token': token});
         if(res.status == 200) {
@@ -96,11 +120,17 @@ export class GroupController extends Controller {
         return 400;
     }
 
+    /**
+     * Exit a group
+     */
     async #exitGroup(id) {
         let res = await this.#spa_fetch.POSTFetch('spa/groups/quit', {'id': id});
         return res.status;
     }
 
+    /**
+     * Create a group
+     */
     async #createGroup(form) {
         let formData = new FormData(form);
         let res = await this.#spa_fetch.POSTFetchForm('spa/groups/store', formData);
@@ -115,6 +145,9 @@ export class GroupController extends Controller {
         }
     }
 
+    /**
+     * Create a post
+     */
     async #createPost(form, id) {
         let formData = new FormData(form);
         let res = await this.#spa_fetch.POSTFetchForm('spa/groups/' + id + '/posts', formData);
@@ -129,6 +162,9 @@ export class GroupController extends Controller {
         }
     }
 
+    /**
+     * Get the comments of a post with pagination
+     */
     async #getComments(id, reset = false) {
         if(reset) {
             this.#commentPage = 1;
@@ -144,6 +180,9 @@ export class GroupController extends Controller {
         return [];
     }
 
+    /**
+     * Save the comment of a form
+     */
     async #saveComment(id, form) {
         let res = await this.#spa_fetch.POSTFetchForm('spa/posts/' + id + '/comments', new FormData(form));
         if(res.status == 200) {

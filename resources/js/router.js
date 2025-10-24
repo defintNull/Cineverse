@@ -33,6 +33,9 @@ export class Router {
         "/groups": [GroupController, "auth"],
     }
 
+    /**
+     * Constructor
+     */
     constructor() {
         if(Router.#instance != null) {
             return Router.#instance;
