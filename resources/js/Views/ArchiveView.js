@@ -52,7 +52,6 @@ export class ArchiveView extends View {
         // Search
         let sbar = this.#searchbar.getComponentElement();
         sbar.id = "search_form";
-        console.log(state);
         sbar.querySelector("input").value = ((state !== undefined && state !== null && state.search !== undefined) ? state.search : "");
         sbar.classList.add("pb-6", "border-b", "border-gray-600", "mb-2");
         filter_container.appendChild(sbar);
