@@ -384,7 +384,7 @@ export class GroupView extends View {
                 container.appendChild(title);
                 let comment_container = document.createElement("div");
                 comment_container.id = "comment_container";
-                comment_container.classList.add("flex", "flex-col", "w-full", "px-20", "pt-6", "pb-4", "gap-y-6", "overflow-y-auto", "scrollbar", "scrollbar-thumb-gray-400", "scrollbar-track-gray-100", "dark:scrollbar-thumb-gray-500", "dark:scrollbar-track-gray-800");
+                comment_container.classList.add("flex", "flex-col", "w-full", "h-full", "px-20", "pt-6", "pb-4", "gap-y-6", "overflow-y-auto", "scrollbar", "scrollbar-thumb-gray-400", "scrollbar-track-gray-100", "dark:scrollbar-thumb-gray-500", "dark:scrollbar-track-gray-800");
 
                 let comments = await getCommentsHandler(parent.querySelector("input[name='id']").value, true);
                 comments.forEach(comment => {
@@ -401,6 +401,18 @@ export class GroupView extends View {
 
                     comment_container.appendChild(comment_element);
                 });
+
+                if(comments.length == 0) {
+                    let temp = document.createElement("div");
+                    temp.id = "comment_placeholder";
+                    temp.className = "flex flex-col items-center justify-center w-full h-full";
+                    let p = document.createElement("p");
+                    p.className = "text-xl text-gray-900 dark:text-white text-center";
+                    p.innerHTML = "No comment<br>Be the first to comment something!";
+                    temp.appendChild(p);
+                    comment_container.appendChild(temp);
+                }
+
                 container.appendChild(comment_container);
 
 
@@ -439,6 +451,9 @@ export class GroupView extends View {
 
                     let comment = await saveCommentHandler(parent.querySelector("input[name='id']").value, this);
                     if(comment instanceof Comment) {
+                        if(document.getElementById("comment_placeholder")) {
+                            document.getElementById("comment_placeholder").remove();
+                        }
                         let comment_element = main.#commentComponent.getComponentElement();
                         comment_element.querySelector("p.username").innerText = comment.getUserUsername();
                         comment_element.querySelector("p.content").innerText = comment.getContent();
