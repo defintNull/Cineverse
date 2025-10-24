@@ -12,6 +12,9 @@ export class ProfileController extends Controller {
     #router;
     #navbar;
 
+    /**
+     * Constructor
+     */
     constructor() {
         super();
         this.#profileView = new ProfileView();
@@ -26,13 +29,6 @@ export class ProfileController extends Controller {
         this.#navbar.changeSelectedNavbarLink("personal_profile");
 
         this.#profileView.render();
-        // this.#profileView.viewPopulateData({
-        //     'username': 'gerry.scotti',
-        //     'email':  'gerry.scotti@mediaset.it',
-        //     'name': 'Gerry',
-        //     'surname': 'Scotti',
-        //     'nationality': 'Italy'
-        // });
         (async () => {
             try {
                 const spaFetch = await SPAFetchService.getInstance();

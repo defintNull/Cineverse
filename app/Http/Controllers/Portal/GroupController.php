@@ -71,6 +71,9 @@ class GroupController extends Controller
         ]);
     }
 
+    /**
+     * Join an existing group
+     */
     public function join(Request $request) :JsonResponse {
         $request->validate([
             'id' => ['required', 'integer', Rule::exists('groups', 'id')],
@@ -107,6 +110,9 @@ class GroupController extends Controller
         ]);
     }
 
+    /**
+     * Exit from a group
+     */
     public function quit(Request $request) : JsonResponse {
         $request->validate([
             'id' => ['required', 'integer', Rule::exists('groups', 'id')],

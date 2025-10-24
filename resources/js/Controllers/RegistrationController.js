@@ -11,6 +11,9 @@ export class RegistrationController extends Controller {
     #registerView;
     #router;
 
+    /**
+     * Constructor
+     */
     constructor() {
         super();
         this.#registerView = new RegisterView();

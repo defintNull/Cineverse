@@ -33,6 +33,9 @@ export class SPAFetchService {
         body: null
     };
 
+    /**
+     * Constructor
+     */
     constructor() {
         if (SPAFetchService.#instance) {
             return SPAFetchService.#instance;
@@ -55,6 +58,9 @@ export class SPAFetchService {
         return false;
     }
 
+    /**
+     * Refresh the XSRF token after login
+     */
     refreshXSRFCookie() {
 
         let XSRF = SPAFetchService.#getXSRFCookie();

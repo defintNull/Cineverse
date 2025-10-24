@@ -1,5 +1,8 @@
 import { Model } from "./Model";
 
+/**
+ * Group Model
+ */
 export class Group extends Model {
     #groupJson
 

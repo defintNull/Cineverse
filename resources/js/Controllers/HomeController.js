@@ -1,8 +1,6 @@
 import { Navbar } from "../navbar";
 import { Router } from "../router";
-import { AuthService } from "../Services/AuthService";
 import { MovieDBService } from "../Services/MovieDBService";
-import { StorageService } from "../Services/StorageService";
 import { HomeView } from "../Views/HomeView";
 import { Controller } from "./Controller";
 
@@ -20,6 +18,9 @@ export class HomeController extends Controller {
     #latestSeriePage;
     #popularSeriePage;
 
+    /**
+     * onstructor
+     */
     constructor() {
         super();
         this.#homeView = new HomeView();
@@ -54,11 +55,16 @@ export class HomeController extends Controller {
         }
     }
 
+    /**
+     * Method invoked to destroy the page when changing route
+     */
     destroy() {
-        document.body.querySelector("main").innerHTML = "";
-        this.#homeView.removeDocumentEventListeners();
+        this.#homeView.clearView();
     }
 
+    /**
+     * Handler to populate the carousel
+     */
     async #populateCarouselElement() {
         let promises = [
             await this.#getLatestMovies(),
@@ -95,6 +101,9 @@ export class HomeController extends Controller {
         return false;
     }
 
+    /**
+     * Handler to get latest Movies
+     */
     async #getLatestMovies() {
         let res = await this.#movieDBApi.getLatestMovies(this.#latestMoviePage);
         if(res.status == 200) {
@@ -104,6 +113,9 @@ export class HomeController extends Controller {
         return false;
     }
 
+    /**
+     * Handler to get popular Movies
+     */
     async #getPopulartMovies() {
         let res = await this.#movieDBApi.getPopularMovies(this.#popularMoviePage);
         if(res.status == 200) {
@@ -113,6 +125,9 @@ export class HomeController extends Controller {
         return false;
     }
 
+    /**
+     * Handler to get on air Series
+     */
     async #getOnTheAirSeries() {
         let res = await this.#movieDBApi.getOnTheAirSeries(this.#latestSeriePage);
         if(res.status == 200) {
@@ -122,6 +137,9 @@ export class HomeController extends Controller {
         return false;
     }
 
+    /**
+     * Handler to get popular Series
+     */
     async #getPopularSeries() {
         let res = await this.#movieDBApi.getPopularSeries(this.#popularMoviePage);
         if(res.status == 200) {
@@ -131,6 +149,9 @@ export class HomeController extends Controller {
         return false;
     }
 
+    /**
+     * Handler for click event to navigate to the detail page of movies
+     */
     #movieClickHandler(id) {
         let status = {
             'type': 'movie',
@@ -139,6 +160,9 @@ export class HomeController extends Controller {
         this.#router.setNextPath(status, "/detail");
     }
 
+    /**
+     * Handler for click event to navigate to the detail page of series
+     */
     #serieClickHandler(id) {
         let status = {
             'type': 'serie',
@@ -147,6 +171,9 @@ export class HomeController extends Controller {
         this.#router.setNextPath(status, "/detail");
     }
 
+    /**
+     * Handler for click event to navigate to the archive page
+     */
     #searchHandler(search) {
         let status = {
             'search': search

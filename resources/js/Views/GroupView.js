@@ -18,6 +18,9 @@ import { Group } from "../Models/Group";
 import { Post } from "../Models/Post";
 import { View } from "./View";
 
+/**
+ * Class that manage the view of the group page
+ */
 export class GroupView extends View {
     #groupCard;
     #groupComponent;
@@ -38,6 +41,9 @@ export class GroupView extends View {
     #scrollHandle;
     #commentScrollHandle;
 
+    /**
+     * Controller
+     */
     constructor() {
         super();
         this.#groupCard = new GroupCard();
@@ -57,6 +63,9 @@ export class GroupView extends View {
         this.#commentForm = new CommentForm();
     }
 
+    /**
+     * Method invoked to generate the structure of the page
+     */
     render() {
         // Setting page
         document.body.querySelector("main").classList.add("sticky", "top-0");
@@ -124,6 +133,9 @@ export class GroupView extends View {
 
     }
 
+    /**
+     * Method to manage the event listeners of the page
+     */
     addEventListeners(searchHandler, getPostsHandler, joinGroupHandler, exitGroupHandler, createGroupHandler, createPostHandler, getCommentsHandler, saveCommentHandler) {
         let main = this;
         this.#scrollHandle = this.#addGroupScrollHandler.bind(
@@ -133,6 +145,9 @@ export class GroupView extends View {
             getPostsHandler
         );
 
+        /**
+         * Search event
+         */
         document.getElementById("searchbar").addEventListener("submit", async function(event) {
             event.preventDefault();
 
@@ -164,6 +179,9 @@ export class GroupView extends View {
 
         });
 
+        /**
+         * Click in a group event
+         */
         document.getElementById("sidebar").addEventListener("click", async function(event) {
             const group_card = event.target.closest(".group-card");
 
@@ -233,6 +251,9 @@ export class GroupView extends View {
             }
         });
 
+        /**
+         * Scroll event to manage multiple scroll of element
+         */
         document.querySelectorAll('div.inner-scroll').forEach(inner => {
             const outer = document.documentElement;
 
@@ -268,6 +289,9 @@ export class GroupView extends View {
             }, { passive: false });
         });
 
+        /**
+         * Scroll event of the main section
+         */
         document.getElementById("element_container").addEventListener("scroll", this.#scrollHandle);
 
         // Group component event join
@@ -286,7 +310,11 @@ export class GroupView extends View {
                 container.appendChild(title);
                 let img = document.createElement("img");
                 img.classList.add("h-46");
-                img.src = parent.querySelector("img").src;
+                if(!parent.querySelector("img").src.includes('null')) {
+                    img.src = parent.querySelector("img").src;
+                } else {
+                    img.src = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMTQwIiB2aWV3Qm94PSIwIDAgMjAwIDE0MCI+PHBvbHlsaW5lIHBvaW50cz0iMCwxNDAgNTAsNzAgMTAwLDE0MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjODg4IiBzdHJva2Utd2lkdGg9IjgiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjxwb2x5bGluZSBwb2ludHM9IjYwLDE0MCAxMTAsODAgMTYwLDE0MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjODg4IiBzdHJva2Utd2lkdGg9IjgiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjxjaXJjbGUgY3g9IjE2MCIgY3k9IjQwIiByPSIxMiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjODg4IiBzdHJva2Utd2lkdGg9IjgiLz48L3N2Zz4=";
+                }
                 container.appendChild(img);
                 let description = document.createElement("p");
                 description.classList.add("text-lg", "italic", "dark:text-white", "text-gray-900");
@@ -486,6 +514,9 @@ export class GroupView extends View {
             }
         });
 
+        /**
+         * Add comment button event
+         */
         document.getElementById("add_button").addEventListener("click", function(event) {
             let popup = main.#popup.getComponentElement();
             let container = popup.querySelector("div.container");
@@ -640,6 +671,9 @@ export class GroupView extends View {
         });
     }
 
+    /**
+     * Method to reset the view
+     */
     resetView() {
         document.body.querySelector("main").classList.remove("sticky", "top-0");
         document.querySelector("footer").classList.remove("hidden");
@@ -656,6 +690,9 @@ export class GroupView extends View {
         });
     }
 
+    /**
+     * Render my groups element
+     */
     async renderMyGroups(groupHandler) {
         let groups = await groupHandler();
         let group_card_container = document.getElementById("group_card_container");
@@ -676,6 +713,9 @@ export class GroupView extends View {
         });
     }
 
+    /**
+     * Render other groups elements
+     */
     async renderGroups(groupHandler) {
         let groups = await groupHandler();
         let scroll = document.getElementById("scroll");
@@ -690,6 +730,9 @@ export class GroupView extends View {
         });
     }
 
+    /**
+     * Set structure for the post section
+     */
     #setPostStructureLayout(bool, id = null, description, visibility, token) {
         if(bool) {
             // Header
@@ -726,6 +769,9 @@ export class GroupView extends View {
         }
     }
 
+    /**
+     * Manage the scroll of the page
+     */
     async #addGroupScrollHandler(container, groupHandler, postHandler) {
         // Altezza totale del contenuto scrollabile
         const scrollHeight = container.scrollHeight;
@@ -777,6 +823,9 @@ export class GroupView extends View {
         }
     }
 
+    /**
+     * Manage the join event
+     */
     async #joinGroupHandler(joinCallback, parent, id, token = null) {
         let error_field = document.getElementById("token_error");
         error_field.classList.add("hidden");
@@ -803,6 +852,11 @@ export class GroupView extends View {
             if (img_src == null) {
                 element.querySelector("img").classList.add("hidden");
             }
+            let container = element.querySelector("div.container");
+            container.querySelector("input[name='id']").value = group.getId();
+            container.querySelector("input[name='description']").value = group.getDescription();
+            container.querySelector("input[name='visibility']").value = group.getVisibility();
+            container.querySelector("input[name='token']").value = group.getToken();
             element.querySelector("img").src = group.getImageSrc();
             group_card_container.append(element);
 
@@ -812,6 +866,9 @@ export class GroupView extends View {
         }
     }
 
+    /**
+     * Manage the exit event
+     */
     async #exitGroupHandler(exitCallback, id, error_field) {
         error_field.classList.add("hidden");
         let res = await exitCallback(id);
@@ -826,6 +883,9 @@ export class GroupView extends View {
         }
     }
 
+    /**
+     * Manage the scroll of the comment section
+     */
     async #commentScrollHandler(container, id, commentHandler) {
         // Altezza totale del contenuto scrollabile
         const scrollHeight = container.scrollHeight;

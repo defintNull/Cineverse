@@ -1,5 +1,8 @@
 import { Model } from "./Model";
 
+/**
+ * Profile Model
+ */
 class Profile extends Model {
     constructor({ id = null, username = "", email = "", name = "", surname = "", nationality = "" } = {}) {
         super();

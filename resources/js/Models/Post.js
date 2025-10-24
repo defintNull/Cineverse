@@ -1,5 +1,8 @@
 import { Model } from "./Model";
 
+/**
+ * Post Model
+ */
 export class Post extends Model {
     #postJson
 

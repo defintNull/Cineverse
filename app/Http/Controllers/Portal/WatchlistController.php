@@ -56,9 +56,6 @@ class WatchlistController extends Controller
     /**
      * Update the specified resource in storage.
      */
-
-    //DA VEDERE DOPO perchè lo userò con il rename della watchlist
-
     public function update(Request $request) : JsonResponse
     {
         $request->validate([
@@ -86,7 +83,9 @@ class WatchlistController extends Controller
 
 
 
-    //Si aggiunge un film alla lista
+    /**
+     * Add an element
+     */
     public function addElement(Request $request) : JsonResponse
     {
         $request->validate([
@@ -134,6 +133,9 @@ class WatchlistController extends Controller
         ]);
     }
 
+    /**
+     * Remove an element from a watchlist
+     */
     public function remove(Request $request) : JsonResponse {
         $request->validate([
             'watchlist_id' => ['required', 'integer', Rule::exists('watchlists', 'id')],

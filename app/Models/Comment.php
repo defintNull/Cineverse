@@ -28,6 +28,9 @@ class Comment extends Model
         return $this->belongsTo(Post::class);
     }
 
+    /**
+     * Get the user owning the comment
+     */
     public function user() : BelongsTo {
         return $this->belongsTo(User::class);
     }

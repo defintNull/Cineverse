@@ -17,6 +17,9 @@ export class LoginController extends Controller {
     #navbar;
     #spa_fetch;
 
+    /**
+     * Constructor
+     */
     constructor() {
         super();
         this.#loginView = new LoginView();

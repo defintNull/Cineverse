@@ -35,6 +35,9 @@ class Watchlist extends Model
         ];
     }
 
+    /**
+     * Get the user owning the watchlist
+     */
     public function user() : BelongsTo {
         return $this->belongsTo(User::class);
     }

@@ -6,13 +6,18 @@ import { Input } from "../Components/Input.js";
 import { DeleteButton } from "../Components/DeleteButton.js";
 import { ExitButton } from "../Components/exitButton.js";
 
-
+/**
+ * Class that manage the view of the page
+ */
 export class WatchlistView extends View {
     #renameButton;
     #inputComponent;
     #delete_button;
     #remove_button;
 
+    /**
+     * Constructor
+     */
     constructor() {
         super();
         this.#renameButton = new RenameButton();
@@ -21,7 +26,9 @@ export class WatchlistView extends View {
         this.#remove_button = new ExitButton();
     }
 
-    // Load layout of the page
+    /**
+     * Render the layaout of the page and initialize it
+     */
     render() {
         // Root container con grid
         const container = document.createElement("div");
@@ -171,7 +178,9 @@ export class WatchlistView extends View {
         document.body.querySelector("main").innerHTML = "";
     }
 
-    // Populate whe left sidebar with the watchlists
+    /**
+     * Populate sidebar with the watchlists
+     */
     async populateWatchlistsLayout(watchlistsfunc) {
         let watchlists = await watchlistsfunc();
 
@@ -211,6 +220,9 @@ export class WatchlistView extends View {
         return { items };
     }
 
+    /**
+     * Populate the grid with elements of the selected watchlist
+     */
     async #addWatchlistGridElements(items) {
         const grid = document.getElementById("watchlist_grid");
 
@@ -260,9 +272,9 @@ export class WatchlistView extends View {
         });
     }
 
-
-
-
+    /**
+     * Manage the event listeners of the page
+     */
     async addEventListeners(
         getWatchlistContentCallback,
         createnewwatchlistCallback,

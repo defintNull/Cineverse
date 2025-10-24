@@ -37,6 +37,10 @@ class Profile extends Controller
             ], 500);
         }
     }
+
+    /**
+     * Update the profile informations
+     */
     public function update(Request $request): JsonResponse
     {
         try {

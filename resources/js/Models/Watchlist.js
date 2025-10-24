@@ -1,5 +1,8 @@
 import { Model } from "./Model";
 
+/**
+ * Watchlist Model
+ */
 export class Watchlist extends Model {
     #watchlistJson
 

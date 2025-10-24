@@ -37,6 +37,10 @@ Route::middleware(AjaxMiddleware::class)->name('spa.')->prefix('spa')->group(fun
      * Route group for the ajax request blocked with authentication of the spa
      */
     Route::middleware('auth:sanctum')->group(function () {
+
+        /**
+         * Route group for watchlist page
+         */
         Route::name('watchlist.')->prefix('watchlist')->group(function () {
             Route::get('/index', [WatchlistController::class, "index"])
                 ->name('index');
@@ -54,6 +58,9 @@ Route::middleware(AjaxMiddleware::class)->name('spa.')->prefix('spa')->group(fun
                 ->name('remove');
         });
 
+        /**
+         * Route group for Groups page
+         */
         Route::name('groups.')->prefix("groups")->group(function() {
             Route::get('/index', [GroupController::class, 'index'])
                 ->name('index');
@@ -67,6 +74,9 @@ Route::middleware(AjaxMiddleware::class)->name('spa.')->prefix('spa')->group(fun
                 ->name('store');
         });
 
+        /**
+         * Route groups for Comment section
+         */
         Route::middleware('auth:sanctum')->group(function(){
             Route::get('posts/{id}/comments', [CommentController::class, 'index'])
                 ->name('comments.index');
@@ -74,6 +84,9 @@ Route::middleware(AjaxMiddleware::class)->name('spa.')->prefix('spa')->group(fun
                 ->name('comments.store');
         });
 
+        /**
+         * Route group for Profile section
+         */
         Route::name('profile.')->prefix('profileinfo')->group(function () {
             Route::get('/index', [Profile::class, 'index'])
                 ->name('index');
@@ -85,6 +98,9 @@ Route::middleware(AjaxMiddleware::class)->name('spa.')->prefix('spa')->group(fun
                 ->name('update');
         });
 
+        /**
+         * Route group for posts section
+         */
         Route::apiResource('groups.posts', PostController::class);
     });
 });
@@ -100,8 +116,3 @@ Route::get('404', function() {
 Route::get('/{any}', function () {
     return view('home');
 })->where('any', '.*');
-
-
-Route::get('/welcome', function () {
-    return view('welcome');
-});
