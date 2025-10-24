@@ -29,7 +29,6 @@ class WatchlistController extends Controller
     {
         $request->validate([
             'name'   => ['required','string','max:255'],
-            //'movies' => ['nullable','array'], // opzionale per ora
         ]);
 
         $user = Auth::user();
@@ -51,27 +50,24 @@ class WatchlistController extends Controller
 
     //DA VEDERE DOPO perchè lo userò con il rename della watchlist
 
-    public function update(Request $request, $watchlist) : JsonResponse
+    public function update(Request $request) : JsonResponse
     {
         try {
-            // Recuperiamo la watchlist dal model (puoi usare direttamente $w)
-            $watchlistrenaming = Watchlist::findOrFail($watchlist->id);
+            // Recuperiamo la watchlist dal model
+            $watchlistrenaming = Watchlist::findOrFail($request->id);
 
             // Validazione dei campi effettivamente presenti nella tabella
             $validatedData = $request->validate([
                 'name'   => 'required|string|max:255',
-                'content' => 'required|array', // ci aspettiamo un array di content
             ]);
 
-            // Aggiorniamo i campi
-            $watchlist->update([
-                'name'   => $validatedData['name'],
-                'content' => json_encode($validatedData['content']), // salviamo come JSON
-            ]);
+            $user = Auth::user();
 
+            $watchlistrenaming->update([
+                'name'    => $request->name,
+            ]);
             return response()->json([
                 'message' => 'Watchlist updated successfully.',
-                'watchlist' => $watchlist,
             ]);
         } catch (\Exception $e) {
             return response()->json([

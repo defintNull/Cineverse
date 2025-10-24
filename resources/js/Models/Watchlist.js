@@ -37,4 +37,9 @@ export default class Watchlist {
   removeMovie(movieId) {
     this.movies = this.movies.filter(m => m.id !== movieId);
   }
+
+
+
+
+
 }

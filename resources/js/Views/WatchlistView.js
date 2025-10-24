@@ -14,8 +14,8 @@ export class WatchlistView extends View {
     #addButton;
     #clickHandle;
     currentWatchlist = null;
-
-
+    #clickbuttonhandle;
+    #clickmainhandle;
 
     constructor() {
         super();
@@ -23,12 +23,11 @@ export class WatchlistView extends View {
         this.#addButton = new AddButton();
     }
 
-
     render(watchlistshandler,movies) {
         this.createWatchlistsLayout();
     }
 
-    addEventListeners(
+    async addEventListeners(
         refs,
         watchlistsWithContent,
         createnewwatchlistfunc,
@@ -37,11 +36,15 @@ export class WatchlistView extends View {
         updatewatchlistfunc
     ) {
         const main = document.getElementById("watchlist_main");
-        const list = document.getElementById("watchlist_list2");//da fixare ci dovrebbe essere una watchlist sola
-        // Listener unico sul contenitore
-        list.addEventListener("click", (e) => {
-            // Verifico che il target sia un LI
-            const li = e.target.closest("li");
+        const list = document.getElementById("watchlist_list2");
+        const master = this;
+        // dentro la tua classe
+        this.#clickmainhandle = function(event) {
+            //const main = document.getElementById("watchlist_main");
+            //const list = document.getElementById("watchlist_list2");
+            // CLICK DELLE WATCHLIST
+            const li = event.target.closest("li");
+            console.log("li trovata", li);
             if (!li || !list.contains(li)) return;
 
             // Recupero i dati dal dataset
@@ -50,33 +53,49 @@ export class WatchlistView extends View {
 
             // Rimuovo eventuale griglia precedente
             document.getElementById("watchlist_grid")?.remove();
+
+            //console.log("watchlistsWithContent", this.watchlistsWithContent);
+
             const match = watchlistsWithContent.find(w => w.watchlist.id == watchlistId);
+
             if (match) {
+                // Memorizzo la watchlist corrente
+                master.currentWatchlist = match.watchlist;
+                //console.log("Watchlist corrente:", this.currentWatchlist);
+
                 // Ricreo la struttura base della griglia
-                // La ricostruisco
-                //TEST DI MEMORIZZAZIONE WATCHLIST CORRENTE
-                this.currentWatchlist = match.watchlist;
-                //FINE TEST
-                const grid = this.addWatchlistGrid(match.watchlist);
+                const grid = master.addWatchlistGrid(match.watchlist);
                 main.appendChild(grid);
 
                 // Popolo i contenuti (film + serie)
-                this.renderItems(match.items, match.watchlist);
+                master.renderItems(match.items, match.watchlist);
             }
+        };
 
-        });
+        // e poi nel costruttore o nell’inizializzazione:
+        //this.list.addEventListener("click", this.#clickmainhandle);
+        document.addEventListener("click", this.#clickmainhandle);
+
         //BOTTONE AGGIUNGI WATCHLIST
         const addButton = document.getElementById("add_watchlist_btn");
         if (addButton) {
-            addButton.addEventListener("click", () => {
+            addButton.addEventListener("click", async function() {
                 // Recupero la UL già esistente
+
+
                 const watchlistContainer = document.getElementById("watchlist_list2");
                 //Ho la necessità di creare un oggetto watchlist per passarlo
-                const newWatchlist = {
+                let newWatchlist = {
                 "name": "New Watchlist"
                 };
                 //mi salvo la watchlist di base
-                let watchlistdb = createnewwatchlistfunc(newWatchlist); //chiamo la funzione del controller per salvare nel db
+                let watchlistdb = await createnewwatchlistfunc(newWatchlist,watchlistsWithContent); //chiamo la funzione del controller per salvare nel db
+                //console.log("  aa ",watchlistdb.id);           //  è UNA PROMISEEEEEE
+                //newWatchlist["content"] = [];
+                //newWatchlist["id"] = watchlistdb;
+                //potrei rilanciare il metodo get all
+
+
                 const newItem = document.createElement("li");
                 newItem.classList.add(
                     "bg-gray-700",
@@ -86,48 +105,20 @@ export class WatchlistView extends View {
                     "hover:bg-gray-600",
                     "transition"
                 );
-                newItem.innerText = "Nuova Watchlist";
-                newItem.dataset.watchlistId = Date.now();
+                newItem.innerText = "New Watchlist";
+                newItem.id = `watchlist-${watchlistdb.id}`;
+                newItem.dataset.watchlistId = watchlistdb.id;
+                //newItem.dataset.watchlistId = Date.now();
 
                 // Inserisco come primo elemento della lista esistente
                 //list.prepend(newItem);
                 watchlistContainer.prepend(newItem);
+                //watchlistsWithContent.push(watchlistdb);
+                //const id = li.dataset.watchlistId;
+                newItem.click();
 
-                //console.log("Nuova watchlist aggiunta!");
             });
         }
-
-        //BOTTONE per il rename della watchlist
-        const renameButton = document.getElementById("rename_watchlist_btn");
-        if (renameButton) {
-            renameButton.addEventListener("click", () => {
-                //qui devo ottenere in qualche modo l'id della watchlist corrente
-                //ma anche cambiare il nome nel titolo e fare la richiesta al db
-                //prendo l'id del title
-                const watchlist_title = document.getElementById("watchlist_title");
-                //Ho la necessità di creare un oggetto watchlist per passarlo
-                let input = "Renamed Watchlist"
-                watchlist_title.innerHTML = input;
-                //INPUT HARDCODATO per ora
-
-                //MI DEVO PRENDERE LA WATCHLIST CORRENTE
-                const renamingwatchlist = this.currentWatchlist;
-                renamingwatchlist.name = input;
-                let watchlistdb = updatewatchlistfunc(renamingwatchlist); //chiamo la funzione del controller per salvare nel db
-
-                // Inserisco come primo elemento della lista esistente
-                //list.prepend(newItem);
-                //watchlistContainer.prepend(newItem);
-
-                //console.log("Nuova watchlist aggiunta!");
-            });
-        }
-
-
-
-
-
-
 
         // Handle click function
         // Qui implemento il click per la schermata di dettaglio film/serie
@@ -159,6 +150,97 @@ export class WatchlistView extends View {
          * Adding click event listeners for movies and series cards
          */
         document.addEventListener("click", this.#clickHandle);
+
+        this.#clickbuttonhandle = function(event) {
+            //devo aggiungere queste classi, movie-card e serie-card, alle card dei film e delle serie
+            const button = event.target.closest(".renamebutton");
+
+            if (button && document.body.contains(button)) {
+                //const input = card.querySelector("input");
+                //posso usare il dataset del bottone
+                //METTO IL RESTO DEL CODICE
+                let id = button.dataset.watchlistId;
+                //Visto che ora gli Id sono parametrici posso prendermi tutti gli elementi associati che voglio
+                const watchlist_title = document.getElementById("title-" + id);
+
+                let input = "Renamed Watchlist";  //                   DA CAMBIARE
+                //const id = button.dataset.watchlistId;
+                console.log("id dal dataset del bottone", id);
+                //TROPPO A CASO questa query
+                //const items = document.querySelectorAll("#watchlist_list2 li");
+
+                const li = document.getElementById(`watchlist-${id}`);
+
+                li.innerHTML = input;
+                //non mi serve cercare così
+
+                //da vedere come fixare al volo qua
+                const wl = watchlistsWithContent.find(
+                            item => String(item.watchlist.id) === String(id)
+                            ) || null;
+                console.log("search",watchlistsWithContent[id]);
+                wl.watchlist.name = input;
+                //RENAME NELLA STRUTTURA DATI, MA VA COMUNQUE
+                //RIRENDERIZZATA LA WATCHLIST LIST Oppure si cambia il campo specifico
+                //PROBABILMENTE è L'opzione MIGLIORE
+                //ALLA creazione dell'elemento della watchlist si mette nel dataset anche l'id
+                //console.log("Watchlist trovata per rename:", wl);
+
+                //const newName = prompt("Nuovo nome della watchlist:", "wl.name");
+
+
+/*                     if (input && input.trim() !== "") {
+                        // aggiorno l’oggetto in memoria
+                        wl.name = input.trim();
+
+                        // aggiorno il titolo nel DOM
+                        //const watchlist_title = document.getElementById("watchlist_title");
+                        //Ho la necessità di creare un oggetto watchlist per passarlo
+
+                        watchlist_title.innerHTML = input;
+                        // salvo sul DB
+                        //saveWatchlist(wl);
+                    } */
+
+
+                //INPUT HARDCODATO per ora
+
+                //MI DEVO PRENDERE LA WATCHLIST CORRENTE
+                const match = watchlistsWithContent.find(w => w.watchlist.id == id);
+                this.currentWatchlist = match.watchlist;
+                const renamingwatchlist = match.watchlist;
+                //console.log("Watchlist da rinominare:", renamingwatchlist);
+                renamingwatchlist.name = input;  //ERRORE QUA
+                let watchlistdb = updatewatchlistfunc(renamingwatchlist); //chiamo la funzione del controller per salvare nel db
+
+                // Inserisco come primo elemento della lista esistente
+                //list.prepend(newItem);
+                //watchlistContainer.prepend(newItem);
+
+                //console.log("Nuova watchlist aggiunta!");
+
+/*                 if (!input) return;
+
+                const id = input.value;
+
+                if (card.classList.contains("movie-card")) {
+
+                     //Adding click events for movies
+
+                    movie_click_callback(id);
+                } else if (card.classList.contains("serie-card")) {
+
+                    Adding click event for series
+
+                    serie_click_callback(id);
+                }
+                */
+            }
+        }
+
+        document.addEventListener("click", this.#clickbuttonhandle);
+
+
 
     }
 
@@ -267,6 +349,7 @@ export class WatchlistView extends View {
                 "transition"
             );
             li.innerText = w.name;
+            li.id = `watchlist-${w.id}`;
             li.dataset.watchlistId = w.id; // salvo un riferimento utile
             list.appendChild(li);
             return { element: li, data: w };
@@ -308,16 +391,18 @@ export class WatchlistView extends View {
 
         // Titolo
         const title = document.createElement("h1");
-        title.id = "watchlist_title";
+        title.id = `title-${watchlist.id}`;
         title.className = "text-2xl sm:text-3xl font-bold text-gray-900 text-white";
         title.innerText = "" + watchlist.name; // qui puoi sostituire con watchlist.name o altro
 
         // Bottone
         const renameButton = document.createElement("button");
-        renameButton.id = "rename_watchlist_btn";
+        renameButton.id =  `rename-${watchlist.id}`;
+        renameButton.dataset.watchlistId = watchlist.id;
+
         renameButton.type = "button";
         renameButton.className = `
-        inline-flex items-center px-4 py-2 border border-transparent
+        renamebutton inline-flex items-center px-4 py-2 border border-transparent
         text-sm font-medium rounded-md shadow-sm
         bg-indigo-600 text-white hover:bg-indigo-700
         focus:outline-none focus:ring-2 focus:ring-indigo-500

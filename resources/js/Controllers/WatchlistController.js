@@ -6,6 +6,7 @@ import { Movie } from "../Models/Movie";
 import { Serie } from "../Models/Serie";
 import { WatchlistView } from "../Views/WatchlistView";
 import { SPAFetchService } from "../Services/SPAFetchService";
+import Watchlist from "../Models/Watchlist";
 
 export class WatchlistController extends Controller {
     #WatchlistView;
@@ -82,12 +83,15 @@ export class WatchlistController extends Controller {
     }
 
     //gli devo passare l'oggeto nel payload della POSTFetch
-    async #createnewwatchlist(newwatchlist) {
+    async #createnewwatchlist(newwatchlist,watchlistsWithContent) {
         let sap_fetch = await SPAFetchService.getInstance();
         let res = await sap_fetch.POSTFetch('/spa/watchlist/store', newwatchlist);
         let payload = await res.json();
-        //console.log(payload.watchlists);
-        return payload.watchlists;
+
+        //console.log("PAYLOAD",payload.watchlist);  CONVIENE RIPRENDERLA DAL DB?
+        payload["items"] =[];
+        watchlistsWithContent.push(payload); //ora va bene
+        return payload.watchlist;
         //al carousel va passata una watchlist
     }
 
