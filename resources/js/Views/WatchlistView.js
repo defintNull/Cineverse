@@ -307,13 +307,16 @@ export class WatchlistView extends View {
 
             const newItem = document.createElement("li");
             newItem.classList.add(
-                "bg-gray-700",
+                "dark:bg-gray-700",
+                "bg-slate-50",
                 "rounded",
                 "p-3",
                 "cursor-pointer",
                 "hover:bg-gray-600",
                 "transition",
-                "watchlist-card"
+                "watchlist-card",
+                "text-gray-900",
+                "dark:text-white"
             );
             newItem.innerText = watchlistdb.getName();
             newItem.dataset.watchlistId = watchlistdb.getId();
