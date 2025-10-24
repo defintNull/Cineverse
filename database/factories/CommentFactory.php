@@ -20,7 +20,7 @@ class CommentFactory extends Factory
             'content' => $this->faker->paragraph(),
             'user_id' => \App\Models\User::factory(),
             'post_id' => \App\Models\Post::factory(),
-            'created_at' => $this->faker->dateTimeBetween('-1 years', 'now'),
+            'created_at' => $this->faker->dateTimeBetween('-1 years', 'now'), //PROBLEMATICO POSS ERRORI
             'updated_at' => now(),
         ];
     }

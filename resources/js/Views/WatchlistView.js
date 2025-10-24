@@ -202,7 +202,10 @@ export class WatchlistView extends View {
         });
 
         // Click first li item
-        document.getElementById("watchlist_list").querySelector("li").click();
+        if(document.getElementById("watchlist_list").querySelector("li")){
+            document.getElementById("watchlist_list").querySelector("li").click();
+        }
+
 
         // Ritorno i riferimenti per l'uso in addEventListeners
         return { items };
@@ -283,7 +286,7 @@ export class WatchlistView extends View {
                 // Setting header
                 let header = document.getElementById("watchlist_header");
                 header.querySelector("input[name='watchlist_id']").value = watchlist_card.dataset.watchlistId;
-                header.querySelector("input[name='rename_watchlist']").classList.add("hidden");
+                header.querySelector("input[name='rename_watchlist']").parentElement.classList.add("hidden");
                 document.getElementById("watchlist_title").classList.remove("hidden");
                 document.getElementById("watchlist_title").innerText = watchlist_card.innerText;
                 header.querySelector("input[name='rename_watchlist']").value = watchlist_card.innerText;
@@ -382,6 +385,8 @@ export class WatchlistView extends View {
                 document.getElementById("rename_watchlist_input").value = document.getElementById("watchlist_title").innerText;
                 document.getElementById("watchlist_title").classList.remove("hidden");
             } else {
+                console.log(document.getElementById("watchlist_title"));
+                console.log(document.getElementById("rename_watchlist_input"));
                 document.getElementById("watchlist_title").classList.add("hidden");
                 document.getElementById("rename_watchlist_input").parentElement.classList.remove("hidden");
             }
@@ -413,9 +418,16 @@ export class WatchlistView extends View {
             let res = await deleteWatchlistCallback(watchlist_id);
 
             if(res == 200) {
-                console.log('Ciao');
                 document.getElementById("watchlist_list").querySelector("li[data-watchlist-id='" + watchlist_id + "'").remove();
-                document.getElementById("watchlist_list").querySelector("li").click();
+                if(document.getElementById("watchlist_list").querySelector("li")){
+                    document.getElementById("watchlist_list").querySelector("li").click();
+                }else{
+                    document.getElementById("watchlist_header").classList.add("hidden");
+                    document.getElementById("watchlist_grid").innerHTML = "";
+
+                }
+
+
             }
         });
 
