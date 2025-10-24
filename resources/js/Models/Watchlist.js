@@ -23,4 +23,8 @@ export class Watchlist extends Model {
     checkElement(type, id) {
         return this.#watchlistJson.content.filter(el => el.type == type && el.id == id).length != 0;
     }
+
+    contentToJson() {
+        return JSON.stringify(this.#watchlistJson.content);
+    }
 }

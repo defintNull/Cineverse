@@ -48,6 +48,10 @@ Route::middleware(AjaxMiddleware::class)->name('spa.')->prefix('spa')->group(fun
                 ->name('removemovie');
             Route::post('/store', [WatchlistController::class, 'store'])
                 ->name('store');
+            Route::post('/destroy', [WatchlistController::class, 'destroy'])
+                ->name('destroy');
+            Route::post('/remove', [WatchlistController::class, 'remove'])
+                ->name('remove');
         });
 
         Route::name('groups.')->prefix("groups")->group(function() {

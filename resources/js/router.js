@@ -24,7 +24,7 @@ export class Router {
         "/": [HomeController, null],
         "/detail": [DetailController, null],
         "/archive": [ArchiveController, null],
-        "/debug": [DebugController, null],
+        //"/debug": [DebugController, null],
         "/login": [LoginController, null],
         "/logout": [LogoutController, "auth"],
         "/register": [RegistrationController, null],

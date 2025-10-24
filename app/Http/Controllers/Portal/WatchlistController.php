@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
+use App\Models\User;
 
 class WatchlistController extends Controller
 {
@@ -24,24 +25,32 @@ class WatchlistController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    //AL MOMENTO POSSO CREARE SOLO LA WATCHLIST VUOTA
-    public function store(Request $request)
+    public function store()
     {
-        $request->validate([
-            'name'   => ['required','string','max:255'],
-        ]);
-
         $user = Auth::user();
 
+        // Check for existing names
+        $existingNames = $user->watchlists()->where('name', 'like', "My Watchlist%")->pluck('name');
+        $usedNumbers = [];
+        foreach ($existingNames as $name) {
+            if (preg_match('/^My Watchlist(\d+)$/', $name, $matches)) {
+                $usedNumbers[] = (int) $matches[1];
+            }
+        }
+        $number = 1;
+        while (in_array($number, $usedNumbers)) {
+            $number++;
+        }
+
         $watchlist = Watchlist::create([
-            'name'    => $request->name,
-            'content'  => $request->content ?? [], // se non arriva, array vuoto
+            'name'    => "My Watchlist".$number,
+            'content'  => [],
             'user_id' => $user->id,
         ]);
 
         return response()->json([
             'watchlist' => $watchlist,
-        ], 201);
+        ], 200);
     }
 
     /**
@@ -52,28 +61,27 @@ class WatchlistController extends Controller
 
     public function update(Request $request) : JsonResponse
     {
-        try {
-            // Recuperiamo la watchlist dal model
-            $watchlistrenaming = Watchlist::findOrFail($request->id);
+        $request->validate([
+            'watchlist_id' => ['required', 'integer', Rule::exists('watchlists', 'id')],
+            'name' => ['required', 'string', "max:255"],
+        ]);
 
-            // Validazione dei campi effettivamente presenti nella tabella
-            $validatedData = $request->validate([
-                'name'   => 'required|string|max:255',
-            ]);
+        $watchlist = Watchlist::where('id', $request->watchlist_id)->get()[0];
+        $user = Auth::user();
 
-            $user = Auth::user();
+        if($watchlist->user->id == Auth::user()->id && $user->watchlists()->where('name', $request->name)->get()->count() == 0) {
+            $watchlist->name = $request->name;
+            $watchlist->save();
 
-            $watchlistrenaming->update([
-                'name'    => $request->name,
-            ]);
             return response()->json([
-                'message' => 'Watchlist updated successfully.',
+                'status' => 200,
+                'watchlist' => $watchlist,
             ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'error' => 'Failed to update watchlist.'
-            ], 500);
         }
+
+        return response()->json([
+            'error' => 'Failed to update watchlist.'
+        ], 400);
     }
 
 
@@ -112,8 +120,52 @@ class WatchlistController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request) : JsonResponse
     {
-        //
+        $request->validate([
+            'watchlist_id' => ['required', 'integer', Rule::exists('watchlists', 'id')],
+        ]);
+
+        $watchlist = Watchlist::where('id', $request->watchlist_id)->get()[0];
+        $watchlist->delete();
+
+        return response()->json([
+            'status' => 200,
+        ]);
+    }
+
+    public function remove(Request $request) : JsonResponse {
+        $request->validate([
+            'watchlist_id' => ['required', 'integer', Rule::exists('watchlists', 'id')],
+            'type' => ['required', Rule::in(['Movie', 'Serie'])],
+            'element_id' => ['required', 'integer'],
+        ]);
+
+        $watchlist = Watchlist::where('id', $request->watchlist_id)->get()[0];
+
+        if($watchlist->user->id == Auth::user()->id) {
+            $type = $request->type;
+            $id = $request->element_id;
+            $content = $watchlist->content;
+
+            $content = array_filter($content, function ($item) use ($type, $id) {
+                return !($item['type'] == $type && $item['id'] == $id);
+            });
+
+            $content = array_values($content);
+
+            // Salva l’array aggiornato
+            $watchlist->content = $content;
+            $watchlist->save();
+
+            return response()->json([
+                'status' => 200,
+            ]);
+        }
+
+        return response()->json([
+            'status' => 400,
+            'error' => 'Unauthorized',
+        ], 400);
     }
 }

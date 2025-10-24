@@ -1,131 +1,340 @@
-import { AddButton } from "../Components/AddButton";
-import { NavigatorElement } from "../Components/NavigatorElement";
 import { Movie } from "../Models/Movie";
-import { Serie } from "../Models/Serie";
 import { MovieDBService } from "../Services/MovieDBService";
 import { View } from "./View";
-import Watchlist from "../Models/Watchlistbis.js";
+import { RenameButton } from "../Components/RenameButton.js";
+import { Input } from "../Components/Input.js";
+import { DeleteButton } from "../Components/DeleteButton.js";
+import { ExitButton } from "../Components/exitButton.js";
 
 
 export class WatchlistView extends View {
-    #element;
-    #bgImage;
-    #navigator;
-    #addButton;
-    #clickHandle;
-    currentWatchlist = null;
-    #clickbuttonhandle;
-    #clickmainhandle;
+    #renameButton;
+    #inputComponent;
+    #delete_button;
+    #remove_button;
 
     constructor() {
         super();
-        this.#navigator = new NavigatorElement();
-        this.#addButton = new AddButton();
+        this.#renameButton = new RenameButton();
+        this.#inputComponent = new Input();
+        this.#delete_button = new DeleteButton();
+        this.#remove_button = new ExitButton();
     }
 
-    render(watchlistshandler,movies) {
-        this.createWatchlistsLayout();
+    // Load layout of the page
+    render() {
+        // Root container con grid
+        const container = document.createElement("div");
+        container.id = "watchlists_layout";
+        container.classList.add(
+            "grid",
+            "grid-cols-8",
+            "min-h-screen",
+            "bg-gray-900",
+            "text-white",
+            "w-full"
+        );
+
+        // Sidebar
+        const sidebar = document.createElement("aside");
+        sidebar.id = "watchlist_sidebar";
+        sidebar.classList.add(
+            "bg-gray-800",
+            "p-4",
+            "overflow-y-auto",
+            "col-span-2",
+            "flex",
+            "flex-col"
+        );
+
+        // Header della sidebar con titolo + bottone
+        const sidebarHeader = document.createElement("div");
+        sidebarHeader.classList.add("flex", "items-center", "justify-between", "mb-4");
+
+        const sidebarTitle = document.createElement("h2");
+        sidebarTitle.classList.add("text-lg", "font-bold");
+        sidebarTitle.innerText = "Your watchlists";
+
+        const addButton = document.createElement("button");
+        addButton.id = "add_watchlist_btn";
+        addButton.innerText = "+";
+        addButton.classList.add(
+            "bg-blue-600",
+            "hover:bg-blue-700",
+            "text-white",
+            "font-bold",
+            "w-8",
+            "h-8",
+            "rounded-full",
+            "flex",
+            "items-center",
+            "justify-center",
+            "shadow",
+            'cursor-pointer',
+        );
+
+        sidebarHeader.appendChild(sidebarTitle);
+        sidebarHeader.appendChild(addButton);
+        sidebar.appendChild(sidebarHeader);
+
+        // Qui verranno aggiunte le watchlist
+        const watchlistContainer = document.createElement("ul");
+        watchlistContainer.id = "watchlist_list";
+        watchlistContainer.classList.add("space-y-2");
+        sidebar.appendChild(watchlistContainer);
+
+        container.appendChild(sidebar);
+
+        // Main content
+        const main = document.createElement("div");
+        main.id = "watchlist_main";
+        main.classList.add("flex", "col-start-3", "col-span-6", "flex-col", "p-6");
+
+        // --- HEADER ben visibile ---
+        // Creo l'header
+        const header = document.createElement("header");
+        header.id = "watchlist_header";
+        header.className = "flex items-center justify-between gap-4";
+
+        let dati = document.createElement("form");
+        dati.id = "rename_form";
+        dati.className = "flex flex-row items-start justify-center h-full gap-x-4";
+
+        let input_container = document.createElement("div");
+        input_container.className = "flex flex-row items-center";
+
+        // Titolo
+        const title = document.createElement("h1");
+        title.id = `watchlist_title`;
+        title.className = "text-2xl sm:text-3xl font-bold text-gray-900 text-white";
+        input_container.appendChild(title);
+
+        // Change name input
+        let rename_input = this.#inputComponent.getComponentElement();
+        rename_input.classList.add("hidden", "min-w-60");
+        rename_input.querySelector("label").remove();
+        rename_input.querySelector("input").id = "rename_watchlist_input";
+        rename_input.querySelector("input").type = "text";
+        rename_input.querySelector("input").name = "rename_watchlist";
+        rename_input.querySelector("input").placeholder = "Insert new name";
+        input_container.appendChild(rename_input);
+
+        dati.appendChild(input_container);
+
+        // Bottone
+        const renameButton = this.#renameButton.getComponentElement();
+        renameButton.classList.add("hidden");
+        dati.appendChild(renameButton);
+
+        // Input to store watchlist id
+        let input = document.createElement("input");
+        input.type = "text";
+        input.name = "watchlist_id";
+        input.hidden = true;
+
+        // Delete button
+        let delete_button = this.#delete_button.getComponentElement();
+        delete_button.id = "delete_watchlist_button";
+        delete_button.innerText = "Delete";
+
+        // Assemblo
+        header.appendChild(dati);
+        header.appendChild(input);
+        header.appendChild(delete_button);
+
+        // Ora puoi appenderlo dove serve, ad esempio:
+        main.appendChild(header);
+
+        // Container principale
+        const grid_container = document.createElement("div");
+        grid_container.id = "watchlist_grid_container";
+        grid_container.className = "flex flex-col p-6 min-h-[calc(100vh-4rem)] box-border";
+
+        // --- GRID ---
+        const grid = document.createElement("div");
+        grid.id = "watchlist_grid";
+        grid.className = "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 items-start content-start";
+        grid_container.appendChild(grid);
+
+        main.appendChild(grid_container);
+
+        container.appendChild(main);
+
+        // Append al DOM
+        document.body.querySelector("main").appendChild(container);
     }
+
+    // Clear the view and remove the document event listeners
+    clearView() {
+        document.body.querySelector("main").innerHTML = "";
+    }
+
+    // Populate whe left sidebar with the watchlists
+    async populateWatchlistsLayout(watchlistsfunc) {
+        let watchlists = await watchlistsfunc();
+
+        const list = document.getElementById("watchlist_list");
+        list.classList.add("space-y-2");
+
+        // Creo gli <li> per ogni watchlist
+        const items = watchlists.map(w => {
+            const li = document.createElement("li");
+            li.classList.add(
+                "bg-gray-700",
+                "watchlist-card",
+                "rounded",
+                "p-3",
+                "cursor-pointer",
+                "hover:bg-gray-600",
+                "transition"
+            );
+            li.innerText = w.getName();
+            li.dataset.watchlistId = w.getId();
+            li.dataset.elements = w.contentToJson();
+            list.appendChild(li);
+            return { element: li, data: w };
+        });
+
+        // Click first li item
+        document.getElementById("watchlist_list").querySelector("li").click();
+
+        // Ritorno i riferimenti per l'uso in addEventListeners
+        return { items };
+    }
+
+    async #addWatchlistGridElements(items) {
+        const grid = document.getElementById("watchlist_grid");
+
+        items.forEach(item => {
+            const card = document.createElement("div");
+            card.classList.add(
+                "bg-gray-800",
+                "rounded-lg",
+                "overflow-hidden",
+                "shadow-lg",
+                "cursor-pointer",
+                "hover:scale-105",
+                "transition",
+                "duration-200",
+                "relative",
+            );
+
+            // Aggiungo la classe specifica in base al tipo
+            if (item instanceof Movie) {
+                card.classList.add("movie-card");
+            } else {
+                card.classList.add("serie-card");
+            }
+
+            let remove_element_button = this.#remove_button.getComponentElement();
+            remove_element_button.classList.remove("top-8", "left-8");
+            remove_element_button.classList.add("top-2", "right-2", "remove-button", "hidden");
+            card.appendChild(remove_element_button);
+
+            // ID nascosto
+            const hiddenInput = document.createElement("input");
+            hiddenInput.type = "hidden";
+            hiddenInput.value = item.getId();
+            card.appendChild(hiddenInput);
+
+            // Poster
+            const img = document.createElement("img");
+            img.src = MovieDBService.getImageSrc("w780", item.getPosterImageSrc());
+            img.alt = item.getTitle();
+            img.classList.add("w-full", "h-64", "object-cover");
+            card.appendChild(img);
+
+            grid.appendChild(card);
+        });
+    }
+
+
+
 
     async addEventListeners(
-        refs,
-        watchlistsWithContent,
-        createnewwatchlistfunc,
+        getWatchlistContentCallback,
+        createnewwatchlistCallback,
         movie_click_callback,
         serie_click_callback,
-        updatewatchlistfunc
+        renameWatchlistcallback,
+        deleteWatchlistCallback,
+        removeElementCallback,
     ) {
-        const main = document.getElementById("watchlist_main");
-        const list = document.getElementById("watchlist_list2");
-        const master = this;
-        // dentro la tua classe
-        this.#clickmainhandle = function(event) {
-            //const main = document.getElementById("watchlist_main");
-            //const list = document.getElementById("watchlist_list2");
-            // CLICK DELLE WATCHLIST
-            const li = event.target.closest("li");
-            console.log("li trovata", li);
-            if (!li || !list.contains(li)) return;
+        const main = this;
 
-            // Recupero i dati dal dataset
-            const watchlistId = li.dataset.watchlistId;
-            if (!watchlistId) return;
+        // Click Event watchlist
+        document.getElementById("watchlist_list").addEventListener("click", async function(event) {
+            const watchlist_card = event.target.closest(".watchlist-card");
+            if(watchlist_card && this.contains(watchlist_card)) {
+                let content = await getWatchlistContentCallback(JSON.parse(watchlist_card.dataset.elements));
 
-            // Rimuovo eventuale griglia precedente
-            document.getElementById("watchlist_grid")?.remove();
+                // Pulizia griglia
+                document.getElementById("watchlist_grid").innerHTML = "";
 
-            //console.log("watchlistsWithContent", this.watchlistsWithContent);
+                // Setting header
+                let header = document.getElementById("watchlist_header");
+                header.querySelector("input[name='watchlist_id']").value = watchlist_card.dataset.watchlistId;
+                document.getElementById("watchlist_title").innerText = watchlist_card.innerText;
+                header.querySelector("input[name='rename_watchlist']").value = watchlist_card.innerText;
+                header.querySelector("button").classList.remove("hidden");
 
-            const match = watchlistsWithContent.find(w => w.watchlist.id == watchlistId);
-
-            if (match) {
-                // Memorizzo la watchlist corrente
-                master.currentWatchlist = match.watchlist;
-                //console.log("Watchlist corrente:", this.currentWatchlist);
-
-                // Ricreo la struttura base della griglia
-                const grid = master.addWatchlistGrid(match.watchlist);
-                main.appendChild(grid);
-
-                // Popolo i contenuti (film + serie)
-                master.renderItems(match.items, match.watchlist);
+                if(!content || content.length === 0) {
+                    const emptyMsg = document.createElement("p");
+                    emptyMsg.classList.add("text-gray-400", "italic", "p-4");
+                    emptyMsg.innerText = "Nessun contenuto in questa watchlist.";
+                    document.getElementById("watchlist_grid").appendChild(emptyMsg);
+                } else {
+                    main.#addWatchlistGridElements(content);
+                }
             }
-        };
-
-        // e poi nel costruttore o nell’inizializzazione:
-        //this.list.addEventListener("click", this.#clickmainhandle);
-        document.addEventListener("click", this.#clickmainhandle);
+        });
 
         //BOTTONE AGGIUNGI WATCHLIST
-        const addButton = document.getElementById("add_watchlist_btn");
-        if (addButton) {
-            addButton.addEventListener("click", async function() {
-                // Recupero la UL già esistente
+        document.getElementById("add_watchlist_btn").addEventListener("click", async function() {
+            //mi salvo la watchlist di base
+            let watchlistdb = await createnewwatchlistCallback();
 
+            const newItem = document.createElement("li");
+            newItem.classList.add(
+                "bg-gray-700",
+                "rounded",
+                "p-3",
+                "cursor-pointer",
+                "hover:bg-gray-600",
+                "transition",
+                "watchlist-card"
+            );
+            newItem.innerText = watchlistdb.getName();
+            newItem.dataset.watchlistId = watchlistdb.getId();
+            newItem.dataset.elements = watchlistdb.contentToJson();
 
-                const watchlistContainer = document.getElementById("watchlist_list2");
-                //Ho la necessità di creare un oggetto watchlist per passarlo
-                let newWatchlist = {
-                "name": "New Watchlist"
-                };
-                //mi salvo la watchlist di base
-                let watchlistdb = await createnewwatchlistfunc(newWatchlist,watchlistsWithContent); //chiamo la funzione del controller per salvare nel db
-                //console.log("  aa ",watchlistdb.id);           //  è UNA PROMISEEEEEE
-                //newWatchlist["content"] = [];
-                //newWatchlist["id"] = watchlistdb;
-                //potrei rilanciare il metodo get all
+            // Inserisco come primo elemento della lista esistente
+            document.getElementById("watchlist_list").prepend(newItem);
+            newItem.click();
 
+        });
 
-                const newItem = document.createElement("li");
-                newItem.classList.add(
-                    "bg-gray-700",
-                    "rounded",
-                    "p-3",
-                    "cursor-pointer",
-                    "hover:bg-gray-600",
-                    "transition"
-                );
-                newItem.innerText = "New Watchlist";
-                newItem.id = `watchlist-${watchlistdb.id}`;
-                newItem.dataset.watchlistId = watchlistdb.id;
-                //newItem.dataset.watchlistId = Date.now();
+        /**
+         * Adding click event listeners for movies and series cards and delete
+         */
+        document.getElementById("watchlist_grid").addEventListener("click", async function(event) {
+            const remove_button = event.target.closest(".remove-button");
+            if (remove_button && document.body.contains(remove_button)) {
+                event.stopPropagation();
+                let type = null;
+                remove_button.parentElement.classList.contains("movie-card") ? type = "Movie" : type = "Serie";
+                let element_id = remove_button.parentElement.querySelector("input").value;
 
-                // Inserisco come primo elemento della lista esistente
-                //list.prepend(newItem);
-                watchlistContainer.prepend(newItem);
-                //watchlistsWithContent.push(watchlistdb);
-                //const id = li.dataset.watchlistId;
-                newItem.click();
+                let res = await removeElementCallback(document.getElementById("watchlist_header").querySelector("input[name='watchlist_id']").value, type, element_id);
 
-            });
-        }
+                if(res == 200) {
+                    remove_button.parentElement.remove();
+                }
 
-        // Handle click function
-        // Qui implemento il click per la schermata di dettaglio film/serie
-        this.#clickHandle = function(event) {
-            //devo aggiungere queste classi, movie-card e serie-card, alle card dei film e delle serie
+                return;
+            }
+
             const card = event.target.closest(".movie-card, .serie-card");
-
             if (card && document.body.contains(card)) {
                 const input = card.querySelector("input");
                 if (!input) return;
@@ -144,364 +353,69 @@ export class WatchlistView extends View {
                     serie_click_callback(id);
                 }
             }
-        }
-
-        /**
-         * Adding click event listeners for movies and series cards
-         */
-        document.addEventListener("click", this.#clickHandle);
-
-        this.#clickbuttonhandle = function(event) {
-            //devo aggiungere queste classi, movie-card e serie-card, alle card dei film e delle serie
-            const button = event.target.closest(".renamebutton");
-
-            if (button && document.body.contains(button)) {
-                //const input = card.querySelector("input");
-                //posso usare il dataset del bottone
-                //METTO IL RESTO DEL CODICE
-                let id = button.dataset.watchlistId;
-                //Visto che ora gli Id sono parametrici posso prendermi tutti gli elementi associati che voglio
-                const watchlist_title = document.getElementById("title-" + id);
-
-                let input = "Renamed Watchlist";  //                   DA CAMBIARE
-                //const id = button.dataset.watchlistId;
-                console.log("id dal dataset del bottone", id);
-                //TROPPO A CASO questa query
-                //const items = document.querySelectorAll("#watchlist_list2 li");
-
-                const li = document.getElementById(`watchlist-${id}`);
-
-                li.innerHTML = input;
-                //non mi serve cercare così
-
-                //da vedere come fixare al volo qua
-                const wl = watchlistsWithContent.find(
-                            item => String(item.watchlist.id) === String(id)
-                            ) || null;
-                console.log("search",watchlistsWithContent[id]);
-                wl.watchlist.name = input;
-                //RENAME NELLA STRUTTURA DATI, MA VA COMUNQUE
-                //RIRENDERIZZATA LA WATCHLIST LIST Oppure si cambia il campo specifico
-                //PROBABILMENTE è L'opzione MIGLIORE
-                //ALLA creazione dell'elemento della watchlist si mette nel dataset anche l'id
-                //console.log("Watchlist trovata per rename:", wl);
-
-                //const newName = prompt("Nuovo nome della watchlist:", "wl.name");
-
-
-/*                     if (input && input.trim() !== "") {
-                        // aggiorno l’oggetto in memoria
-                        wl.name = input.trim();
-
-                        // aggiorno il titolo nel DOM
-                        //const watchlist_title = document.getElementById("watchlist_title");
-                        //Ho la necessità di creare un oggetto watchlist per passarlo
-
-                        watchlist_title.innerHTML = input;
-                        // salvo sul DB
-                        //saveWatchlist(wl);
-                    } */
-
-
-                //INPUT HARDCODATO per ora
-
-                //MI DEVO PRENDERE LA WATCHLIST CORRENTE
-                const match = watchlistsWithContent.find(w => w.watchlist.id == id);
-                this.currentWatchlist = match.watchlist;
-                const renamingwatchlist = match.watchlist;
-                //console.log("Watchlist da rinominare:", renamingwatchlist);
-                renamingwatchlist.name = input;  //ERRORE QUA
-                let watchlistdb = updatewatchlistfunc(renamingwatchlist); //chiamo la funzione del controller per salvare nel db
-
-                // Inserisco come primo elemento della lista esistente
-                //list.prepend(newItem);
-                //watchlistContainer.prepend(newItem);
-
-                //console.log("Nuova watchlist aggiunta!");
-
-/*                 if (!input) return;
-
-                const id = input.value;
-
-                if (card.classList.contains("movie-card")) {
-
-                     //Adding click events for movies
-
-                    movie_click_callback(id);
-                } else if (card.classList.contains("serie-card")) {
-
-                    Adding click event for series
-
-                    serie_click_callback(id);
-                }
-                */
-            }
-        }
-
-        document.addEventListener("click", this.#clickbuttonhandle);
-
-
-
-    }
-
-    removeDocumentEventListeners() {
-        document.removeEventListener("click", this.#clickHandle);
-    }
-
-
-    //step 1)crea il layout di base chiamato da render e sincrono
-    //NULLA DA CAMBIARE QUI
-    createWatchlistsLayout() {
-    // Root container con grid
-    const container = document.createElement("div");
-    container.id = "watchlists_layout";
-    container.classList.add(
-        "grid",
-        "grid-cols-8",
-        "min-h-screen",
-        "bg-gray-900",
-        "text-white",
-        "w-full"
-    );
-
-    // Sidebar
-    const sidebar = document.createElement("aside");
-    sidebar.id = "watchlist_sidebar";
-    sidebar.classList.add(
-        "bg-gray-800",
-        "p-4",
-        "overflow-y-auto",
-        "col-span-2",
-        "flex",
-        "flex-col"
-    );
-
-    // Header della sidebar con titolo + bottone
-    const sidebarHeader = document.createElement("div");
-    sidebarHeader.classList.add("flex", "items-center", "justify-between", "mb-4");
-
-    const sidebarTitle = document.createElement("h2");
-    sidebarTitle.classList.add("text-lg", "font-bold");
-    sidebarTitle.innerText = "Your watchlists";
-
-    const addButton = document.createElement("button");
-    addButton.id = "add_watchlist_btn";
-    addButton.innerText = "+";
-    addButton.classList.add(
-        "bg-blue-600",
-        "hover:bg-blue-700",
-        "text-white",
-        "font-bold",
-        "w-8",
-        "h-8",
-        "rounded-full",
-        "flex",
-        "items-center",
-        "justify-center",
-        "shadow"
-    );
-
-    sidebarHeader.appendChild(sidebarTitle);
-    sidebarHeader.appendChild(addButton);
-    sidebar.appendChild(sidebarHeader);
-
-    // Qui verranno aggiunte le watchlist
-    const watchlistContainer = document.createElement("ul");
-    watchlistContainer.id = "watchlist_list";
-    watchlistContainer.classList.add("space-y-2");
-    sidebar.appendChild(watchlistContainer);
-
-    container.appendChild(sidebar);
-
-    // Main content
-    const main = document.createElement("div");
-    main.id = "watchlist_main";
-    main.classList.add("flex", "col-start-3", "col-span-6", "flex-col", "p-6");
-    container.appendChild(main);
-
-    // Append al DOM
-    document.body.querySelector("main").appendChild(container);
-    }
-
-    async populateWatchlistsLayout(watchlistsfunc) {
-        let watchlists = await watchlistsfunc();
-        const sidebar = document.getElementById("watchlist_sidebar");
-        const main = document.getElementById("watchlist_main");
-
-        if (!sidebar || !main) {
-            console.error("La struttura non è stata ancora creata. Chiama createWatchlistsLayout() prima.");
-            return;
-        }
-
-        const list = document.createElement("ul");
-        list.id = "watchlist_list2";
-        list.classList.add("space-y-2");
-
-        // Creo gli <li> per ogni watchlist
-        const items = watchlists.map(w => {
-            const li = document.createElement("li");
-            li.classList.add(
-                "bg-gray-700",
-                "rounded",
-                "p-3",
-                "cursor-pointer",
-                "hover:bg-gray-600",
-                "transition"
-            );
-            li.innerText = w.name;
-            li.id = `watchlist-${w.id}`;
-            li.dataset.watchlistId = w.id; // salvo un riferimento utile
-            list.appendChild(li);
-            return { element: li, data: w };
         });
 
-        sidebar.appendChild(list);
+        /**
+         * Enable the rename field
+         */
+        document.getElementById("rename_button").addEventListener("click", function(event) {
+            let header = document.getElementById("watchlist_header");
 
-        // Mostro di default la prima watchlist
-        if (watchlists.length > 0) {
-            const grid = this.addWatchlistGrid(watchlists[0]);
-            main.appendChild(grid);
-            //SALVO NELLA CLASSE
-            this.currentWatchlist = watchlists[0];
-
-            // Qui puoi già renderizzare i contenuti perché watchlistsfunc li ha forniti
-            if (Array.isArray(watchlists[0].items) && watchlists[0].items.length > 0) {
-                this.renderItems(watchlists[0].items, watchlists[0].watchlist ?? watchlists[0]);
+            header.querySelector("p.error-field").innerText = "";
+            if(document.getElementById("watchlist_title").classList.contains("hidden")) {
+                document.getElementById("rename_watchlist_input").parentElement.classList.add("hidden");
+                document.getElementById("rename_watchlist_input").value = document.getElementById("watchlist_title").innerText;
+                document.getElementById("watchlist_title").classList.remove("hidden");
+            } else {
+                document.getElementById("watchlist_title").classList.add("hidden");
+                document.getElementById("rename_watchlist_input").parentElement.classList.remove("hidden");
             }
-        }
+        });
 
-        // Ritorno i riferimenti per l'uso in addEventListeners
-        return { items, main };
-    }
+        /**
+         * Rename a watchlist
+         */
+        document.getElementById("rename_form").addEventListener("submit", async function(event) {
+            event.preventDefault()
+            this.querySelector("p.error-field").innerText = "";
 
-
-
-    //Questa genera la struttura a destra, prima di lanciare renderItems
-    addWatchlistGrid(watchlist) {
-        // Container principale
-        const grid_container = document.createElement("div");
-        grid_container.id = "watchlist_grid";
-        grid_container.className = "flex flex-col p-6 min-h-[calc(100vh-4rem)] box-border";
-
-        // --- HEADER ben visibile ---
-        // Creo l'header
-        const header = document.createElement("header");
-
-        header.className = "flex items-center gap-4";
-
-        // Titolo
-        const title = document.createElement("h1");
-        title.id = `title-${watchlist.id}`;
-        title.className = "text-2xl sm:text-3xl font-bold text-gray-900 text-white";
-        title.innerText = "" + watchlist.name; // qui puoi sostituire con watchlist.name o altro
-
-        // Bottone
-        const renameButton = document.createElement("button");
-        renameButton.id =  `rename-${watchlist.id}`;
-        renameButton.dataset.watchlistId = watchlist.id;
-
-        renameButton.type = "button";
-        renameButton.className = `
-        renamebutton inline-flex items-center px-4 py-2 border border-transparent
-        text-sm font-medium rounded-md shadow-sm
-        bg-indigo-600 text-white hover:bg-indigo-700
-        focus:outline-none focus:ring-2 focus:ring-indigo-500
-        `;
-        renameButton.innerHTML = `
-        <svg xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            class="w-5 h-5">
-            <path stroke-linecap="round"
-                stroke-linejoin="round"
-                d="m16.862 4.487 1.687-1.688a1.875 1.875
-                    0 1 1 2.652 2.652L10.582 16.07a4.5 4.5
-                    0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5
-                    0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5
-                    7.125M18 14v4.75A2.25 2.25 0 0 1 15.75
-                    21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25
-                    2.25 0 0 1 5.25 6H10" />
-        </svg>
-        `;
-
-        // Assemblo
-        header.appendChild(title);
-        header.appendChild(renameButton);
-
-        // Ora puoi appenderlo dove serve, ad esempio:
-        grid_container.appendChild(header);
-
-        // --- GRID ---
-        const grid = document.createElement("div");
-        grid.className = "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 items-start content-start";
-
-        // Placeholder se vuota
-        if (!watchlist.content || watchlist.content.length === 0) {
-            const placeholder = document.createElement("div");
-            placeholder.className = "col-span-full flex flex-col items-center justify-center text-gray-400 italic p-12 border-2 border-dashed border-gray-600 rounded-lg h-[300px]";
-            placeholder.innerHTML = `
-                <span class="text-5xl mb-4">🎬</span>
-                <p class="text-lg">Nessun contenuto in questa watchlist</p>
-            `;
-            grid.appendChild(placeholder);
-        }
-
-        grid_container.appendChild(grid);
-        return grid_container;
-    }
-
-    async renderItems(items) {
-    this.addWatchlistGridElements(items);
-    }
-
-    async addWatchlistGridElements(items) {
-        const grid = document.getElementById("watchlist_grid").querySelector("div");
-        grid.innerHTML = "";
-
-        if (!items || items.length === 0) {
-            const emptyMsg = document.createElement("p");
-            emptyMsg.classList.add("text-gray-400", "italic", "p-4");
-            emptyMsg.innerText = "Nessun contenuto in questa watchlist.";
-            grid.appendChild(emptyMsg);
-            return;
-        }
-
-        items.forEach(item => {
-            const card = document.createElement("div");
-            card.classList.add(
-                "bg-gray-800",
-                "rounded-lg",
-                "overflow-hidden",
-                "shadow-lg",
-                "cursor-pointer",
-                "hover:scale-105",
-                "transition",
-                "duration-200"
-            );
-
-            // Aggiungo la classe specifica in base al tipo
-            if (item.title) {
-                card.classList.add("movie-card");
-            } else if (item.name) {
-                card.classList.add("serie-card");
+            let watchlist = await renameWatchlistcallback(this.parentElement.querySelector("input[name='watchlist_id']").value, this.querySelector("input").value);
+            if(watchlist == 400) {
+                this.querySelector("p.error-field").innerText = "Something went wrong!";
+            } else {
+                document.getElementById("watchlist_list").querySelector("li[data-watchlist-id='" + this.parentElement.querySelector("input[name='watchlist_id']").value + "'").innerText = watchlist.getName();
+                document.getElementById("rename_watchlist_input").parentElement.classList.add("hidden");
+                document.getElementById("watchlist_title").innerText = watchlist.getName();
+                document.getElementById("watchlist_title").classList.remove("hidden");
             }
+        });
 
-            // 🔹 ID nascosto
-            const hiddenInput = document.createElement("input");
-            hiddenInput.type = "hidden";
-            hiddenInput.value = item.id;
-            card.appendChild(hiddenInput);
+        /**
+         * Delete a watchlist
+         */
+        document.getElementById("delete_watchlist_button").addEventListener("click", async function(event) {
+            let watchlist_id = document.getElementById("watchlist_header").querySelector("input[name='watchlist_id']").value;
+            let res = await deleteWatchlistCallback(watchlist_id);
 
-            // Poster
-            const img = document.createElement("img");
-            img.src = MovieDBService.getImageSrc("w780", item.poster_path);
-            img.alt = item.title || item.name;
-            img.classList.add("w-full", "h-64", "object-cover");
-            card.appendChild(img);
+            if(res == 200) {
+                console.log('Ciao');
+                document.getElementById("watchlist_list").querySelector("li[data-watchlist-id='" + watchlist_id + "'").remove();
+                document.getElementById("watchlist_list").querySelector("li").click();
+            }
+        });
 
-            grid.appendChild(card);
+        // Remove button over events
+        document.getElementById("watchlist_grid_container").addEventListener("mouseover", function(event) {
+            const card = event.target.closest(".movie-card, .serie-card");
+            if (card && document.body.contains(card)) {
+                card.querySelector(".remove-button").classList.remove("hidden");
+            }
+        });
+        document.getElementById("watchlist_grid_container").addEventListener("mouseout", function(event) {
+            const card = event.target.closest(".movie-card, .serie-card");
+            if (card && document.body.contains(card)) {
+                card.querySelector(".remove-button").classList.add("hidden");
+            }
         });
     }
 
