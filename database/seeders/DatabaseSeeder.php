@@ -22,27 +22,12 @@ class DatabaseSeeder extends Seeder
         //php artisan migrate:fresh --seed
         //droppa tutto,remigra e riesegue i seeder
 
-
-        User::factory()->create([
-            'name' => 'Gerry',
-            'surname' => 'Scotti',
-            'email' => 'gerry.scotti@mediaset.it',
-            'username' => 'gerry.scotti',
-            'password' => bcrypt('cadutalibera!'),
-            'remember_token' => Str::random(10),
-            'role' => 'default',
-            'status' => 1,
-            'watchlistpriv' => 1,
-            'theme' => 0,
-            'preferredgenres' => ['Game Show', 'Reality'],
-            'nationality' => 'Italy'
-        ]);
-
+        //utente Andrea iannotti  id = 1
         User::factory()->create([
             'name' => 'Andrea',
-            'surname' => 'Di Simone',
-            'email' => 'gerry.scotti2@mediaset.it',
-            'username' => 'andrea.disimone',
+            'surname' => 'Iannotti',
+            'email' => 'andrea.iannotti@student.univaq.it',
+            'username' => 'andrea.iannotti',
             'password' => bcrypt('cadutalibera!'),
             'remember_token' => Str::random(10),
             'role' => 'default',
@@ -50,146 +35,82 @@ class DatabaseSeeder extends Seeder
             'watchlistpriv' => 1,
             'theme' => 0,
             'preferredgenres' => ['Game Show', 'Reality'],
-            'nationality' => 'Italy'
+            'nationality' => 'Italy',
+            'propic' => 'ProfilePictureFoto/propic1.jpg'
         ]);
 
-        // User::factory(10)->create();
-        User::factory(20)->create();
+        //utente Andrea Luca Di Simone id = 2
+        User::factory()->create([
+            'name' => 'Andrea Luca',
+            'surname' => 'Di Simone',
+            'email' => 'andrealuca.disimone@student.univaq.it',
+            'username' => 'andrealuca.disimone',
+            'password' => bcrypt('cadutalibera!'),
+            'remember_token' => Str::random(10),
+            'role' => 'default',
+            'status' => 1,
+            'watchlistpriv' => 1,
+            'theme' => 0,
+            'preferredgenres' => ['Game Show', 'Reality'],
+            'nationality' => 'Italy',
+            'propic' => 'ProfilePictureFoto/propic2.jpg'
+        ]);
 
+        //utente Lorenzo D'Angelo id = 3
+        User::factory()->create([
+            'name' => 'Lorenzo',
+            'surname' => "D'Angelo",
+            'email' => 'lorenzo.dangelo1@student.univaq.it',
+            'username' => 'lorenzo.dangelo',
+            'password' => bcrypt('cadutalibera!'),
+            'remember_token' => Str::random(10),
+            'role' => 'default',
+            'status' => 1,
+            'watchlistpriv' => 1,
+            'theme' => 0,
+            'preferredgenres' => ['Game Show', 'Reality'],
+            'nationality' => 'Italy',
+            'propic' => 'ProfilePictureFoto/propic4.jpg'
+        ]);
 
+        //utente prof Serafino Cicerone id = 4
         User::factory()->create([
             'name' => 'Serafino',
-            'surname' => 'Cicerone',
+            'surname' => "Cicerone",
             'email' => 'serafino.cicerone@univaq.it',
             'username' => 'serafino.cicerone',
             'password' => bcrypt('frontend!'),
+            'remember_token' => Str::random(10),
+            'role' => 'default',
+            'status' => 1,
+            'watchlistpriv' => 1,
+            'theme' => 0,
             'preferredgenres' => ['Comedy', 'Horror', 'Action'],
-            'email_verified_at' => now(),
+            'nationality' => 'Italy',
+            'propic' => 'ProfilePictureFoto/propic6.jpg'
         ]);
 
+        User::factory(46)->create();
 
-
-        Watchlist::factory()->create([
-            'name' => 'My Watchlist1',
-            'content' => [
-                ['type' => 'Movie', 'id' => 550],
-                ['type' => 'Serie', 'id' => 76479],
-            ],
-            'user_id' => 1,
-        ]);
-
-        Watchlist::factory()->create([
-            'name' => 'My Watchlist2',
-            'content' => [
-                ['type' => 'Movie', 'id' => 872585],
-                ['type' => 'Serie', 'id' => 1396],
-            ],
-            'user_id' => 1,
-        ]);
-
-        Watchlist::factory()->create([
-            'name' => 'My Watchlist3',
-            'content' => [
-                ['type' => 'Movie', 'id' => 872585],
-                ['type' => 'Serie', 'id' => 1396],
-            ],
-            'user_id' => 1,
-        ]);
-
-        Watchlist::factory()->create([
-            'name' => 'My Watchlist4',
-            'content' => [
-                ['type' => 'Movie', 'id' => 872585],
-                ['type' => 'Serie', 'id' => 1396],
-            ],
-            'user_id' => 1,
-        ]);
-
-        Watchlist::factory()->create([
-            'name' => 'My Watchlist5',
-            'content' => [
-                ['type' => 'Movie', 'id' => 872585],
-                ['type' => 'Serie', 'id' => 1396],
-            ],
-            'user_id' => 1,
-        ]);
-
-        Watchlist::factory()->create([
-            'name' => 'My Watchlist6',
-            'content' => [
-                ['type' => 'Movie', 'id' => 872585],
-                ['type' => 'Serie', 'id' => 1396],
-            ],
-            'user_id' => 1,
-        ]);
-
-        Watchlist::factory()->create([
-            'name' => 'My Watchlist7',
-            'content' => [
-                ['type' => 'Movie', 'id' => 872585],
-                ['type' => 'Serie', 'id' => 1396],
-            ],
-            'user_id' => 1,
-        ]);
-
-        Watchlist::factory()->create([
-            'name' => 'My Watchlist8',
-            'content' => [
-                ['type' => 'Movie', 'id' => 872585],
-                ['type' => 'Serie', 'id' => 1396],
-            ],
-            'user_id' => 1,
-        ]);
+        for ($i = 0; $i < 50; $i++) {
+            $watchlistCount = rand(3, 5); // numero casuale di commenti per post
+            for ($j = 0; $j < $watchlistCount; $j++) {
+                Watchlist::factory()->create([
+                'user_id' => $i,
+                ]);
+            }
+        }
 
         Group::factory()->create([
             'name' => 'Cinephiles United',
             'description' => 'A group for movie enthusiasts to share reviews and recommendations.',
         ]);
 
-        Group::factory(50)->create();
-
-
-        Post::factory()->create([
-            'content' => 'Hello World!',
-            'group_id' => 1,
-            'author_id' => 12,
-            'movies' => [550, 120], //come sono gestite le serie?
-            //bisognerebbe cambiare il modello e le migrazioni, basta copiare
-            //le watchlist
-        ]);
-
-        Post::factory()->create([
-            'content' => 'Second Post',
-            'group_id' => 1,
-            'author_id' => 1,
-            'movies' => null,
-        ]);
+        Group::factory(49)->create();
 
         Post::factory(150)->create();
 
         // assegnazione membri ai gruppi
-        $group = Group::first();
-
-        if ($group) {
-            $specificUserIds = [1, 12]; // utenti creati esplicitamente sopra
-            $randomUserIds = User::whereNotIn('id', $specificUserIds)
-                ->inRandomOrder()
-                ->take(3)
-                ->pluck('id')
-                ->toArray();
-
-            $group->users()->syncWithoutDetaching(array_merge($specificUserIds, $randomUserIds));
-        }
-
-        // crea un secondo gruppo e assegna membri casuali
-        $secondGroup = Group::factory()->create([
-            'name' => 'Weekend Watchers',
-            'description' => 'Casual weekend movie club.',
-        ]);
-
-        $secondGroup->users()->syncWithoutDetaching(
-            User::inRandomOrder()->take(4)->pluck('id')->toArray()
-        );
 
         // assegna circa 5 gruppi esistenti a ogni utente (non crearne di nuovi)
         $totalGroups = Group::count();
@@ -224,7 +145,8 @@ class DatabaseSeeder extends Seeder
                 Comment::factory()->create([
                     'post_id' => $post->id,
                     'user_id' => $authorId,
-                    'content' => 'Commento di prova ' . Str::random(8),
+                    //'content' => 'Commento di prova ' . Str::random(8),
+                    'content' => 'Commento di prova ' . fake()->realText(20, 3),
                 ]);
             }
         });

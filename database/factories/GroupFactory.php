@@ -18,11 +18,11 @@ class GroupFactory extends Factory
     {
         return [
             'name' => fake()->company(),
-            'description' => fake()->paragraph(),
+            'description' => fake()->realText(200, 3),
             'visibility' => fake()->randomElement(['public', 'private']),
             'token' => fake()->randomNumber(),
             'propic' => null,
-            'user_id' => fake()->numberBetween(1, 20),
+            'user_id' => fake()->numberBetween(1, 50),
         ];
     }
 }

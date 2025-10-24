@@ -41,6 +41,8 @@ class UserFactory extends Factory
                 ['Action', 'Adventure', 'Comedy', 'Drama', 'Horror', 'Romance', 'Sci-Fi', 'Thriller'],
                 rand(1, 4)
             ),
+            'propic' => 'ProfilePictureFoto/propic' . rand(1, 5) . '.jpg'
+
         ];
     }
 

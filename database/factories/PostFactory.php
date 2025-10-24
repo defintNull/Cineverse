@@ -18,11 +18,13 @@ class PostFactory extends Factory
     {
         return [
             //
-            'content' => fake()->paragraphs(3, true),
-            'movies' => json_encode([1,2,3]),
+            //'content' => fake()->paragraphs(3, true),
+            'content' => fake()->realText(200, 3),
+            'movies' => json_encode([550,120]),
             'author_id' => fake()->numberBetween(1, 20),
             'group_id' => fake()->numberBetween(1, 50),
-            'title' => fake()->name(),
+            //'title' => fake()->name(),
+            'title' => fake()->realText(30, 3),
         ];
     }
 }
