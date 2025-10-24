@@ -1,6 +1,8 @@
 import { AddButton } from "../Components/AddButton";
 import { Button } from "../Components/Button";
+import { CommentComponent } from "../Components/CommentComponent";
 import { DeleteButton } from "../Components/DeleteButton";
+import { ExitButton } from "../Components/exitButton";
 import { GroupCard } from "../Components/GroupCard";
 import { GroupComponent } from "../Components/GroupComponent";
 import { HeaderComponent } from "../Components/HeaderComponent";
@@ -29,8 +31,11 @@ export class GroupView extends View {
     #select;
     #textarea;
     #imageInput;
+    #commentComponent;
+    #exitButton;
 
     #scrollHandle;
+    #commentScrollHandle;
 
     constructor() {
         super();
@@ -46,6 +51,8 @@ export class GroupView extends View {
         this.#select = new Select();
         this.#textarea = new Textarea();
         this.#imageInput = new ImageInput();
+        this.#commentComponent = new CommentComponent();
+        this.#exitButton = new ExitButton();
     }
 
     render() {
@@ -115,7 +122,7 @@ export class GroupView extends View {
 
     }
 
-    addEventListeners(searchHandler, getPostsHandler, joinGroupHandler, exitGroupHandler, createGroupHandler, createPostHandler) {
+    addEventListeners(searchHandler, getPostsHandler, joinGroupHandler, exitGroupHandler, createGroupHandler, createPostHandler, getCommentsHandler) {
         let main = this;
         this.#scrollHandle = this.#addGroupScrollHandler.bind(
             this,
@@ -340,6 +347,70 @@ export class GroupView extends View {
             const info_button = event.target.closest(".header > div > button.normal-button");
             if(info_button && this.contains(info_button)) {
                 document.querySelector("div.header > div.container").classList.toggle("hidden");
+            }
+        });
+
+        // Comments button event
+        document.getElementById("element_container").addEventListener("click", async function(event) {
+            const comment_button = event.target.closest("div.comments");
+            if(comment_button && this.contains(comment_button)) {
+                let parent = comment_button.parentElement.parentElement;
+
+                let comment_section = document.createElement("div");
+                comment_section.id = "comment_section";
+                comment_section.classList.add("absolute", "bottom-0", "right-0", "w-[77.7777%]", "h-svh", "overflow-y-auto", "z-60", "bg-gray-100", "dark:bg-gray-800", "scrollbar", "scrollbar-thumb-gray-400", "scrollbar-track-gray-100", "dark:scrollbar-thumb-gray-500", "dark:scrollbar-track-gray-800");
+
+                let container = document.createElement("div");
+                container.classList.add("flex", "flex-col", "relative", "w-full", "items-center", "py-12", "px-20", "gap-y-6");
+
+                let exit_button = main.#exitButton.getComponentElement();
+                exit_button.id = "exit_comment";
+                container.appendChild(exit_button);
+
+                // Exit comments event
+                exit_button.addEventListener("click", function(event) {
+                    document.getElementById("comment_section").remove();
+                });
+
+                let title = document.createElement("p");
+                title.classList.add("text-2xl", "font-semibold", "text-gray-900", "text-white");
+                title.innerText = "Comment section";
+                container.appendChild(title);
+                let comment_container = document.createElement("div");
+                comment_container.id = "comment_container";
+                comment_container.classList.add("flex", "flex-col", "w-full", "gap-y-6");
+
+                let comments = await getCommentsHandler(parent.querySelector("input[name='id']").value, true);
+                comments.forEach(comment => {
+                    let comment_element = main.#commentComponent.getComponentElement();
+                    comment_element.querySelector("p.username").innerText = comment.getUserUsername();
+                    comment_element.querySelector("p.content").innerText = comment.getContent();
+                    let img = comment.getUserPropicSrc();
+                    if(img !== null) {
+                        let propic = comment_element.querySelector("img");
+                        propic.src = img;
+                        comment_element.querySelector("svg").classList.add("hidden");
+                        propic.classList.remove("hidden");
+                    }
+
+                    comment_container.appendChild(comment_element);
+                });
+                container.appendChild(comment_container);
+
+                comment_section.appendChild(container);
+
+                document.getElementById("element_container").style.overflow = 'hidden';
+                document.body.querySelector("main").appendChild(comment_section);
+
+                // Setting scroll handler
+                main.#commentScrollHandle = main.#commentScrollHandler.bind(
+                    main,
+                    comment_section,
+                    parent.querySelector("input[name='id']").value,
+                    getCommentsHandler
+                )
+
+                comment_section.addEventListener("scroll", main.#commentScrollHandle);
             }
         });
 
@@ -675,6 +746,40 @@ export class GroupView extends View {
             document.getElementById("popup").remove();
         } else {
             error_field.classList.remove("hidden");
+        }
+    }
+
+    async #commentScrollHandler(container, id, commentHandler) {
+        // Altezza totale del contenuto scrollabile
+        const scrollHeight = container.scrollHeight;
+        // Altezza visibile del div
+        const clientHeight = container.clientHeight;
+        // Quanto è stato scrollato in verticale
+        const scrollTop = container.scrollTop;
+
+        if (scrollTop + clientHeight >= scrollHeight - 100) {
+            container.removeEventListener("scroll", this.#commentScrollHandle);
+
+            let comment_container = document.getElementById("comment_container");
+            let comments = await commentHandler(id, false);
+            comments.forEach(comment => {
+                let comment_element = this.#commentComponent.getComponentElement();
+                comment_element.querySelector("p.username").innerText = comment.getUserUsername();
+                comment_element.querySelector("p.content").innerText = comment.getContent();
+                let img = comment.getUserPropicSrc();
+                if(img !== null) {
+                    let propic = comment_element.querySelector("img");
+                    propic.src = img;
+                    comment_element.querySelector("svg").classList.add("hidden");
+                    propic.classList.remove("hidden");
+                }
+
+                comment_container.appendChild(comment_element);
+            });
+
+            if(comments.length != 0) {
+                container.addEventListener("scroll", this.#commentScrollHandle);
+            }
         }
     }
 }

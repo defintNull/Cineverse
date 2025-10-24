@@ -1,3 +1,4 @@
+import { Comment } from "../Models/Comment";
 import { Group } from "../Models/Group";
 import { Post } from "../Models/Post";
 import { SPAFetchService } from "../Services/SPAFetchService";
@@ -10,12 +11,14 @@ export class GroupController extends Controller {
 
     #groupsPage;
     #postsPage;
+    #commentPage;
 
     constructor() {
         super();
         this.#groupView = new GroupView();
         this.#groupsPage = 1;
         this.#postsPage = 1;
+        this.#commentPage = 1;
     }
 
     async start() {
@@ -32,6 +35,7 @@ export class GroupController extends Controller {
             this.#exitGroup.bind(this),
             this.#createGroup.bind(this),
             this.#createPost.bind(this),
+            this.#getComments.bind(this),
         );
     }
 
@@ -119,5 +123,20 @@ export class GroupController extends Controller {
         } else {
             return 400;
         }
+    }
+
+    async #getComments(id, reset = false) {
+        if(reset) {
+            this.#commentPage = 1;
+        }
+        let res = await this.#spa_fetch.GETFetch('spa/posts/' + id + '/comments', {"page": this.#commentPage});
+        if(res.status == 200) {
+            let json = await res.json();
+            let comments = json.comments.data;
+            comments = comments.map(el => new Comment(el));
+            this.#commentPage += 1;
+            return comments;
+        }
+        return [];
     }
 }

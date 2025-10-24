@@ -7,6 +7,7 @@ use App\Http\Controllers\Portal\WatchlistController;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Authentication\Profile;
+use App\Http\Controllers\Portal\CommentController;
 use App\Http\Controllers\Portal\GroupController;
 use App\Http\Controllers\Portal\PostController;
 
@@ -60,6 +61,10 @@ Route::middleware(AjaxMiddleware::class)->name('spa.')->prefix('spa')->group(fun
                 ->name('quit');
             Route::post('/store', [GroupController::class, 'store'])
                 ->name('store');
+        });
+
+        Route::middleware('auth:sanctum')->group(function(){
+            Route::apiResource('posts.comments', CommentController::class);
         });
     });
 

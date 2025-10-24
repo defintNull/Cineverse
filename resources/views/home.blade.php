@@ -56,14 +56,6 @@
                     </ul>
                 </div>
             </div>
-            {{-- <a href="{{ url('/profile') }}" title="Profilo" class="flex items-center space-x-2 group focus:outline-none focus:ring-2 focus:ring-yellow-300 rounded">
-                <span class="sr-only">Profilo</span>
-                <svg class="w-10 h-10 rounded-full border-2 border-white group-hover:border-yellow-300 bg-white text-blue-600 transition"
-                     fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-                    <circle cx="12" cy="8" r="4" />
-                    <path d="M4 20c0-4 4-6 8-6s8 2 8 6" />
-                </svg>
-            </a> --}}
         </div>
     </header>
 
