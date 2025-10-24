@@ -30,7 +30,8 @@ export class WatchlistView extends View {
             "grid",
             "grid-cols-8",
             "min-h-screen",
-            "bg-gray-900",
+            "dark:bg-gray-900",
+            "bg-gray-100",
             "text-white",
             "w-full"
         );
@@ -39,7 +40,8 @@ export class WatchlistView extends View {
         const sidebar = document.createElement("aside");
         sidebar.id = "watchlist_sidebar";
         sidebar.classList.add(
-            "bg-gray-800",
+            "dark:bg-gray-800",
+            "bg-gray-200",
             "p-4",
             "overflow-y-auto",
             "col-span-2",
@@ -52,7 +54,7 @@ export class WatchlistView extends View {
         sidebarHeader.classList.add("flex", "items-center", "justify-between", "mb-4");
 
         const sidebarTitle = document.createElement("h2");
-        sidebarTitle.classList.add("text-lg", "font-bold");
+        sidebarTitle.classList.add("text-lg", "font-bold", "dark:text-white", "text-gray-900");
         sidebarTitle.innerText = "Your watchlists";
 
         const addButton = document.createElement("button");
@@ -106,7 +108,7 @@ export class WatchlistView extends View {
         // Titolo
         const title = document.createElement("h1");
         title.id = `watchlist_title`;
-        title.className = "text-2xl sm:text-3xl font-bold text-gray-900 text-white";
+        title.className = "text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white";
         input_container.appendChild(title);
 
         // Change name input
@@ -180,13 +182,17 @@ export class WatchlistView extends View {
         const items = watchlists.map(w => {
             const li = document.createElement("li");
             li.classList.add(
-                "bg-gray-700",
+                "dark:bg-gray-700",
+                "bg-slate-50",
                 "watchlist-card",
                 "rounded",
                 "p-3",
                 "cursor-pointer",
-                "hover:bg-gray-600",
-                "transition"
+                "dark:hover:bg-gray-600",
+                "hover:bg-gray-100",
+                "transition",
+                'text-gray-900',
+                "dark:text-white"
             );
             li.innerText = w.getName();
             li.dataset.watchlistId = w.getId();
@@ -208,7 +214,8 @@ export class WatchlistView extends View {
         items.forEach(item => {
             const card = document.createElement("div");
             card.classList.add(
-                "bg-gray-800",
+                "dark:bg-gray-800",
+                "bg-slate-50",
                 "rounded-lg",
                 "overflow-hidden",
                 "shadow-lg",
@@ -229,6 +236,8 @@ export class WatchlistView extends View {
             let remove_element_button = this.#remove_button.getComponentElement();
             remove_element_button.classList.remove("top-8", "left-8", "dark:hover:bg-gray-700", "hover:bg-gray-200");
             remove_element_button.classList.add("top-2", "right-2", "remove-button", "hidden", "hover:bg-gray-500");
+            remove_element_button.querySelector("svg").classList.remove("text-gray-900", "dark:text-white");
+            remove_element_button.querySelector("svg").classList.add("text-white");
             card.appendChild(remove_element_button);
 
             // ID nascosto
@@ -274,6 +283,8 @@ export class WatchlistView extends View {
                 // Setting header
                 let header = document.getElementById("watchlist_header");
                 header.querySelector("input[name='watchlist_id']").value = watchlist_card.dataset.watchlistId;
+                header.querySelector("input[name='rename_watchlist']").add("hidden");
+                document.getElementById("watchlist_title").classList.remove("hidden");
                 document.getElementById("watchlist_title").innerText = watchlist_card.innerText;
                 header.querySelector("input[name='rename_watchlist']").value = watchlist_card.innerText;
                 header.querySelector("button").classList.remove("hidden");
