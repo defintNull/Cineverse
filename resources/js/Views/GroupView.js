@@ -286,7 +286,11 @@ export class GroupView extends View {
                 container.appendChild(title);
                 let img = document.createElement("img");
                 img.classList.add("h-46");
-                img.src = parent.querySelector("img").src;
+                if(!parent.querySelector("img").src.includes('null')) {
+                    img.src = parent.querySelector("img").src;
+                } else {
+                    img.src = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMTQwIiB2aWV3Qm94PSIwIDAgMjAwIDE0MCI+PHBvbHlsaW5lIHBvaW50cz0iMCwxNDAgNTAsNzAgMTAwLDE0MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjODg4IiBzdHJva2Utd2lkdGg9IjgiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjxwb2x5bGluZSBwb2ludHM9IjYwLDE0MCAxMTAsODAgMTYwLDE0MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjODg4IiBzdHJva2Utd2lkdGg9IjgiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjxjaXJjbGUgY3g9IjE2MCIgY3k9IjQwIiByPSIxMiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjODg4IiBzdHJva2Utd2lkdGg9IjgiLz48L3N2Zz4=";
+                }
                 container.appendChild(img);
                 let description = document.createElement("p");
                 description.classList.add("text-lg", "italic", "dark:text-white", "text-gray-900");
@@ -803,6 +807,11 @@ export class GroupView extends View {
             if (img_src == null) {
                 element.querySelector("img").classList.add("hidden");
             }
+            let container = element.querySelector("div.container");
+            container.querySelector("input[name='id']").value = group.getId();
+            container.querySelector("input[name='description']").value = group.getDescription();
+            container.querySelector("input[name='visibility']").value = group.getVisibility();
+            container.querySelector("input[name='token']").value = group.getToken();
             element.querySelector("img").src = group.getImageSrc();
             group_card_container.append(element);
 
