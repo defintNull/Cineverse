@@ -1,8 +1,6 @@
 import { AddButton } from "../Components/AddButton";
-import { Button } from "../Components/Button";
 import { CommentComponent } from "../Components/CommentComponent";
 import { CommentForm } from "../Components/CommentForm";
-import { DeleteButton } from "../Components/DeleteButton";
 import { ExitButton } from "../Components/exitButton";
 import { GroupCard } from "../Components/GroupCard";
 import { GroupComponent } from "../Components/GroupComponent";
@@ -195,7 +193,7 @@ export class GroupView extends View {
                     if(document.querySelector("div.header")) {
                         main.#setPostStructureLayout(false);
                     }
-                    main.#setPostStructureLayout(true, group_card.querySelector("input[name='id']").value, group_card.querySelector("input[name='description']").value, group_card.querySelector("input[name='token']").value);
+                    main.#setPostStructureLayout(true, group_card.querySelector("input[name='id']").value, group_card.querySelector("input[name='description']").value, group_card.querySelector("input[name='visibility']").value, group_card.querySelector("input[name='token']").value);
 
                     let scroll = document.getElementById("scroll");
                     scroll.innerHTML = "";
@@ -656,6 +654,7 @@ export class GroupView extends View {
             let container = element.querySelector("div.container");
             container.querySelector("input[name='id']").value = group.getId();
             container.querySelector("input[name='description']").value = group.getDescription();
+            container.querySelector("input[name='visibility']").value = group.getVisibility();
             container.querySelector("input[name='token']").value = group.getToken();
             element.querySelector("img").src = group.getImageSrc();
             group_card_container.append(element);
@@ -676,7 +675,7 @@ export class GroupView extends View {
         });
     }
 
-    #setPostStructureLayout(bool, id = null, description, token) {
+    #setPostStructureLayout(bool, id = null, description, visibility, token) {
         if(bool) {
             // Header
             let header = this.#headerComponent.getComponentElement();
@@ -694,6 +693,10 @@ export class GroupView extends View {
             let descrip = des_element.cloneNode(true);
             descrip.querySelector("p").innerText = "Description:";
             descrip.querySelectorAll("p")[1].innerText = description;
+            header.querySelector("div.container").appendChild(descrip);
+            descrip = des_element.cloneNode(true);
+            descrip.querySelector("p").innerText = "Visibility:";
+            descrip.querySelectorAll("p")[1].innerText = visibility;
             header.querySelector("div.container").appendChild(descrip);
             descrip = des_element.cloneNode(true);
             descrip.querySelector("p").innerText = "Token:";

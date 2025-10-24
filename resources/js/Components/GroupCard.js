@@ -7,6 +7,7 @@ export class GroupCard extends Component {
                 <div class="hidden container">
                     <input hidden type="text" name="id" value="" />
                     <input hidden type="text" name="description" value="" />
+                    <input hidden type="text" name="visibility" value="" />
                     <input hidden type="text" name="token" value="" />
                 </div>
             </div>`;
