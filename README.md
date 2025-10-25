@@ -1,6 +1,7 @@
 # 🎬 Cineverse
 
 Cineverse è una piattaforma web dedicata agli appassionati di cinema e serie TV, progettata per offrire un’esperienza completa di scoperta, consultazione e gestione dei propri titoli preferiti. L’applicazione consente di esplorare un vasto catalogo di film e serie provenienti da tutto il mondo, sfruttando le informazioni messe a disposizione da API esterne come [The Movie Database (TMDB)](https://www.themoviedb.org/).
+Oltre alla consultazione dei contenuti, gli utenti possono creare o unirsi a gruppi tematici, all’interno dei quali è possibile visualizzare, pubblicare e commentare post, favorendo così la condivisione di opinioni, consigli e discussioni con altri appassionati.
 
 ## 🚀 Tecnologie utilizzate
 
