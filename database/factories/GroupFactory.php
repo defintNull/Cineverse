@@ -21,8 +21,9 @@ class GroupFactory extends Factory
             'description' => fake()->realText(200, 3),
             'visibility' => fake()->randomElement(['public', 'private']),
             'token' => fake()->randomNumber(),
-            'propic' => null,
+            'propic' => 'GroupPictureFoto/gpropic' . rand(1, 5) . '.jpg',
             'user_id' => fake()->numberBetween(1, 50),
+
         ];
     }
 }
