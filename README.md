@@ -17,10 +17,21 @@ Assicurati di avere installato:
 
 - [Composer](https://getcomposer.org/)
 - [Node.js](https://nodejs.org/)
-- Un database a tua scelta (MySQL, PostgreSQL, SQLite, ecc.)
+- [Git](https://git-scm.com/)
+- Un database a scelta (MySQL, PostgreSQL, SQLite, ecc.)
 
 ### 2. Clonazione del progetto
+
+Clonare il progetto attraverso il comando nella destinazione desiderata (genererà una nuova cartella con il nome del progetto)
 
 ```bash
 git clone https://github.com/tuo-utente/cineverse.git
 cd cineverse
+```
+
+### 3. Installazione delle dipendenze
+
+```bash
+composer install
+npm install
+```
