@@ -811,10 +811,13 @@ export class GroupView extends View {
 
                 groups.forEach(group => {
                     let element = this.#groupComponent.getComponentElement();
+                    element.querySelector("p").innerText = group.getName();
                     element.querySelector("input[name='id']").value = group.getId();
                     element.querySelector("input[name='description']").value = group.getDescription();
+                    element.querySelector("input[name='visibility']").value = group.getVisibility();
+                    element.querySelector("img").src = group.getImageSrc();
                     scroll.append(element);
-                });
+                });;
 
                 if(groups.length != 0) {
                     container.addEventListener("scroll", this.#scrollHandle);
