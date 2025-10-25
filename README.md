@@ -57,11 +57,13 @@ php artisan key:generate
 php artisan migrate --seed
 ```
 
-### 3. Installazione delle dipendenze
+### ▶️ Avvio dell'applicazione
 
-Installare le dipendenze con i comandi
+Per avviare il progetto, esegui i seguenti comandi all'interno della cartella di lavoro:
 
 ```bash
-composer install
-npm install
+php artisan serve
+npm run dev
 ```
+
+Il server sarà disponibile su `localhost` alla porta `8000`
