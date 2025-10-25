@@ -211,7 +211,7 @@ export class GroupView extends View {
                     if(document.querySelector("div.header")) {
                         main.#setPostStructureLayout(false);
                     }
-                    main.#setPostStructureLayout(true, group_card.querySelector("input[name='id']").value, group_card.querySelector("input[name='description']").value, group_card.querySelector("input[name='visibility']").value, group_card.querySelector("input[name='token']").value);
+                    main.#setPostStructureLayout(true, group_card.querySelector("input[name='id']").value, group_card.querySelector("p").innerText, group_card.querySelector("input[name='description']").value, group_card.querySelector("input[name='visibility']").value, group_card.querySelector("input[name='token']").value);
 
                     let scroll = document.getElementById("scroll");
                     scroll.innerHTML = "";
@@ -733,12 +733,12 @@ export class GroupView extends View {
     /**
      * Set structure for the post section
      */
-    #setPostStructureLayout(bool, id = null, description, visibility, token) {
+    #setPostStructureLayout(bool, id = null, title, description, visibility, token) {
         if(bool) {
             // Header
             let header = this.#headerComponent.getComponentElement();
             header.querySelector("button.red-button").innerText = "Exit";
-            header.querySelector("p").innerText = "Group Title";
+            header.querySelector("p").innerText = title;
             header.querySelector("button.normal-button").innerText = "Info";
             let group_id = document.createElement("input");
             group_id.hidden = true;
