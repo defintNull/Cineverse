@@ -1,8 +1,0 @@
-[] Ricontrollare tema chiaro/scuro
-[] Sezione commenti
-[] seeder commenti
-[] commentare il codice
-[] finire pagina watchlist
-[] aggiunta film watchlist
-[] Rivedere diagramma classi
-[] decidere se fare i like
