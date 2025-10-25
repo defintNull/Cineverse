@@ -354,10 +354,18 @@ export class WatchlistView extends View {
                 let type = null;
                 remove_button.parentElement.classList.contains("movie-card") ? type = "Movie" : type = "Serie";
                 let element_id = remove_button.parentElement.querySelector("input").value;
+                let watchlist_id = document.getElementById("watchlist_header").querySelector("input[name='watchlist_id']").value;
 
-                let res = await removeElementCallback(document.getElementById("watchlist_header").querySelector("input[name='watchlist_id']").value, type, element_id);
+                let res = await removeElementCallback(watchlist_id, type, element_id);
 
                 if(res == 200) {
+                    let li = document.getElementById("watchlist_sidebar").querySelector("li[data-watchlist-id='" + watchlist_id + "'");
+                    let elements = JSON.parse(li.dataset.elements || "[]");
+
+                    elements = elements.filter(el => !(el.id == element_id && el.type == type));
+
+                    li.dataset.elements = JSON.stringify(elements);
+
                     remove_button.parentElement.remove();
                 }
 
