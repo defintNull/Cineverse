@@ -92,6 +92,7 @@ export class ProfileController extends Controller {
         } else if (res.status === 401) {
             this.#profileView.globalErrorField("Non autorizzato. Effettua il login.");
         } else if (res.status === 200) {
+            this.#navbar.renderAvatarImage();
             this.#router.overridePath({}, "/");
             localStorage.setItem("theme", payload.theme);
             (function () {

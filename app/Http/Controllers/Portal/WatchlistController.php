@@ -89,7 +89,7 @@ class WatchlistController extends Controller
     public function addElement(Request $request) : JsonResponse
     {
         $request->validate([
-            'watchlist' => ['required','integer',Rule::exists('Watchlists','id')],
+            'watchlist' => ['required','integer',Rule::exists('watchlists','id')],
             'type' => ['required', Rule::in(['Movie', 'Serie'])],
             'element_id' => ['required','integer'],
         ]);
