@@ -77,10 +77,10 @@ export class GroupView extends View {
         // Sidebar
         let sidebar = document.createElement("div");
         sidebar.id = "sidebar";
-        sidebar.classList.add("inner-scroll", "flex", "flex-col", "gap-y-4", "pb-12", "pt-6", "items-center", "col-span-2", "overflow-y-auto", "border-r-2", "border-gray-300", "dark:border-gray-500", "scrollbar", "scrollbar-thumb-gray-400", "scrollbar-track-gray-100", "dark:scrollbar-thumb-gray-500", "dark:scrollbar-track-gray-800");
+        sidebar.classList.add("inner-scroll", "flex", "flex-col", "gap-y-4", "pb-12", "items-center", "col-span-2", "overflow-y-auto", "border-r-2", "border-gray-300", "dark:border-gray-500", "scrollbar", "scrollbar-thumb-gray-400", "scrollbar-track-gray-100", "dark:scrollbar-thumb-gray-500", "dark:scrollbar-track-gray-800");
 
         let search_container = document.createElement("div");
-        search_container.classList.add("flex", "flex-col", "items-center", "w-full", "px-8", "pt-6", "sticky", "top-0", "dark:bg-gray-800", "bg-gray-100");
+        search_container.classList.add("flex", "flex-col", "items-center", "w-full", "px-8", "pt-12", "sticky", "top-0", "dark:bg-gray-800", "bg-gray-100");
 
         let title = document.createElement("p");
         title.classList.add("text-2xl", "text-gray-900", "dark:text-white", "pb-4", "font-semibold");
@@ -174,6 +174,7 @@ export class GroupView extends View {
                 element.querySelector("input[name='id']").value = group.getId();
                 element.querySelector("input[name='description']").value = group.getDescription();
                 element.querySelector("input[name='visibility']").value = group.getVisibility();
+                element.querySelector("img").src = group.getImageSrc();
                 scroll.append(element);
             });
 
@@ -233,6 +234,7 @@ export class GroupView extends View {
                         });
                     } else {
                         let placehoder = document.createElement("div");
+                        placehoder.id = "post_placeholder";
                         placehoder.classList.add("flex", "flex-col", "items-center", "justify-center", "w-full", "grow");
                         let cont = document.createElement("div");
                         cont.classList.add("w-full", "grow", "flex", "flex-col", "items-center", "justify-center");
@@ -515,7 +517,7 @@ export class GroupView extends View {
         });
 
         /**
-         * Add comment button event
+         * Add post or group button event
          */
         document.getElementById("add_button").addEventListener("click", function(event) {
             let popup = main.#popup.getComponentElement();
@@ -569,6 +571,9 @@ export class GroupView extends View {
                             propic.src = img;
                             post_element.querySelector("div.author-avatar > svg").classList.add("hidden");
                             propic.classList.remove("hidden");
+                        }
+                        if(document.getElementById("post_placeholder")) {
+                            document.getElementById("post_placeholder").remove();
                         }
                         document.getElementById("scroll").prepend(post_element);
                         document.getElementById("element_container").scrollTo({
