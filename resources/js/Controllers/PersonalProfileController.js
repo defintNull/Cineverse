@@ -3,6 +3,7 @@ import { ProfileView } from "../Views/PersonalProfileView";
 import { Router } from "../router";
 import { SPAFetchService } from "../Services/SPAFetchService";
 import { Navbar } from "../navbar";
+import { StorageService } from "../Services/StorageService";
 
 /**
  * Controller class that manages the profile editing route
@@ -11,6 +12,7 @@ export class ProfileController extends Controller {
     #profileView;
     #router;
     #navbar;
+    #storageService;
 
     /**
      * Constructor
@@ -20,6 +22,7 @@ export class ProfileController extends Controller {
         this.#profileView = new ProfileView();
         this.#router = Router.getInstance();
         this.#navbar = Navbar.getInstance();
+        this.#storageService = StorageService.getInstance();
     }
 
     /**
@@ -92,6 +95,8 @@ export class ProfileController extends Controller {
         } else if (res.status === 401) {
             this.#profileView.globalErrorField("Non autorizzato. Effettua il login.");
         } else if (res.status === 200) {
+            this.#storageService.setData("propic_src", payload.img_src);
+            this.#storageService.setData("propic_alt", payload.alt);
             this.#navbar.renderAvatarImage();
             this.#router.overridePath({}, "/");
             localStorage.setItem("theme", payload.theme);

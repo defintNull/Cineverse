@@ -54,14 +54,17 @@ export class DetailView extends View {
             this.classList.add("border-b-2");
 
             let detail = document.getElementById("detail_container");
-            detail.style.height = "auto";
-            const fullHeight = detail.scrollHeight + "px";
+            if(!detail.classList.contains("open")) {
+                detail.classList.add("open");
+                detail.style.height = "auto";
+                const fullHeight = detail.scrollHeight + "px";
 
-            detail.style.height = "0px";
-            void detail.offsetHeight;
+                detail.style.height = "0px";
+                void detail.offsetHeight;
 
-            detail.style.height = fullHeight;
-            detail.classList.remove("opacity-0");
+                detail.style.height = fullHeight;
+                detail.classList.remove("opacity-0");
+            }
         });
 
         document.getElementById("preview_button").addEventListener("click", function() {
@@ -69,15 +72,18 @@ export class DetailView extends View {
             this.classList.add("border-b-2");
 
             let detail = document.getElementById("detail_container");
-            detail.style.height = detail.scrollHeight + "px";
-            void detail.offsetHeight;
+            if(detail.classList.contains("open")) {
+                detail.classList.remove("open");
+                detail.style.height = detail.scrollHeight + "px";
+                void detail.offsetHeight;
 
-            detail.style.height = "0px";
-            detail.classList.add("opacity-0");
+                detail.style.height = "0px";
+                detail.classList.add("opacity-0");
 
-            setTimeout(() => {
-            detail.style.height = "0px";
-            }, 500);
+                setTimeout(() => {
+                detail.style.height = "0px";
+                }, 500);
+            }
         });
 
         if(this.#element instanceof Movie) {
