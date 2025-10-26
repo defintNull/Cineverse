@@ -81,8 +81,16 @@ class Profile extends Controller
             }
 
             $userModel->update($validatedData);
+
+            $image_src = null;
+            if($userModel->propic != null && Storage::disk('local')->exists($userModel->propic)) {
+                $image_src = 'data:image/jpeg;base64,'.base64_encode(Storage::disk('local')->get($userModel->propic));
+            }
+
             return response()->json([
                 'message' => 'Profile updated successfully.',
+                'img_src' => $image_src,
+                'alt' => $userModel->username,
                 'theme' => $userModel->theme,
             ]);
         } catch (Exception $e) {
