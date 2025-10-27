@@ -4,7 +4,7 @@ import { View } from "./View";
 import { RenameButton } from "../Components/RenameButton.js";
 import { Input } from "../Components/Input.js";
 import { DeleteButton } from "../Components/DeleteButton.js";
-import { ExitButton } from "../Components/exitButton.js";
+import { ExitButton } from "../Components/ExitButton.js";
 
 /**
  * Class that manage the view of the page
