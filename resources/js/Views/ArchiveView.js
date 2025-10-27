@@ -143,7 +143,7 @@ export class ArchiveView extends View {
         document.getElementById("search_form").addEventListener("submit", async function(event) {
             event.preventDefault();
             document.getElementById("elements_container").innerHTML = "";
-            main.addSearchElements(searchHandler);
+            main.addSearchElements(searchHandler, true);
         });
 
         // Autocomplete event for languages
@@ -297,7 +297,7 @@ export class ArchiveView extends View {
     /**
      * Add the elements returned from the advanced search
      */
-    async addSearchElements(searchHandler) {
+    async addSearchElements(searchHandler, reset = false) {
         let search = document.getElementById("search_form").querySelector("input[type='search']").value;
         let type = document.getElementById("ser_mov_select").value;
         let language = document.getElementById("language_input").nextElementSibling.value;
@@ -315,7 +315,7 @@ export class ArchiveView extends View {
             'genres': genres,
         };
 
-        let elements = await searchHandler(search);
+        let elements = await searchHandler(search, reset);
 
         let elements_container = document.getElementById("elements_container");
         elements.forEach(el => {

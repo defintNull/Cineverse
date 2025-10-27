@@ -76,7 +76,10 @@ export class ArchiveController extends Controller {
     /**
      * Manage the advanced search to TMDB api
      */
-    async #advanceSearchHandle(json) {
+    async #advanceSearchHandle(json, reset = false) {
+        if(reset) {
+            this.#searchPage = 1;
+        }
         if(this.#totalSearchPage <= this.#searchPage) {
             return false;
         }
