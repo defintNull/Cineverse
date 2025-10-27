@@ -1,7 +1,7 @@
 import { AddButton } from "../Components/AddButton";
 import { CommentComponent } from "../Components/CommentComponent";
 import { CommentForm } from "../Components/CommentForm";
-import { ExitButton } from "../Components/exitButton";
+import { ExitButton } from "../Components/ExitButton";
 import { GroupCard } from "../Components/GroupCard";
 import { GroupComponent } from "../Components/GroupComponent";
 import { HeaderComponent } from "../Components/HeaderComponent";
