@@ -70,7 +70,12 @@ export class DetailController extends Controller {
                 }
 
                 // Events
-                this.#detailView.addEventListeners(this.#element, this.#serieClickHandler.bind(this), this.#getWatchlistsHandler.bind(this));
+                this.#detailView.addEventListeners(
+                    this.#element,
+                    this.#serieClickHandler.bind(this),
+                    this.#getWatchlistsHandler.bind(this),
+                    this.#addElementToWatchlist.bind(this)
+                );
             }
         } else {
             this.#router.overridePath({}, "/");
